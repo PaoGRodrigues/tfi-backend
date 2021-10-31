@@ -1,4 +1,4 @@
-module main.go
+module github.com/PaoGRodrigues/tfi-backend
 
 go 1.14
 
