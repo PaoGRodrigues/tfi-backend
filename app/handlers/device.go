@@ -9,13 +9,13 @@ type DeviceHandler struct {
 	DeviceUseCase domains.DeviceUseCase
 }
 
-func NewDeviceHandler(rg *gin.RouterGroup, deviceUseCase domains.DeviceUseCase) {
+func NewDeviceHandler(rg *gin.Engine, deviceUseCase domains.DeviceUseCase) {
 
 	deviceHandler := &DeviceHandler{
 		DeviceUseCase: deviceUseCase,
 	}
 
-	rg.GET("devices", deviceHandler.GetDevices)
+	rg.GET("/devices", deviceHandler.GetDevices)
 }
 
 func (dh *DeviceHandler) GetDevices(c *gin.Context) {
