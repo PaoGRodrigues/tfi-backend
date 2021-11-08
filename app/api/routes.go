@@ -15,3 +15,10 @@ func (api *Api) MapURLToPing() {
 		})
 	})
 }
+
+// func (api *Api) MapDevicesURL() {
+
+// 	repository.NewDeviceRepository()
+// 	useCases.NewDeviceUseCase()
+// 	handlers.NewDeviceHandler(api.Engine)
+// }

@@ -13,7 +13,7 @@ type Device struct {
 }
 
 //DeviceUseCase needs to be implemented in Device use cases
-type DeviceUseCase interface {
+type DeviceGateway interface {
 	GetAll(context.Context) ([]Device, error)
 }
 

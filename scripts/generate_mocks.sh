@@ -1,3 +1,3 @@
 #!/bin/bash
 
-mockgen -destination tests/mocks/sourceMock.go -package mocks github.com/PaoGRodrigues/tfi-backend/app/domains DeviceUseCase,DeviceRepository
+mockgen -destination tests/mocks/device/gateway.go -source=app/device/domains/device.go DeviceGateway, DeviceRepository

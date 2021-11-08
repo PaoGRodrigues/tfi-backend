@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/domains"
-	"github.com/PaoGRodrigues/tfi-backend/app/handlers"
-	"github.com/PaoGRodrigues/tfi-backend/tests/mocks"
+	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/device/handlers"
+	mocks "github.com/PaoGRodrigues/tfi-backend/tests/mocks/device"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -27,16 +27,16 @@ func TestCreateADeviceHandlerAndGetAllDevicesFromAUseCase(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDeviceUseCase := mocks.NewMockDeviceUseCase(ctrl)
+	mockDeviceGateway := mocks.NewMockDeviceGateway(ctrl)
 
-	executeWithContext := func(MockDeviceUseCase *mocks.MockDeviceUseCase) *httptest.ResponseRecorder {
+	executeWithContext := func(MockDeviceGateway *mocks.MockDeviceGateway) *httptest.ResponseRecorder {
 		response := httptest.NewRecorder()
 		_, ginEngine := gin.CreateTestContext(response)
 
 		requestUrl := "/devices"
 		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
 
-		handlers.NewDeviceHandler(ginEngine, MockDeviceUseCase)
+		handlers.NewDeviceHandler(ginEngine, MockDeviceGateway)
 		ginEngine.ServeHTTP(response, httpRequest)
 		return response
 	}
@@ -52,9 +52,9 @@ func TestCreateADeviceHandlerAndGetAllDevicesFromAUseCase(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockDeviceUseCase.EXPECT().GetAll(gomock.Any()).Return(createdDevices, nil)
+		mockDeviceGateway.EXPECT().GetAll(gomock.Any()).Return(createdDevices, nil)
 
-		res := executeWithContext(mockDeviceUseCase)
+		res := executeWithContext(mockDeviceGateway)
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 }
