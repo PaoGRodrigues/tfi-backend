@@ -4,10 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Api struct {
-	*gin.Engine
-}
-
 func (api *Api) MapURLToPing() {
 	api.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
@@ -16,9 +12,6 @@ func (api *Api) MapURLToPing() {
 	})
 }
 
-// func (api *Api) MapDevicesURL() {
-
-// 	repository.NewDeviceRepository()
-// 	useCases.NewDeviceUseCase()
-// 	handlers.NewDeviceHandler(api.Engine)
-// }
+func (api *Api) MapGetDevicesURL() {
+	api.GET("/devices", api.GetDevices)
+}

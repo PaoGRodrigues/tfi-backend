@@ -7,14 +7,16 @@ import (
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/device/gateway"
 	"github.com/PaoGRodrigues/tfi-backend/app/device/handlers"
+
 	mocks "github.com/PaoGRodrigues/tfi-backend/tests/mocks/device"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateADeviceHandlerAndGetAllDevicesFromAUseCase(t *testing.T) {
+func TestCreateADeviceHandlerAndGetAllDevicesFromTheGateway(t *testing.T) {
 
 	var (
 		id      = 1
@@ -27,17 +29,24 @@ func TestCreateADeviceHandlerAndGetAllDevicesFromAUseCase(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDeviceGateway := mocks.NewMockDeviceGateway(ctrl)
+	mockDeviceRepository := mocks.NewMockDeviceRepository(ctrl)
+	mockDeviceGateway := gateway.NewDeviceSearcher(mockDeviceRepository)
+	mockDeviceHandler := handlers.NewDeviceHandler(mockDeviceGateway)
 
-	executeWithContext := func(MockDeviceGateway *mocks.MockDeviceGateway) *httptest.ResponseRecorder {
+	r := gin.Default()
+
+	r.GET("/devices", mockDeviceHandler.GetDevices,
+		func(c *gin.Context) {
+			c.Status(http.StatusOK)
+		})
+
+	executeWithContext := func() *httptest.ResponseRecorder {
 		response := httptest.NewRecorder()
-		_, ginEngine := gin.CreateTestContext(response)
 
 		requestUrl := "/devices"
 		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
 
-		handlers.NewDeviceHandler(ginEngine, MockDeviceGateway)
-		ginEngine.ServeHTTP(response, httpRequest)
+		r.ServeHTTP(response, httpRequest)
 		return response
 	}
 
@@ -52,9 +61,9 @@ func TestCreateADeviceHandlerAndGetAllDevicesFromAUseCase(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockDeviceGateway.EXPECT().GetAll(gomock.Any()).Return(createdDevices, nil)
+		mockDeviceRepository.EXPECT().GetAll(gomock.Any()).Return(createdDevices, nil)
 
-		res := executeWithContext(mockDeviceGateway)
+		res := executeWithContext()
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 }

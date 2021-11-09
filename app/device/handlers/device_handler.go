@@ -9,13 +9,11 @@ type DeviceHandler struct {
 	DeviceGateway domains.DeviceGateway
 }
 
-func NewDeviceHandler(rg *gin.Engine, deviceGateway domains.DeviceGateway) {
+func NewDeviceHandler(deviceGateway domains.DeviceGateway) *DeviceHandler {
 
-	deviceHandler := &DeviceHandler{
+	return &DeviceHandler{
 		DeviceGateway: deviceGateway,
 	}
-
-	rg.GET("/devices", deviceHandler.GetDevices)
 }
 
 func (dh *DeviceHandler) GetDevices(c *gin.Context) {

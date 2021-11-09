@@ -8,6 +8,7 @@ func main() {
 	}
 
 	api.MapURLToPing()
+	api.MapGetDevicesURL()
 
 	api.Run(":8080")
 }
