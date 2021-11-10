@@ -17,5 +17,7 @@ func (api *Api) GetDevices(c *gin.Context) {
 	if err != nil {
 		c.JSON(500, gin.H{"data": "error"})
 	}
+	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
+	c.Header("Access-Control-Allow-Methods", "GET")
 	c.JSON(http.StatusOK, gin.H{"data": devices})
 }
