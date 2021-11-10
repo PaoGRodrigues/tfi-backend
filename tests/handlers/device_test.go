@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/device/gateway"
 	"github.com/PaoGRodrigues/tfi-backend/app/device/handlers"
@@ -33,9 +34,14 @@ func TestCreateADeviceHandlerAndGetAllDevicesFromTheGateway(t *testing.T) {
 	mockDeviceGateway := gateway.NewDeviceSearcher(mockDeviceRepository)
 	mockDeviceHandler := handlers.NewDeviceHandler(mockDeviceGateway)
 
+	api := &api.Api{
+		DeviceHandler: mockDeviceHandler,
+		Engine:        gin.Default(),
+	}
+
 	r := gin.Default()
 
-	r.GET("/devices", mockDeviceHandler.GetDevices,
+	r.GET("/devices", api.GetDevices,
 		func(c *gin.Context) {
 			c.Status(http.StatusOK)
 		})
@@ -61,7 +67,7 @@ func TestCreateADeviceHandlerAndGetAllDevicesFromTheGateway(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockDeviceRepository.EXPECT().GetAll(gomock.Any()).Return(createdDevices, nil)
+		mockDeviceRepository.EXPECT().GetAll().Return(createdDevices, nil)
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusOK, res.Code)

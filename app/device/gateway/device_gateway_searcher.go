@@ -1,8 +1,6 @@
 package gateway
 
 import (
-	"context"
-
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
 )
 
@@ -17,8 +15,8 @@ func NewDeviceSearcher(repo domains.DeviceRepository) domains.DeviceGateway {
 	}
 }
 
-func (gw *DeviceSearcher) GetAll(c context.Context) ([]domains.Device, error) {
-	res, err := gw.deviceRepo.GetAll(c)
+func (gw *DeviceSearcher) GetAll() ([]domains.Device, error) {
+	res, err := gw.deviceRepo.GetAll()
 	if err != nil {
 		return nil, err
 	}
