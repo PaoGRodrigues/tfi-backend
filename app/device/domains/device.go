@@ -9,8 +9,8 @@ type Device struct {
 }
 
 //DeviceUseCase needs to be implemented in Device use cases
-type DeviceGateway interface {
-	GetAll() ([]Device, error)
+type DeviceUseCase interface {
+	GetAllDevices() ([]Device, error)
 }
 
 type DeviceRepository interface {

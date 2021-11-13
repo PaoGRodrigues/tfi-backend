@@ -8,8 +8,7 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
-	"github.com/PaoGRodrigues/tfi-backend/app/device/gateway"
-	"github.com/PaoGRodrigues/tfi-backend/app/device/handlers"
+	"github.com/PaoGRodrigues/tfi-backend/app/device/usecase"
 
 	mocks "github.com/PaoGRodrigues/tfi-backend/tests/mocks/device"
 	"github.com/gin-gonic/gin"
@@ -31,11 +30,10 @@ func TestCreateADeviceHandlerAndGetAllDevicesFromTheGateway(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDeviceRepository := mocks.NewMockDeviceRepository(ctrl)
-	mockDeviceGateway := gateway.NewDeviceSearcher(mockDeviceRepository)
-	mockDeviceHandler := handlers.NewDeviceHandler(mockDeviceGateway)
+	mockDeviceGateway := usecase.NewDeviceSearcher(mockDeviceRepository)
 
 	api := &api.Api{
-		DeviceHandler: mockDeviceHandler,
+		DeviceUseCase: mockDeviceGateway,
 		Engine:        gin.Default(),
 	}
 

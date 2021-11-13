@@ -3,17 +3,17 @@ package api
 import (
 	"net/http"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/device/handlers"
+	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
 	"github.com/gin-gonic/gin"
 )
 
 type Api struct {
-	DeviceHandler *handlers.DeviceHandler
+	DeviceUseCase domains.DeviceUseCase
 	*gin.Engine
 }
 
 func (api *Api) GetDevices(c *gin.Context) {
-	devices, err := api.DeviceHandler.GetDevices()
+	devices, err := api.DeviceUseCase.GetAllDevices()
 	if err != nil {
 		c.JSON(500, gin.H{"data": "error"})
 	}

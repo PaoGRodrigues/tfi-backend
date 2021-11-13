@@ -10,7 +10,7 @@ func main() {
 	iniatializer := api.Initializer{}
 
 	api := &api.Api{
-		DeviceHandler: iniatializer.InitializeDeviceDependencies(),
+		DeviceUseCase: iniatializer.InitializeDeviceDependencies(),
 		Engine:        gin.Default(),
 	}
 
