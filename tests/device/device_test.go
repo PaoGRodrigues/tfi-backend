@@ -1,6 +1,7 @@
 package device_test
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -16,7 +17,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateADeviceHandlerAndGetAllDevicesFromTheGateway(t *testing.T) {
+func TestCreateDeviceUseCaseAndGetAllDevices(t *testing.T) {
 
 	var (
 		id      = 1
@@ -30,10 +31,10 @@ func TestCreateADeviceHandlerAndGetAllDevicesFromTheGateway(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDeviceRepository := mocks.NewMockDeviceRepository(ctrl)
-	mockDeviceGateway := usecase.NewDeviceSearcher(mockDeviceRepository)
+	mockDeviceSearcherUseCase := usecase.NewDeviceSearcher(mockDeviceRepository)
 
 	api := &api.Api{
-		DeviceUseCase: mockDeviceGateway,
+		DeviceUseCase: mockDeviceSearcherUseCase,
 		Engine:        gin.Default(),
 	}
 
@@ -69,5 +70,45 @@ func TestCreateADeviceHandlerAndGetAllDevicesFromTheGateway(t *testing.T) {
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusOK, res.Code)
+	})
+}
+
+func TestCreateADeviceUsecaseAndGetDevicesReturnAnError(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDeviceRepository := mocks.NewMockDeviceRepository(ctrl)
+	mockDeviceSearcherUseCase := usecase.NewDeviceSearcher(mockDeviceRepository)
+
+	api := &api.Api{
+		DeviceUseCase: mockDeviceSearcherUseCase,
+		Engine:        gin.Default(),
+	}
+
+	r := gin.Default()
+
+	r.GET("/devices", api.GetDevices,
+		func(c *gin.Context) {
+			c.Status(http.StatusOK)
+		})
+
+	executeWithContext := func() *httptest.ResponseRecorder {
+		response := httptest.NewRecorder()
+
+		requestUrl := "/devices"
+		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+
+		r.ServeHTTP(response, httpRequest)
+		return response
+	}
+
+	t.Run("Ok", func(t *testing.T) {
+
+		mockDeviceRepository.EXPECT().GetAll().Return(nil, fmt.Errorf("Testing error case"))
+
+		res := executeWithContext()
+		assert.Equal(t, http.StatusInternalServerError, res.Code)
 	})
 }
