@@ -10,7 +10,6 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/device/usecase"
-
 	mocks "github.com/PaoGRodrigues/tfi-backend/tests/mocks/device"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
