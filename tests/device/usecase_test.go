@@ -1,6 +1,7 @@
 package device_test
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -38,5 +39,22 @@ func TestGetAllDevicesSearcherReturnAListOfDevices(t *testing.T) {
 
 	if !reflect.DeepEqual(got, expected) {
 		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
+	}
+}
+
+func TestGetAllDevicesSearcherReturnAnError(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDeviceRepository := mocks.NewMockDeviceRepository(ctrl)
+	mockDeviceRepository.EXPECT().GetAll().Return(nil, fmt.Errorf("Testing Error"))
+
+	deviceSearcher := usecase.NewDeviceSearcher(mockDeviceRepository)
+	_, err := deviceSearcher.GetAllDevices()
+
+	if err == nil {
+		t.Errorf("We expected an error, but didn't get one.")
 	}
 }
