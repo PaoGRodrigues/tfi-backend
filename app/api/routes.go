@@ -1,10 +1,8 @@
-package main
+package api
 
-import "github.com/gin-gonic/gin"
-
-type Api struct {
-	*gin.Engine
-}
+import (
+	"github.com/gin-gonic/gin"
+)
 
 func (api *Api) MapURLToPing() {
 	api.GET("/ping", func(c *gin.Context) {
@@ -12,4 +10,8 @@ func (api *Api) MapURLToPing() {
 			"message": "pong",
 		})
 	})
+}
+
+func (api *Api) MapGetDevicesURL() {
+	api.GET("/devices", api.GetDevices)
 }
