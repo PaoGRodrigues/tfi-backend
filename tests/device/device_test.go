@@ -1,4 +1,4 @@
-package handlers_test
+package device_test
 
 import (
 	"net/http"
