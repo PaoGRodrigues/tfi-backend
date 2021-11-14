@@ -4,15 +4,15 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
 )
 
-type DeviceStorageClient struct {
+type DeviceFakeClient struct {
 }
 
-func NewDeviceRepository() *DeviceStorageClient {
+func NewDeviceFakeClient() *DeviceFakeClient {
 
-	return &DeviceStorageClient{}
+	return &DeviceFakeClient{}
 }
 
-func (d *DeviceStorageClient) GetAll() ([]domains.Device, error) {
+func (d *DeviceFakeClient) GetAll() ([]domains.Device, error) {
 	devices := []domains.Device{
 		domains.Device{
 			ID:      1,
