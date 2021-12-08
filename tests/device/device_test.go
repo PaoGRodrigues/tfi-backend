@@ -9,7 +9,6 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
-	"github.com/PaoGRodrigues/tfi-backend/app/device/usecase"
 	mocks "github.com/PaoGRodrigues/tfi-backend/tests/mocks/device"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
@@ -29,8 +28,7 @@ func TestCreateDeviceUseCaseAndGetAllDevices(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDeviceRepository := mocks.NewMockDeviceRepository(ctrl)
-	mockDeviceSearcherUseCase := usecase.NewDeviceSearcher(mockDeviceRepository)
+	mockDeviceSearcherUseCase := mocks.NewMockDeviceUseCase(ctrl)
 
 	api := &api.Api{
 		DeviceUseCase: mockDeviceSearcherUseCase,
@@ -65,7 +63,7 @@ func TestCreateDeviceUseCaseAndGetAllDevices(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockDeviceRepository.EXPECT().GetAll().Return(createdDevices, nil)
+		mockDeviceSearcherUseCase.EXPECT().GetAllDevices().Return(createdDevices, nil)
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -78,8 +76,7 @@ func TestCreateADeviceUsecaseAndGetDevicesReturnAnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDeviceRepository := mocks.NewMockDeviceRepository(ctrl)
-	mockDeviceSearcherUseCase := usecase.NewDeviceSearcher(mockDeviceRepository)
+	mockDeviceSearcherUseCase := mocks.NewMockDeviceUseCase(ctrl)
 
 	api := &api.Api{
 		DeviceUseCase: mockDeviceSearcherUseCase,
@@ -105,7 +102,7 @@ func TestCreateADeviceUsecaseAndGetDevicesReturnAnError(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockDeviceRepository.EXPECT().GetAll().Return(nil, fmt.Errorf("Testing error case"))
+		mockDeviceSearcherUseCase.EXPECT().GetAllDevices().Return(nil, fmt.Errorf("Testing error case"))
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusInternalServerError, res.Code)
