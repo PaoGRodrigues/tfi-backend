@@ -4,10 +4,11 @@ import "time"
 
 type Traffic struct {
 	ID          int       `json:"ID"`
-	Timestamp   time.Time `json:Timestamp`
+	Datetime    time.Time `json:Timestamp`
 	Source      string    `json:SourceIp`
 	Destination string    `json:Destination`
 	Port        string    `json:Port`
+	Protocol    string    `json:Protocol`
 	Service     string    `json:Service`
 	Bytes       int       `json:Bytes`
 }
