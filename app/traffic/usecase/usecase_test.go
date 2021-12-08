@@ -1,4 +1,4 @@
-package traffic_test
+package usecase_test
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
-	mocks "github.com/PaoGRodrigues/tfi-backend/tests/mocks/traffic"
+	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"github.com/golang/mock/gomock"
 )
 

@@ -1,4 +1,4 @@
-package device_test
+package usecase_test
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/device/usecase"
-	mocks "github.com/PaoGRodrigues/tfi-backend/tests/mocks/device"
+	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/device"
 	"github.com/golang/mock/gomock"
 )
 

@@ -1,4 +1,4 @@
-package device_test
+package api_test
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
-	mocks "github.com/PaoGRodrigues/tfi-backend/tests/mocks/device"
+	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/device"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
