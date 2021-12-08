@@ -34,7 +34,7 @@ func (trff *TrafficFakeClient) GetAll() ([]domains.Traffic, error) {
 			Port:        443,
 			Protocol:    "tcp",
 			Service:     "SSL",
-			Bytes:       345,
+			Bytes:       10000,
 		},
 		domains.Traffic{
 			ID:          1234,
@@ -44,7 +44,7 @@ func (trff *TrafficFakeClient) GetAll() ([]domains.Traffic, error) {
 			Port:        443,
 			Protocol:    "tcp",
 			Service:     "SSL",
-			Bytes:       345,
+			Bytes:       1000,
 		},
 	}
 
