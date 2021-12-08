@@ -1,6 +1,7 @@
 package api_test
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -75,5 +76,44 @@ func TestCreateTrafficUseCaseAndGetAllTraffic(t *testing.T) {
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusOK, res.Code)
+	})
+}
+
+func TestCreateATrafficUsecaseAndGetTrafficReturnAnError(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockTrafficSearcherUseCase := mocks.NewMockTrafficUseCase(ctrl)
+
+	api := &api.Api{
+		TrafficUseCase: mockTrafficSearcherUseCase,
+		Engine:         gin.Default(),
+	}
+
+	r := gin.Default()
+
+	r.GET("/traffic", api.GetTraffic,
+		func(c *gin.Context) {
+			c.Status(http.StatusOK)
+		})
+
+	executeWithContext := func() *httptest.ResponseRecorder {
+		response := httptest.NewRecorder()
+
+		requestUrl := "/traffic"
+		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+
+		r.ServeHTTP(response, httpRequest)
+		return response
+	}
+
+	t.Run("Ok", func(t *testing.T) {
+
+		mockTrafficSearcherUseCase.EXPECT().GetAllTraffic().Return(nil, fmt.Errorf("Testing error case"))
+
+		res := executeWithContext()
+		assert.Equal(t, http.StatusInternalServerError, res.Code)
 	})
 }
