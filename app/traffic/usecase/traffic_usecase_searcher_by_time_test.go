@@ -23,7 +23,7 @@ func TestGetAllTrafficReturnAListOfTrafficJsons(t *testing.T) {
 			Datetime:    time.Date(2020, time.January, 1, 0, 0, 0, 0, time.UTC),
 			Source:      "192.168.4.9",
 			Destination: "lib.gen.rus",
-			Port:        "443",
+			Port:        443,
 			Protocol:    "tcp",
 			Service:     "SSL",
 			Bytes:       345,

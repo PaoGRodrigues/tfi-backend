@@ -7,7 +7,7 @@ type Traffic struct {
 	Datetime    time.Time `json:Timestamp`
 	Source      string    `json:SourceIp`
 	Destination string    `json:Destination`
-	Port        string    `json:Port`
+	Port        int       `json:Port`
 	Protocol    string    `json:Protocol`
 	Service     string    `json:Service`
 	Bytes       int       `json:Bytes`
