@@ -1,6 +1,7 @@
 package traffic_test
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 	"time"
@@ -40,5 +41,21 @@ func TestGetAllTrafficReturnAListOfTrafficJsons(t *testing.T) {
 	}
 	if !reflect.DeepEqual(got, expected) {
 		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
+	}
+}
+
+func TestGetAllTrafficReturnAnError(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockTrafficRepo := mocks.NewMockTrafficRepository(ctrl)
+	mockTrafficRepo.EXPECT().GetAll().Return(nil, fmt.Errorf("Testing Error"))
+
+	trafficSearcher := usecase.NewTrafficSearcher(mockTrafficRepo)
+	_, err := trafficSearcher.GetAllTraffic()
+
+	if err == nil {
+		t.Errorf("We expected an error, but didn't get one.")
 	}
 }
