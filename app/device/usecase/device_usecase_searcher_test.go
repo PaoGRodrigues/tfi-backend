@@ -1,4 +1,4 @@
-package device_test
+package usecase_test
 
 import (
 	"fmt"
@@ -7,14 +7,12 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/device/usecase"
-	mocks "github.com/PaoGRodrigues/tfi-backend/tests/mocks/device"
-	"github.com/gin-gonic/gin"
+	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/device"
 	"github.com/golang/mock/gomock"
 )
 
 func TestGetAllDevicesSearcherReturnAListOfDevices(t *testing.T) {
 
-	gin.SetMode(gin.TestMode)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -44,7 +42,6 @@ func TestGetAllDevicesSearcherReturnAListOfDevices(t *testing.T) {
 
 func TestGetAllDevicesSearcherReturnAnError(t *testing.T) {
 
-	gin.SetMode(gin.TestMode)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
