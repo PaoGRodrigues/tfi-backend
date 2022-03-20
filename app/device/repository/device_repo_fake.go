@@ -15,28 +15,24 @@ func NewDeviceFakeClient() *DeviceFakeClient {
 func (d *DeviceFakeClient) GetAll() ([]domains.Device, error) {
 	devices := []domains.Device{
 		domains.Device{
-			ID:      1,
-			Name:    "Test1",
-			IP:      "13.13.13.13",
-			Details: "details",
+			Name:     "Test1",
+			IP:       "13.13.13.13",
+			OsDetail: "details",
 		},
 		domains.Device{
-			ID:      2,
-			Name:    "Test2",
-			IP:      "14.14.14.14",
-			Details: "details",
+			Name:     "Test2",
+			IP:       "14.14.14.14",
+			OsDetail: "details",
 		},
 		domains.Device{
-			ID:      3,
-			Name:    "Test3",
-			IP:      "15.15.15.15",
-			Details: "details",
+			Name:     "Test3",
+			IP:       "15.15.15.15",
+			OsDetail: "details",
 		},
 		domains.Device{
-			ID:      4,
-			Name:    "Test4",
-			IP:      "16.16.16.16",
-			Details: "details",
+			Name:     "Test4",
+			IP:       "16.16.16.16",
+			OsDetail: "details",
 		},
 	}
 

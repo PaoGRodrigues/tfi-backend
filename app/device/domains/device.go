@@ -2,10 +2,12 @@ package domains
 
 // Device connected to the network
 type Device struct {
-	ID      int    `json:"ID"`
-	Name    string `json:"Name"`
-	IP      string `json:"IP"`
-	Details string `json:"Details"`
+	IsLocalhost bool `json:is_localhost"`
+	Country     string
+	Name        string
+	IP          string
+	OsDetail    string `json:"os_detail"`
+	Mac         string
 }
 
 //DeviceUseCase needs to be implemented in Device use cases
