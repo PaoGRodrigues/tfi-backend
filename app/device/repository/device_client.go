@@ -3,6 +3,7 @@ package repository
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -27,11 +28,13 @@ type response struct {
 	Data        []domains.Device
 }
 
-func NewDeviceClient(urlClient string, interfaceId int) *DeviceClient {
+func NewDeviceClient(urlClient string, interfaceId int, usr string, pass string) *DeviceClient {
 
 	return &DeviceClient{
 		urlClient:   urlClient,
 		interfaceId: interfaceId,
+		usr:         usr,
+		pass:        pass,
 	}
 }
 
@@ -49,12 +52,17 @@ func (d *DeviceClient) getDevicesList() (HttpResponse, error) {
 	client := &http.Client{}
 	endpoint := "/lua/rest/v2/get/host/custom_data.lua"
 
-	dataString := "{\"ifid\": 0, \"field_alias\": \"is_localhost,name,privatehost,ip,os_detail,mac,city,country\"}"
+	dataString := "{\"ifid\":2,\"field_alias\":\"is_localhost,name,privatehost,ip,os_detail,mac,city,country\"}"
 	dataToSend := bytes.NewReader([]byte(dataString))
 
 	req, err := http.NewRequest("GET", d.urlClient+endpoint, dataToSend)
-	req.Header.Add("Content-Type", "application/json")
+	if err != nil {
+		return HttpResponse{}, err
+	}
 	req.SetBasicAuth(d.usr, d.pass)
+	req.Header.Add("Content-Type", "application/json")
+
+	fmt.Printf(dataString)
 
 	response, err := client.Do(req)
 	if err != nil {
@@ -67,6 +75,7 @@ func (d *DeviceClient) getDevicesList() (HttpResponse, error) {
 		return HttpResponse{}, err
 	}
 
+	fmt.Printf(string(body))
 	var resp HttpResponse
 	err = json.Unmarshal(body, &resp)
 	if err != nil {
