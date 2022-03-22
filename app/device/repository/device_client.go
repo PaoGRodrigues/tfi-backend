@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -19,13 +18,9 @@ type DeviceClient struct {
 	pass        string
 }
 type HttpResponse struct {
-	Rc    string
+	Rc    int
 	RcStr string
-	Rsp   response
-}
-type response struct {
-	CurrentPage int
-	Data        []domains.Device
+	Rsp   []domains.Device
 }
 
 func NewDeviceClient(urlClient string, interfaceId int, usr string, pass string) *DeviceClient {
@@ -45,24 +40,24 @@ func (d *DeviceClient) GetAll() ([]domains.Device, error) {
 		return nil, err
 	}
 
-	return devicesListResponse.Rsp.Data, nil
+	return devicesListResponse.Rsp, nil
 }
 
 func (d *DeviceClient) getDevicesList() (HttpResponse, error) {
 	client := &http.Client{}
 	endpoint := "/lua/rest/v2/get/host/custom_data.lua"
 
-	dataString := "{\"ifid\":2,\"field_alias\":\"is_localhost,name,privatehost,ip,os_detail,mac,city,country\"}"
-	dataToSend := bytes.NewReader([]byte(dataString))
-
-	req, err := http.NewRequest("GET", d.urlClient+endpoint, dataToSend)
+	req, err := http.NewRequest("GET", d.urlClient+endpoint, nil)
 	if err != nil {
 		return HttpResponse{}, err
 	}
 	req.SetBasicAuth(d.usr, d.pass)
 	req.Header.Add("Content-Type", "application/json")
 
-	fmt.Printf(dataString)
+	query := req.URL.Query()
+	query.Add("ifid", string("2"))
+	query.Add("field_alias", "privatehost,name,privatehost,ip,os_detail,mac,city,country")
+	req.URL.RawQuery = query.Encode()
 
 	response, err := client.Do(req)
 	if err != nil {

@@ -27,7 +27,7 @@ func main() {
 }
 
 func initializeDeviceDependencies() deviceDomain.DeviceUseCase {
-	deviceRepo := deviceRepo.NewDeviceClient("http://192.168.0.16:3000", 2, "xx", "xx")
+	deviceRepo := deviceRepo.NewDeviceClient("http://192.168.0.16:3000", 2, "XX", "XX")
 	deviceUseCase := deviceUseCase.NewDeviceSearcher(deviceRepo)
 	return deviceUseCase
 }
