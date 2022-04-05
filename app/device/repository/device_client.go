@@ -56,7 +56,7 @@ func (d *DeviceClient) getDevicesList() (HttpResponse, error) {
 
 	query := req.URL.Query()
 	query.Add("ifid", string("2"))
-	query.Add("field_alias", "privatehost,name,privatehost,ip,os_detail,mac,city,country")
+	query.Add("field_alias", "name,privatehost,ip,os_detail,mac,city,country")
 	req.URL.RawQuery = query.Encode()
 
 	response, err := client.Do(req)
