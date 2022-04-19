@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	device "github.com/PaoGRodrigues/tfi-backend/app/device/domains"
@@ -17,11 +18,15 @@ type Api struct {
 func (api *Api) GetDevices(c *gin.Context) {
 	devices, err := api.DeviceUseCase.GetAllDevices()
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
 	}
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "GET")
 	c.JSON(http.StatusOK, gin.H{"data": devices})
+	return
 }
 
 func (api *Api) GetTraffic(c *gin.Context) {

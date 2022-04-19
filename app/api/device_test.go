@@ -18,10 +18,9 @@ import (
 func TestCreateDeviceUseCaseAndGetAllDevices(t *testing.T) {
 
 	var (
-		id      = 1
-		name    = "Test"
-		ip      = "13.13.13.13"
-		details = "details"
+		name     = "Test"
+		ip       = "13.13.13.13"
+		osDetail = "details"
 	)
 
 	gin.SetMode(gin.TestMode)
@@ -54,10 +53,9 @@ func TestCreateDeviceUseCaseAndGetAllDevices(t *testing.T) {
 
 	createdDevices := []domains.Device{
 		domains.Device{
-			ID:      id,
-			Name:    name,
-			IP:      ip,
-			Details: details,
+			Name:     name,
+			IP:       ip,
+			OsDetail: osDetail,
 		},
 	}
 
