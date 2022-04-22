@@ -5,11 +5,13 @@ import (
 	"net/http"
 
 	device "github.com/PaoGRodrigues/tfi-backend/app/device/domains"
+	services_tool "github.com/PaoGRodrigues/tfi-backend/app/services/tool"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/gin-gonic/gin"
 )
 
 type Api struct {
+	Tool           *services_tool.Tool
 	DeviceUseCase  device.DeviceUseCase
 	TrafficUseCase traffic.TrafficUseCase
 	*gin.Engine

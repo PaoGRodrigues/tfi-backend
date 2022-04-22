@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
+	tool "github.com/PaoGRodrigues/tfi-backend/app/services/tool"
 )
 
 type DeviceClient struct {
-	urlClient   string
-	interfaceId int
-	usr         string
-	pass        string
+	tool     *tool.Tool
+	endpoint string
 }
 type HttpResponse struct {
 	Rc    int
@@ -21,13 +21,11 @@ type HttpResponse struct {
 	Rsp   []domains.Device
 }
 
-func NewDeviceClient(urlClient string, interfaceId int, usr string, pass string) *DeviceClient {
+func NewDeviceClient(tool *tool.Tool, endpoint string) *DeviceClient {
 
 	return &DeviceClient{
-		urlClient:   urlClient,
-		interfaceId: interfaceId,
-		usr:         usr,
-		pass:        pass,
+		tool:     tool,
+		endpoint: endpoint,
 	}
 }
 
@@ -43,17 +41,17 @@ func (d *DeviceClient) GetAll() ([]domains.Device, error) {
 
 func (d *DeviceClient) getDevicesList() (HttpResponse, error) {
 	client := &http.Client{}
-	endpoint := "/lua/rest/v2/get/host/custom_data.lua"
 
-	req, err := http.NewRequest("GET", d.urlClient+endpoint, nil)
+	req, err := http.NewRequest("GET", d.tool.UrlClient+d.endpoint, nil)
 	if err != nil {
 		return HttpResponse{}, err
 	}
-	req.SetBasicAuth(d.usr, d.pass)
+	req.SetBasicAuth(d.tool.Usr, d.tool.Pass)
 	req.Header.Add("Content-Type", "application/json")
 
 	query := req.URL.Query()
-	query.Add("ifid", string("2"))
+
+	query.Add("ifid", strconv.Itoa(d.tool.InterfaceId))
 	query.Add("field_alias", "name,privatehost,ip,os_detail,mac,city,country")
 	req.URL.RawQuery = query.Encode()
 
