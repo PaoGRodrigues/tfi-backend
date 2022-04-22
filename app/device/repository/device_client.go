@@ -9,8 +9,6 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
 )
 
-const URL = "http://192.168.0.16:3000"
-
 type DeviceClient struct {
 	urlClient   string
 	interfaceId int
