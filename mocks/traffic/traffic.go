@@ -34,19 +34,19 @@ func (m *MockTrafficUseCase) EXPECT() *MockTrafficUseCaseMockRecorder {
 	return m.recorder
 }
 
-// GetAllTraffic mocks base method.
-func (m *MockTrafficUseCase) GetAllTraffic() ([]domains.Traffic, error) {
+// GetAllActiveTraffic mocks base method.
+func (m *MockTrafficUseCase) GetAllActiveTraffic() ([]domains.Traffic, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllTraffic")
+	ret := m.ctrl.Call(m, "GetAllActiveTraffic")
 	ret0, _ := ret[0].([]domains.Traffic)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAllTraffic indicates an expected call of GetAllTraffic.
-func (mr *MockTrafficUseCaseMockRecorder) GetAllTraffic() *gomock.Call {
+// GetAllActiveTraffic indicates an expected call of GetAllActiveTraffic.
+func (mr *MockTrafficUseCaseMockRecorder) GetAllActiveTraffic() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllTraffic", reflect.TypeOf((*MockTrafficUseCase)(nil).GetAllTraffic))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActiveTraffic", reflect.TypeOf((*MockTrafficUseCase)(nil).GetAllActiveTraffic))
 }
 
 // MockTrafficRepository is a mock of TrafficRepository interface.
@@ -72,17 +72,17 @@ func (m *MockTrafficRepository) EXPECT() *MockTrafficRepositoryMockRecorder {
 	return m.recorder
 }
 
-// GetAll mocks base method.
-func (m *MockTrafficRepository) GetAll() ([]domains.Traffic, error) {
+// GetAllActiveTraffic mocks base method.
+func (m *MockTrafficRepository) GetAllActiveTraffic() ([]domains.Traffic, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAll")
+	ret := m.ctrl.Call(m, "GetAllActiveTraffic")
 	ret0, _ := ret[0].([]domains.Traffic)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAll indicates an expected call of GetAll.
-func (mr *MockTrafficRepositoryMockRecorder) GetAll() *gomock.Call {
+// GetAllActiveTraffic indicates an expected call of GetAllActiveTraffic.
+func (mr *MockTrafficRepositoryMockRecorder) GetAllActiveTraffic() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockTrafficRepository)(nil).GetAll))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActiveTraffic", reflect.TypeOf((*MockTrafficRepository)(nil).GetAllActiveTraffic))
 }

@@ -14,7 +14,7 @@ func NewTrafficFakeClient() *TrafficFakeClient {
 	return &TrafficFakeClient{}
 }
 
-func (trff *TrafficFakeClient) GetAll() ([]domains.Traffic, error) {
+func (trff *TrafficFakeClient) GetAllActiveTraffic() ([]domains.Traffic, error) {
 	trafficStruct := []domains.Traffic{
 		domains.Traffic{
 			ID:          1234,

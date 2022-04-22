@@ -72,7 +72,7 @@ func TestCreateTrafficUseCaseAndGetAllTraffic(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockTrafficSearcherUseCase.EXPECT().GetAllTraffic().Return(createdTraffic, nil)
+		mockTrafficSearcherUseCase.EXPECT().GetAllActiveTraffic().Return(createdTraffic, nil)
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -111,7 +111,7 @@ func TestCreateATrafficUsecaseAndGetTrafficReturnAnError(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockTrafficSearcherUseCase.EXPECT().GetAllTraffic().Return(nil, fmt.Errorf("Testing error case"))
+		mockTrafficSearcherUseCase.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Testing error case"))
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusInternalServerError, res.Code)

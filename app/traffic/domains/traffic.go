@@ -14,9 +14,9 @@ type Traffic struct {
 }
 
 type TrafficUseCase interface {
-	GetAllTraffic() ([]Traffic, error)
+	GetAllActiveTraffic() ([]Traffic, error)
 }
 
 type TrafficRepository interface {
-	GetAll() ([]Traffic, error)
+	GetAllActiveTraffic() ([]Traffic, error)
 }
