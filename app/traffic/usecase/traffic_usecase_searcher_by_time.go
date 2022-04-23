@@ -15,7 +15,7 @@ func NewTrafficSearcher(repo domains.TrafficRepository) *TrafficSearcher {
 	}
 }
 
-func (gw *TrafficSearcher) GetAllActiveTraffic() ([]domains.Traffic, error) {
+func (gw *TrafficSearcher) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 	res, err := gw.trafficRepo.GetAllActiveTraffic()
 	if err != nil {
 		return nil, err

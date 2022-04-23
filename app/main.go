@@ -18,7 +18,7 @@ func main() {
 	api := &api.Api{
 		Tool:           tool,
 		DeviceUseCase:  initializeDeviceDependencies(tool),
-		TrafficUseCase: initializeTrafficDependencies(),
+		TrafficUseCase: initializeTrafficDependencies(tool),
 		Engine:         gin.Default(),
 	}
 
@@ -35,8 +35,8 @@ func initializeDeviceDependencies(tool *services_tool.Tool) deviceDomain.DeviceU
 	return deviceUseCase
 }
 
-func initializeTrafficDependencies() trafficDomain.TrafficUseCase {
-	trafficRepo := trafficRepo.NewTrafficFakeClient()
+func initializeTrafficDependencies(tool *services_tool.Tool) trafficDomain.TrafficUseCase {
+	trafficRepo := trafficRepo.NewActiveFlowClient(tool, "/lua/rest/v2/get/flow/active.lua")
 	trafficUseCase := trafficUseCase.NewTrafficSearcher(trafficRepo)
 	return trafficUseCase
 }

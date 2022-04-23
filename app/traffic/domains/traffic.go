@@ -1,22 +1,35 @@
 package domains
 
-import "time"
+type ActiveFlow struct {
+	Client   Client
+	Server   Server
+	Bytes    int
+	Protocol Protocol
+}
 
-type Traffic struct {
-	ID          int       `json:"ID"`
-	Datetime    time.Time `json:Timestamp`
-	Source      string    `json:SourceIp`
-	Destination string    `json:Destination`
-	Port        int       `json:Port`
-	Protocol    string    `json:Protocol`
-	Service     string    `json:Service`
-	Bytes       int       `json:Bytes`
+type Client struct {
+	Name string
+	Port int
+	IP   string
+}
+
+type Server struct {
+	IP                string
+	IsBroadcastDomain bool
+	IsDHCP            bool
+	Port              int
+	Name              string
+}
+
+type Protocol struct {
+	L4 string
+	L7 string
 }
 
 type TrafficUseCase interface {
-	GetAllActiveTraffic() ([]Traffic, error)
+	GetAllActiveTraffic() ([]ActiveFlow, error)
 }
 
 type TrafficRepository interface {
-	GetAllActiveTraffic() ([]Traffic, error)
+	GetAllActiveTraffic() ([]ActiveFlow, error)
 }
