@@ -8,14 +8,14 @@ import (
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/device"
+	"github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/host"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestCreateDeviceUseCaseAndGetAllDevices(t *testing.T) {
+func TestCreateHostUseCaseAndGetAllHosts(t *testing.T) {
 
 	var (
 		name = "Test"
@@ -26,16 +26,16 @@ func TestCreateDeviceUseCaseAndGetAllDevices(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDeviceSearcherUseCase := mocks.NewMockDeviceUseCase(ctrl)
+	mockHostSearcherUseCase := mocks.NewMockHostUseCase(ctrl)
 
 	api := &api.Api{
-		DeviceUseCase: mockDeviceSearcherUseCase,
-		Engine:        gin.Default(),
+		HostUseCase: mockHostSearcherUseCase,
+		Engine:      gin.Default(),
 	}
 
 	r := gin.Default()
 
-	r.GET("/devices", api.GetDevices,
+	r.GET("/hosts", api.GetHosts,
 		func(c *gin.Context) {
 			c.Status(http.StatusOK)
 		})
@@ -43,15 +43,15 @@ func TestCreateDeviceUseCaseAndGetAllDevices(t *testing.T) {
 	executeWithContext := func() *httptest.ResponseRecorder {
 		response := httptest.NewRecorder()
 
-		requestUrl := "/devices"
+		requestUrl := "/hosts"
 		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
 
 		r.ServeHTTP(response, httpRequest)
 		return response
 	}
 
-	createdDevices := []domains.Device{
-		domains.Device{
+	createdHosts := []domains.Host{
+		domains.Host{
 			Name: name,
 			IP:   ip,
 		},
@@ -59,29 +59,29 @@ func TestCreateDeviceUseCaseAndGetAllDevices(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockDeviceSearcherUseCase.EXPECT().GetAllDevices().Return(createdDevices, nil)
+		mockHostSearcherUseCase.EXPECT().GetAllHosts().Return(createdHosts, nil)
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 }
 
-func TestCreateADeviceUsecaseAndGetDevicesReturnAnError(t *testing.T) {
+func TestCreateAHostUsecaseAndGetHostsReturnAnError(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockDeviceSearcherUseCase := mocks.NewMockDeviceUseCase(ctrl)
+	mockHostSearcherUseCase := mocks.NewMockHostUseCase(ctrl)
 
 	api := &api.Api{
-		DeviceUseCase: mockDeviceSearcherUseCase,
-		Engine:        gin.Default(),
+		HostUseCase: mockHostSearcherUseCase,
+		Engine:      gin.Default(),
 	}
 
 	r := gin.Default()
 
-	r.GET("/devices", api.GetDevices,
+	r.GET("/hosts", api.GetHosts,
 		func(c *gin.Context) {
 			c.Status(http.StatusOK)
 		})
@@ -89,7 +89,7 @@ func TestCreateADeviceUsecaseAndGetDevicesReturnAnError(t *testing.T) {
 	executeWithContext := func() *httptest.ResponseRecorder {
 		response := httptest.NewRecorder()
 
-		requestUrl := "/devices"
+		requestUrl := "/hosts"
 		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
 
 		r.ServeHTTP(response, httpRequest)
@@ -98,7 +98,7 @@ func TestCreateADeviceUsecaseAndGetDevicesReturnAnError(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockDeviceSearcherUseCase.EXPECT().GetAllDevices().Return(nil, fmt.Errorf("Testing error case"))
+		mockHostSearcherUseCase.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing error case"))
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusInternalServerError, res.Code)
