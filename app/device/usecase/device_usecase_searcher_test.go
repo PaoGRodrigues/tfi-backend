@@ -18,9 +18,8 @@ func TestGetAllDevicesSearcherReturnAListOfDevices(t *testing.T) {
 
 	expected := []domains.Device{
 		domains.Device{
-			Name:     "Test",
-			IP:       "13.13.13.13",
-			OsDetail: "details",
+			Name: "Test",
+			IP:   "13.13.13.13",
 		},
 	}
 

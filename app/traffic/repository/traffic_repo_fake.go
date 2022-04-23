@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"time"
-
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
@@ -14,39 +12,43 @@ func NewTrafficFakeClient() *TrafficFakeClient {
 	return &TrafficFakeClient{}
 }
 
-func (trff *TrafficFakeClient) GetAll() ([]domains.Traffic, error) {
-	trafficStruct := []domains.Traffic{
-		domains.Traffic{
-			ID:          1234,
-			Datetime:    time.Date(2020, time.January, 1, 0, 0, 0, 0, time.UTC),
-			Source:      "192.168.4.9",
-			Destination: "lib.gen.rus",
-			Port:        443,
-			Protocol:    "tcp",
-			Service:     "SSL",
-			Bytes:       345,
+func (trff *TrafficFakeClient) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
+	client := domains.Client{
+		Name: "test",
+		Port: 55672,
+		IP:   "192.168.4.9",
+	}
+	server := domains.Server{
+		IP:                "123.123.123.123",
+		IsBroadcastDomain: false,
+		IsDHCP:            false,
+		Port:              443,
+		Name:              "lib.gen.rus",
+	}
+	protocols := domains.Protocol{
+		L4: "UDP.Youtube",
+		L7: "TLS.GoogleServices",
+	}
+	activeFlowStruct := []domains.ActiveFlow{
+		domains.ActiveFlow{
+			Client:   client,
+			Server:   server,
+			Bytes:    345,
+			Protocol: protocols,
 		},
-		domains.Traffic{
-			ID:          1234,
-			Datetime:    time.Date(2021, time.January, 1, 0, 0, 0, 0, time.UTC),
-			Source:      "192.168.4.9",
-			Destination: "lib.gen.rus",
-			Port:        443,
-			Protocol:    "tcp",
-			Service:     "SSL",
-			Bytes:       10000,
+		domains.ActiveFlow{
+			Client:   client,
+			Server:   server,
+			Bytes:    10000,
+			Protocol: protocols,
 		},
-		domains.Traffic{
-			ID:          1234,
-			Datetime:    time.Date(2021, time.February, 20, 0, 0, 0, 0, time.UTC),
-			Source:      "192.168.4.9",
-			Destination: "lib.gen.rus",
-			Port:        443,
-			Protocol:    "tcp",
-			Service:     "SSL",
-			Bytes:       1000,
+		domains.ActiveFlow{
+			Client:   client,
+			Server:   server,
+			Bytes:    1000,
+			Protocol: protocols,
 		},
 	}
 
-	return trafficStruct, nil
+	return activeFlowStruct, nil
 }

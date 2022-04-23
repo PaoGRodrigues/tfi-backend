@@ -6,7 +6,6 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
@@ -18,16 +17,22 @@ import (
 
 func TestCreateTrafficUseCaseAndGetAllTraffic(t *testing.T) {
 
-	var (
-		id          = 1
-		datetime    = time.Now()
-		source      = "172.16.0.0"
-		destination = "8.8.8.8"
-		port        = 443
-		protocol    = "tcp"
-		service     = "Ssl"
-		bytes       = 234567
-	)
+	client := domains.Client{
+		Name: "test",
+		Port: 55672,
+		IP:   "192.168.4.9",
+	}
+	server := domains.Server{
+		IP:                "123.123.123.123",
+		IsBroadcastDomain: false,
+		IsDHCP:            false,
+		Port:              443,
+		Name:              "lib.gen.rus",
+	}
+	protocols := domains.Protocol{
+		L4: "UDP.Youtube",
+		L7: "TLS.GoogleServices",
+	}
 
 	gin.SetMode(gin.TestMode)
 	ctrl := gomock.NewController(t)
@@ -57,22 +62,18 @@ func TestCreateTrafficUseCaseAndGetAllTraffic(t *testing.T) {
 		return response
 	}
 
-	createdTraffic := []domains.Traffic{
-		domains.Traffic{
-			ID:          id,
-			Datetime:    datetime,
-			Source:      source,
-			Destination: destination,
-			Port:        port,
-			Protocol:    protocol,
-			Service:     service,
-			Bytes:       bytes,
+	createdTraffic := []domains.ActiveFlow{
+		domains.ActiveFlow{
+			Client:   client,
+			Server:   server,
+			Bytes:    345,
+			Protocol: protocols,
 		},
 	}
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockTrafficSearcherUseCase.EXPECT().GetAllTraffic().Return(createdTraffic, nil)
+		mockTrafficSearcherUseCase.EXPECT().GetAllActiveTraffic().Return(createdTraffic, nil)
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -111,7 +112,7 @@ func TestCreateATrafficUsecaseAndGetTrafficReturnAnError(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockTrafficSearcherUseCase.EXPECT().GetAllTraffic().Return(nil, fmt.Errorf("Testing error case"))
+		mockTrafficSearcherUseCase.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Testing error case"))
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusInternalServerError, res.Code)

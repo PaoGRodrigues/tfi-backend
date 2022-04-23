@@ -5,7 +5,6 @@ type Device struct {
 	Name        string
 	PrivateHost bool
 	IP          string
-	OsDetail    string
 	Mac         string
 	City        string
 	Country     string
