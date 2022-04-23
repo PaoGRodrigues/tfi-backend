@@ -2,7 +2,6 @@ package repository
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -57,7 +56,6 @@ func (actF *ActiveFlowsClient) getActiveFlows() ([]domains.ActiveFlow, error) {
 		}
 	}
 	activeFlows = append(activeFlows, resp.Rsp.Data...)
-	fmt.Println(activeFlows)
 	return activeFlows, nil
 }
 

@@ -2,44 +2,43 @@ package repository
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/device/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/host/domains"
 	tool "github.com/PaoGRodrigues/tfi-backend/app/services/tool"
 )
 
-type DeviceClient struct {
+type HostClient struct {
 	tool     *tool.Tool
 	endpoint string
 }
 type HttpResponse struct {
 	Rc    int
 	RcStr string
-	Rsp   []domains.Device
+	Rsp   []domains.Host
 }
 
-func NewDeviceClient(tool *tool.Tool, endpoint string) *DeviceClient {
+func NewHostClient(tool *tool.Tool, endpoint string) *HostClient {
 
-	return &DeviceClient{
+	return &HostClient{
 		tool:     tool,
 		endpoint: endpoint,
 	}
 }
 
-func (d *DeviceClient) GetAll() ([]domains.Device, error) {
+func (d *HostClient) GetAll() ([]domains.Host, error) {
 
-	devicesListResponse, err := d.getDevicesList()
+	HostsListResponse, err := d.getHostsList()
 	if err != nil {
 		return nil, err
 	}
 
-	return devicesListResponse.Rsp, nil
+	return HostsListResponse.Rsp, nil
 }
 
-func (d *DeviceClient) getDevicesList() (HttpResponse, error) {
+func (d *HostClient) getHostsList() (HttpResponse, error) {
 	client := &http.Client{}
 
 	req, err := http.NewRequest("GET", d.tool.UrlClient+d.endpoint, nil)
@@ -66,7 +65,6 @@ func (d *DeviceClient) getDevicesList() (HttpResponse, error) {
 		return HttpResponse{}, err
 	}
 
-	fmt.Printf(string(body))
 	var resp HttpResponse
 	err = json.Unmarshal(body, &resp)
 	if err != nil {

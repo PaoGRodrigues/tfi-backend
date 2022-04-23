@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	device "github.com/PaoGRodrigues/tfi-backend/app/device/domains"
+	host "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
 	services_tool "github.com/PaoGRodrigues/tfi-backend/app/services/tool"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/gin-gonic/gin"
@@ -12,13 +12,13 @@ import (
 
 type Api struct {
 	Tool           *services_tool.Tool
-	DeviceUseCase  device.DeviceUseCase
+	HostUseCase    host.HostUseCase
 	TrafficUseCase traffic.TrafficUseCase
 	*gin.Engine
 }
 
-func (api *Api) GetDevices(c *gin.Context) {
-	devices, err := api.DeviceUseCase.GetAllDevices()
+func (api *Api) GetHosts(c *gin.Context) {
+	hosts, err := api.HostUseCase.GetAllHosts()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})
@@ -27,7 +27,7 @@ func (api *Api) GetDevices(c *gin.Context) {
 	}
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "GET")
-	c.JSON(http.StatusOK, gin.H{"data": devices})
+	c.JSON(http.StatusOK, gin.H{"data": hosts})
 	return
 }
 
