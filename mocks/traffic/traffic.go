@@ -35,10 +35,10 @@ func (m *MockTrafficUseCase) EXPECT() *MockTrafficUseCaseMockRecorder {
 }
 
 // GetAllActiveTraffic mocks base method.
-func (m *MockTrafficUseCase) GetAllActiveTraffic() ([]domains.Traffic, error) {
+func (m *MockTrafficUseCase) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllActiveTraffic")
-	ret0, _ := ret[0].([]domains.Traffic)
+	ret0, _ := ret[0].([]domains.ActiveFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -73,10 +73,10 @@ func (m *MockTrafficRepository) EXPECT() *MockTrafficRepositoryMockRecorder {
 }
 
 // GetAllActiveTraffic mocks base method.
-func (m *MockTrafficRepository) GetAllActiveTraffic() ([]domains.Traffic, error) {
+func (m *MockTrafficRepository) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllActiveTraffic")
-	ret0, _ := ret[0].([]domains.Traffic)
+	ret0, _ := ret[0].([]domains.ActiveFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
