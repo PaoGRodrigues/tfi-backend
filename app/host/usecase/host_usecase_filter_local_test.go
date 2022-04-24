@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -76,5 +77,21 @@ func TestGetLocalHostCallingGetHostFromRepoInSearcherReturnLocalHosts(t *testing
 
 	if !reflect.DeepEqual([]domains.Host{local}, got) {
 		t.Errorf("expected:\n%+v\ngot:\n%+v", local, got)
+	}
+}
+
+func TestGetLocalHostAndGetAllHostsInSearcherReturnError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockSearcher := mocks.NewMockHostUseCase(ctrl)
+	mockSearcher.EXPECT().GetHosts().Return([]domains.Host{})
+	mockSearcher.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
+
+	filter := usecase.NewLocalHosts(mockSearcher)
+	_, err := filter.GetLocalHosts()
+
+	if err == nil {
+		t.Fail()
 	}
 }
