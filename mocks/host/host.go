@@ -49,6 +49,58 @@ func (mr *MockHostUseCaseMockRecorder) GetAllHosts() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllHosts", reflect.TypeOf((*MockHostUseCase)(nil).GetAllHosts))
 }
 
+// GetHosts mocks base method.
+func (m *MockHostUseCase) GetHosts() []domains.Host {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHosts")
+	ret0, _ := ret[0].([]domains.Host)
+	return ret0
+}
+
+// GetHosts indicates an expected call of GetHosts.
+func (mr *MockHostUseCaseMockRecorder) GetHosts() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHosts", reflect.TypeOf((*MockHostUseCase)(nil).GetHosts))
+}
+
+// MockLocalHostFilter is a mock of LocalHostFilter interface.
+type MockLocalHostFilter struct {
+	ctrl     *gomock.Controller
+	recorder *MockLocalHostFilterMockRecorder
+}
+
+// MockLocalHostFilterMockRecorder is the mock recorder for MockLocalHostFilter.
+type MockLocalHostFilterMockRecorder struct {
+	mock *MockLocalHostFilter
+}
+
+// NewMockLocalHostFilter creates a new mock instance.
+func NewMockLocalHostFilter(ctrl *gomock.Controller) *MockLocalHostFilter {
+	mock := &MockLocalHostFilter{ctrl: ctrl}
+	mock.recorder = &MockLocalHostFilterMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockLocalHostFilter) EXPECT() *MockLocalHostFilterMockRecorder {
+	return m.recorder
+}
+
+// GetLocalHosts mocks base method.
+func (m *MockLocalHostFilter) GetLocalHosts() ([]domains.Host, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetLocalHosts")
+	ret0, _ := ret[0].([]domains.Host)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetLocalHosts indicates an expected call of GetLocalHosts.
+func (mr *MockLocalHostFilterMockRecorder) GetLocalHosts() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLocalHosts", reflect.TypeOf((*MockLocalHostFilter)(nil).GetLocalHosts))
+}
+
 // MockHostRepository is a mock of HostRepository interface.
 type MockHostRepository struct {
 	ctrl     *gomock.Controller

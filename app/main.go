@@ -23,16 +23,17 @@ func main() {
 	}
 
 	api.MapURLToPing()
-	api.MapGetHostURL()
+	api.MapGetHostsURL()
 	api.MapGetTrafficURL()
+	api.MapGetLocalHostsURL()
 
 	api.Run(":8080")
 }
 
 func initializeHostDependencies(tool *services_tool.Tool) hostDomain.HostUseCase {
 	hostRepo := hostRepo.NewHostClient(tool, "/lua/rest/v2/get/host/custom_data.lua")
-	hostUseCase := hostUseCase.NewHostSearcher(hostRepo)
-	return hostUseCase
+	hostSearch := hostUseCase.NewHostSearcher(hostRepo)
+	return hostSearch
 }
 
 func initializeTrafficDependencies(tool *services_tool.Tool) trafficDomain.TrafficUseCase {

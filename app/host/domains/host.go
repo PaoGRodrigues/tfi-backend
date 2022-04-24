@@ -13,6 +13,11 @@ type Host struct {
 //HostUseCase needs to be implemented in Host use cases
 type HostUseCase interface {
 	GetAllHosts() ([]Host, error)
+	GetHosts() []Host
+}
+
+type LocalHostFilter interface {
+	GetLocalHosts() ([]Host, error)
 }
 
 type HostRepository interface {
