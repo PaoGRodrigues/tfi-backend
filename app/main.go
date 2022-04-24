@@ -15,11 +15,15 @@ import (
 func main() {
 
 	tool := newTool()
+	hostUseCase, localHostFilter := initializeHostDependencies(tool)
+	trafficUseCase := initializeTrafficDependencies(tool)
+
 	api := &api.Api{
-		Tool:           tool,
-		HostUseCase:    initializeHostDependencies(tool),
-		TrafficUseCase: initializeTrafficDependencies(tool),
-		Engine:         gin.Default(),
+		Tool:            tool,
+		HostUseCase:     hostUseCase,
+		LocalHostFilter: localHostFilter,
+		TrafficUseCase:  trafficUseCase,
+		Engine:          gin.Default(),
 	}
 
 	api.MapURLToPing()
@@ -30,10 +34,11 @@ func main() {
 	api.Run(":8080")
 }
 
-func initializeHostDependencies(tool *services_tool.Tool) hostDomain.HostUseCase {
+func initializeHostDependencies(tool *services_tool.Tool) (hostDomain.HostUseCase, hostDomain.LocalHostFilter) {
 	hostRepo := hostRepo.NewHostClient(tool, "/lua/rest/v2/get/host/custom_data.lua")
-	hostSearch := hostUseCase.NewHostSearcher(hostRepo)
-	return hostSearch
+	hostSearcher := hostUseCase.NewHostSearcher(hostRepo)
+	localHostFilter := hostUseCase.NewLocalHosts(hostSearcher)
+	return hostSearcher, localHostFilter
 }
 
 func initializeTrafficDependencies(tool *services_tool.Tool) trafficDomain.TrafficUseCase {

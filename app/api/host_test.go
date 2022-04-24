@@ -104,3 +104,56 @@ func TestCreateAHostUsecaseAndGetHostsReturnAnError(t *testing.T) {
 		assert.Equal(t, http.StatusInternalServerError, res.Code)
 	})
 }
+
+func TestCreateHostFilterCaseAndGetAllLocalHosts(t *testing.T) {
+
+	var (
+		name        = "Test"
+		ip          = "13.13.13.13"
+		privateHost = true
+	)
+
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockLocalHostFilter := mocks.NewMockLocalHostFilter(ctrl)
+
+	api := &api.Api{
+		LocalHostFilter: mockLocalHostFilter,
+		Engine:          gin.Default(),
+	}
+
+	r := gin.Default()
+
+	r.GET("/localhosts", api.GetLocalHosts,
+		func(c *gin.Context) {
+			c.Status(http.StatusOK)
+		})
+
+	executeWithContext := func() *httptest.ResponseRecorder {
+		response := httptest.NewRecorder()
+
+		requestUrl := "/localhosts"
+		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+
+		r.ServeHTTP(response, httpRequest)
+		return response
+	}
+
+	localhosts := []domains.Host{
+		domains.Host{
+			Name:        name,
+			IP:          ip,
+			PrivateHost: privateHost,
+		},
+	}
+
+	t.Run("Ok", func(t *testing.T) {
+
+		mockLocalHostFilter.EXPECT().GetLocalHosts().Return(localhosts, nil)
+
+		res := executeWithContext()
+		assert.Equal(t, http.StatusOK, res.Code)
+	})
+}
