@@ -14,7 +14,7 @@ func NewLocalHosts(huc domains.HostUseCase) *LocalHosts {
 
 func (l *LocalHosts) GetLocalHosts() ([]domains.Host, error) {
 	current := l.searcher.GetHosts()
-	if current == nil {
+	if len(current) == 0 {
 		hosts, err := l.searcher.GetAllHosts()
 		if err != nil {
 			return nil, err
