@@ -12,10 +12,14 @@ func (api *Api) MapURLToPing() {
 	})
 }
 
-func (api *Api) MapGetHostURL() {
+func (api *Api) MapGetHostsURL() {
 	api.GET("/hosts", api.GetHosts)
 }
 
 func (api *Api) MapGetTrafficURL() {
 	api.GET("/traffic", api.GetTraffic)
+}
+
+func (api *Api) MapGetLocalHostsURL() {
+	api.GET("/localhosts", api.GetLocalHosts)
 }
