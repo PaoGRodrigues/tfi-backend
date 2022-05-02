@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -106,5 +107,22 @@ func TestGetBytesPerDestSearcherActiveFlowsIsEmptyReturnsBytesSuccessfully(t *te
 
 	if !reflect.DeepEqual(expected, got) {
 		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
+	}
+}
+
+func TestGetBytesPerDestSearcherActiveFlowsIsEmptyReturnsBytesFailedAndFailedTheEntireFunction(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockSearcher.EXPECT().GetActiveFlows().Return(nil)
+	mockSearcher.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Test Error"))
+
+	parser := usecase.NewBytesDestinationParser(mockSearcher)
+	_, err := parser.GetBytesPerDestination()
+
+	if err == nil {
+		t.Fail()
 	}
 }
