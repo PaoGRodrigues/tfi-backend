@@ -6,18 +6,13 @@ type BytesDestinationParser struct {
 	searcher domains.TrafficUseCase
 }
 
-type BytesPerDestination struct {
-	Bytes       int
-	Destination string
-}
-
 func NewBytesDestinationParser(trafSearcher domains.TrafficUseCase) *BytesDestinationParser {
 	return &BytesDestinationParser{
 		searcher: trafSearcher,
 	}
 }
 
-func (parser *BytesDestinationParser) GetBytesPerDestination() ([]BytesPerDestination, error) {
+func (parser *BytesDestinationParser) GetBytesPerDestination() ([]domains.BytesPerDestination, error) {
 	activeFlows := parser.searcher.GetActiveFlows()
 	if len(activeFlows) == 0 {
 		current, err := parser.searcher.GetAllActiveTraffic()
@@ -30,11 +25,11 @@ func (parser *BytesDestinationParser) GetBytesPerDestination() ([]BytesPerDestin
 	return bytesDst, nil
 }
 
-func parse(actFlows []domains.ActiveFlow) []BytesPerDestination {
-	bytesDst := []BytesPerDestination{}
+func parse(actFlows []domains.ActiveFlow) []domains.BytesPerDestination {
+	bytesDst := []domains.BytesPerDestination{}
 
 	for _, flow := range actFlows {
-		bpd := BytesPerDestination{
+		bpd := domains.BytesPerDestination{
 			Bytes:       flow.Bytes,
 			Destination: flow.Server.Name,
 		}

@@ -23,3 +23,7 @@ func (api *Api) MapGetTrafficURL() {
 func (api *Api) MapGetLocalHostsURL() {
 	api.GET("/localhosts", api.GetLocalHosts)
 }
+
+func (api *Api) MapGetActiveFlowsPerDestinationURL() {
+	api.GET("/activeflowsperdest", api.GetActiveFlowsPerDestination)
+}

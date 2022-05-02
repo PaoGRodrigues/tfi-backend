@@ -26,9 +26,18 @@ type Protocol struct {
 	L7 string
 }
 
+type BytesPerDestination struct {
+	Bytes       int
+	Destination string
+}
+
 type TrafficUseCase interface {
 	GetAllActiveTraffic() ([]ActiveFlow, error)
 	GetActiveFlows() []ActiveFlow
+}
+
+type TrafficActiveFlowsSearcher interface {
+	GetBytesPerDestination() ([]BytesPerDestination, error)
 }
 
 type TrafficRepository interface {

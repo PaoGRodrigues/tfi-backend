@@ -63,6 +63,44 @@ func (mr *MockTrafficUseCaseMockRecorder) GetAllActiveTraffic() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActiveTraffic", reflect.TypeOf((*MockTrafficUseCase)(nil).GetAllActiveTraffic))
 }
 
+// MockTrafficActiveFlowsSearcher is a mock of TrafficActiveFlowsSearcher interface.
+type MockTrafficActiveFlowsSearcher struct {
+	ctrl     *gomock.Controller
+	recorder *MockTrafficActiveFlowsSearcherMockRecorder
+}
+
+// MockTrafficActiveFlowsSearcherMockRecorder is the mock recorder for MockTrafficActiveFlowsSearcher.
+type MockTrafficActiveFlowsSearcherMockRecorder struct {
+	mock *MockTrafficActiveFlowsSearcher
+}
+
+// NewMockTrafficActiveFlowsSearcher creates a new mock instance.
+func NewMockTrafficActiveFlowsSearcher(ctrl *gomock.Controller) *MockTrafficActiveFlowsSearcher {
+	mock := &MockTrafficActiveFlowsSearcher{ctrl: ctrl}
+	mock.recorder = &MockTrafficActiveFlowsSearcherMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockTrafficActiveFlowsSearcher) EXPECT() *MockTrafficActiveFlowsSearcherMockRecorder {
+	return m.recorder
+}
+
+// GetBytesPerDestination mocks base method.
+func (m *MockTrafficActiveFlowsSearcher) GetBytesPerDestination() ([]domains.BytesPerDestination, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBytesPerDestination")
+	ret0, _ := ret[0].([]domains.BytesPerDestination)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBytesPerDestination indicates an expected call of GetBytesPerDestination.
+func (mr *MockTrafficActiveFlowsSearcherMockRecorder) GetBytesPerDestination() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBytesPerDestination", reflect.TypeOf((*MockTrafficActiveFlowsSearcher)(nil).GetBytesPerDestination))
+}
+
 // MockTrafficRepository is a mock of TrafficRepository interface.
 type MockTrafficRepository struct {
 	ctrl     *gomock.Controller

@@ -16,14 +16,15 @@ func main() {
 
 	tool := newTool()
 	hostUseCase, localHostFilter := initializeHostDependencies(tool)
-	trafficUseCase := initializeTrafficDependencies(tool)
+	trafficSearcher, trafficActiveFlowsSearcher := initializeTrafficDependencies(tool)
 
 	api := &api.Api{
-		Tool:            tool,
-		HostUseCase:     hostUseCase,
-		LocalHostFilter: localHostFilter,
-		TrafficUseCase:  trafficUseCase,
-		Engine:          gin.Default(),
+		Tool:                tool,
+		HostUseCase:         hostUseCase,
+		LocalHostFilter:     localHostFilter,
+		TrafficSearcher:     trafficSearcher,
+		ActiveFlowsSearcher: trafficActiveFlowsSearcher,
+		Engine:              gin.Default(),
 	}
 
 	api.MapURLToPing()
@@ -41,10 +42,11 @@ func initializeHostDependencies(tool *services_tool.Tool) (hostDomain.HostUseCas
 	return hostSearcher, localHostFilter
 }
 
-func initializeTrafficDependencies(tool *services_tool.Tool) trafficDomain.TrafficUseCase {
+func initializeTrafficDependencies(tool *services_tool.Tool) (trafficDomain.TrafficUseCase, trafficDomain.TrafficActiveFlowsSearcher) {
 	trafficRepo := trafficRepo.NewActiveFlowClient(tool, "/lua/rest/v2/get/flow/active.lua")
-	trafficUseCase := trafficUseCase.NewTrafficSearcher(trafficRepo)
-	return trafficUseCase
+	trafficSearcher := trafficUseCase.NewTrafficSearcher(trafficRepo)
+	trafficActiveFlowsSearcher := trafficUseCase.NewBytesDestinationParser(trafficSearcher)
+	return trafficSearcher, trafficActiveFlowsSearcher
 }
 
 func newTool() *services_tool.Tool {

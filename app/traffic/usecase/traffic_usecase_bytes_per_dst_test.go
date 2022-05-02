@@ -38,8 +38,8 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 		},
 	}
 
-	expected := []usecase.BytesPerDestination{
-		usecase.BytesPerDestination{
+	expected := []domains.BytesPerDestination{
+		domains.BytesPerDestination{
 			Bytes:       expectedFlowFromSearcher[0].Bytes,
 			Destination: expectedFlowFromSearcher[0].Server.Name,
 		},
@@ -87,8 +87,8 @@ func TestGetBytesPerDestSearcherActiveFlowsIsEmptyReturnsBytesSuccessfully(t *te
 		},
 	}
 
-	expected := []usecase.BytesPerDestination{
-		usecase.BytesPerDestination{
+	expected := []domains.BytesPerDestination{
+		domains.BytesPerDestination{
 			Bytes:       expectedFlowFromSearcher[0].Bytes,
 			Destination: expectedFlowFromSearcher[0].Server.Name,
 		},
