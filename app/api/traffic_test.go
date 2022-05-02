@@ -164,3 +164,42 @@ func TestCreateTrafficActiveFlowsAndGetBytesPerDest(t *testing.T) {
 		assert.Equal(t, http.StatusOK, res.Code)
 	})
 }
+
+func TestCreateTrafficActiveFlowsAndGetAnError(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockActiveFlowsSearcher := mocks.NewMockTrafficActiveFlowsSearcher(ctrl)
+
+	api := &api.Api{
+		ActiveFlowsSearcher: mockActiveFlowsSearcher,
+		Engine:              gin.Default(),
+	}
+
+	r := gin.Default()
+
+	r.GET("/activeflowsperdest", api.GetActiveFlowsPerDestination,
+		func(c *gin.Context) {
+			c.Status(http.StatusOK)
+		})
+
+	executeWithContext := func() *httptest.ResponseRecorder {
+		response := httptest.NewRecorder()
+
+		requestUrl := "/activeflowsperdest"
+		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+
+		r.ServeHTTP(response, httpRequest)
+		return response
+	}
+
+	t.Run("Ok", func(t *testing.T) {
+
+		mockActiveFlowsSearcher.EXPECT().GetBytesPerDestination().Return(nil, fmt.Errorf("Testing error case"))
+
+		res := executeWithContext()
+		assert.Equal(t, http.StatusInternalServerError, res.Code)
+	})
+}
