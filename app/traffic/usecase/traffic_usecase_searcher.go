@@ -6,6 +6,7 @@ import (
 
 type TrafficSearcher struct {
 	trafficRepo domains.TrafficRepository
+	activeFlows []domains.ActiveFlow
 }
 
 func NewTrafficSearcher(repo domains.TrafficRepository) *TrafficSearcher {
@@ -20,5 +21,10 @@ func (gw *TrafficSearcher) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 	if err != nil {
 		return nil, err
 	}
+	gw.activeFlows = res
 	return res, nil
+}
+
+func (gw *TrafficSearcher) GetActiveFlows() []domains.ActiveFlow {
+	return gw.activeFlows
 }

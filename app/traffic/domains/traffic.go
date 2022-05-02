@@ -28,6 +28,7 @@ type Protocol struct {
 
 type TrafficUseCase interface {
 	GetAllActiveTraffic() ([]ActiveFlow, error)
+	GetActiveFlows() []ActiveFlow
 }
 
 type TrafficRepository interface {

@@ -34,6 +34,20 @@ func (m *MockTrafficUseCase) EXPECT() *MockTrafficUseCaseMockRecorder {
 	return m.recorder
 }
 
+// GetActiveFlows mocks base method.
+func (m *MockTrafficUseCase) GetActiveFlows() []domains.ActiveFlow {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetActiveFlows")
+	ret0, _ := ret[0].([]domains.ActiveFlow)
+	return ret0
+}
+
+// GetActiveFlows indicates an expected call of GetActiveFlows.
+func (mr *MockTrafficUseCaseMockRecorder) GetActiveFlows() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActiveFlows", reflect.TypeOf((*MockTrafficUseCase)(nil).GetActiveFlows))
+}
+
 // GetAllActiveTraffic mocks base method.
 func (m *MockTrafficUseCase) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 	m.ctrl.T.Helper()
