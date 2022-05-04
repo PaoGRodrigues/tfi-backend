@@ -11,10 +11,11 @@ import (
 )
 
 type Api struct {
-	Tool            *services_tool.Tool
-	HostUseCase     host.HostUseCase
-	TrafficUseCase  traffic.TrafficUseCase
-	LocalHostFilter host.LocalHostFilter
+	Tool                *services_tool.Tool
+	HostUseCase         host.HostUseCase
+	TrafficSearcher     traffic.TrafficUseCase
+	LocalHostFilter     host.LocalHostFilter
+	ActiveFlowsSearcher traffic.TrafficActiveFlowsSearcher
 	*gin.Engine
 }
 
@@ -33,7 +34,7 @@ func (api *Api) GetHosts(c *gin.Context) {
 }
 
 func (api *Api) GetTraffic(c *gin.Context) {
-	traffic, err := api.TrafficUseCase.GetAllActiveTraffic()
+	traffic, err := api.TrafficSearcher.GetAllActiveTraffic()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})
@@ -56,4 +57,17 @@ func (api *Api) GetLocalHosts(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "GET")
 	c.JSON(http.StatusOK, gin.H{"data": hosts})
+}
+
+func (api *Api) GetActiveFlowsPerDestination(c *gin.Context) {
+	activeFlows, err := api.ActiveFlowsSearcher.GetBytesPerDestination()
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(500, gin.H{"data": "error"})
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
+	c.Header("Access-Control-Allow-Methods", "GET")
+	c.JSON(http.StatusOK, gin.H{"data": activeFlows})
 }
