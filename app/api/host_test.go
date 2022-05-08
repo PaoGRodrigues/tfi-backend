@@ -117,11 +117,11 @@ func TestCreateHostFilterCaseAndGetAllLocalHosts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLocalHostFilter := mocks.NewMockLocalHostFilter(ctrl)
+	mockHostFilter := mocks.NewMockHostsFilter(ctrl)
 
 	api := &api.Api{
-		LocalHostFilter: mockLocalHostFilter,
-		Engine:          gin.Default(),
+		HostsFilter: mockHostFilter,
+		Engine:      gin.Default(),
 	}
 
 	r := gin.Default()
@@ -151,7 +151,7 @@ func TestCreateHostFilterCaseAndGetAllLocalHosts(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockLocalHostFilter.EXPECT().GetLocalHosts().Return(localhosts, nil)
+		mockHostFilter.EXPECT().GetLocalHosts().Return(localhosts, nil)
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusOK, res.Code)
@@ -164,11 +164,11 @@ func TestCreateHostFilterCaseAndReturnsAnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockLocalHostFilter := mocks.NewMockLocalHostFilter(ctrl)
+	mockHostFilter := mocks.NewMockHostsFilter(ctrl)
 
 	api := &api.Api{
-		LocalHostFilter: mockLocalHostFilter,
-		Engine:          gin.Default(),
+		HostsFilter: mockHostFilter,
+		Engine:      gin.Default(),
 	}
 
 	r := gin.Default()
@@ -190,7 +190,7 @@ func TestCreateHostFilterCaseAndReturnsAnError(t *testing.T) {
 
 	t.Run("Ok", func(t *testing.T) {
 
-		mockLocalHostFilter.EXPECT().GetLocalHosts().Return(nil, fmt.Errorf("Testing error case"))
+		mockHostFilter.EXPECT().GetLocalHosts().Return(nil, fmt.Errorf("Testing error case"))
 
 		res := executeWithContext()
 		assert.Equal(t, http.StatusInternalServerError, res.Code)

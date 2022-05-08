@@ -14,7 +14,7 @@ type Api struct {
 	Tool                *services_tool.Tool
 	HostUseCase         host.HostUseCase
 	TrafficSearcher     traffic.TrafficUseCase
-	LocalHostFilter     host.LocalHostFilter
+	HostsFilter         host.HostsFilter
 	ActiveFlowsSearcher traffic.TrafficActiveFlowsSearcher
 	*gin.Engine
 }
@@ -47,7 +47,7 @@ func (api *Api) GetTraffic(c *gin.Context) {
 }
 
 func (api *Api) GetLocalHosts(c *gin.Context) {
-	hosts, err := api.LocalHostFilter.GetLocalHosts()
+	hosts, err := api.HostsFilter.GetLocalHosts()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})
