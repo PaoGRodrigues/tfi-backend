@@ -63,31 +63,31 @@ func (mr *MockHostUseCaseMockRecorder) GetHosts() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHosts", reflect.TypeOf((*MockHostUseCase)(nil).GetHosts))
 }
 
-// MockLocalHostFilter is a mock of LocalHostFilter interface.
-type MockLocalHostFilter struct {
+// MockHostsFilter is a mock of HostsFilter interface.
+type MockHostsFilter struct {
 	ctrl     *gomock.Controller
-	recorder *MockLocalHostFilterMockRecorder
+	recorder *MockHostsFilterMockRecorder
 }
 
-// MockLocalHostFilterMockRecorder is the mock recorder for MockLocalHostFilter.
-type MockLocalHostFilterMockRecorder struct {
-	mock *MockLocalHostFilter
+// MockHostsFilterMockRecorder is the mock recorder for MockHostsFilter.
+type MockHostsFilterMockRecorder struct {
+	mock *MockHostsFilter
 }
 
-// NewMockLocalHostFilter creates a new mock instance.
-func NewMockLocalHostFilter(ctrl *gomock.Controller) *MockLocalHostFilter {
-	mock := &MockLocalHostFilter{ctrl: ctrl}
-	mock.recorder = &MockLocalHostFilterMockRecorder{mock}
+// NewMockHostsFilter creates a new mock instance.
+func NewMockHostsFilter(ctrl *gomock.Controller) *MockHostsFilter {
+	mock := &MockHostsFilter{ctrl: ctrl}
+	mock.recorder = &MockHostsFilterMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockLocalHostFilter) EXPECT() *MockLocalHostFilterMockRecorder {
+func (m *MockHostsFilter) EXPECT() *MockHostsFilterMockRecorder {
 	return m.recorder
 }
 
 // GetLocalHosts mocks base method.
-func (m *MockLocalHostFilter) GetLocalHosts() ([]domains.Host, error) {
+func (m *MockHostsFilter) GetLocalHosts() ([]domains.Host, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetLocalHosts")
 	ret0, _ := ret[0].([]domains.Host)
@@ -96,9 +96,24 @@ func (m *MockLocalHostFilter) GetLocalHosts() ([]domains.Host, error) {
 }
 
 // GetLocalHosts indicates an expected call of GetLocalHosts.
-func (mr *MockLocalHostFilterMockRecorder) GetLocalHosts() *gomock.Call {
+func (mr *MockHostsFilterMockRecorder) GetLocalHosts() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLocalHosts", reflect.TypeOf((*MockLocalHostFilter)(nil).GetLocalHosts))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLocalHosts", reflect.TypeOf((*MockHostsFilter)(nil).GetLocalHosts))
+}
+
+// GetRemoteHosts mocks base method.
+func (m *MockHostsFilter) GetRemoteHosts() ([]domains.Host, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetRemoteHosts")
+	ret0, _ := ret[0].([]domains.Host)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetRemoteHosts indicates an expected call of GetRemoteHosts.
+func (mr *MockHostsFilterMockRecorder) GetRemoteHosts() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRemoteHosts", reflect.TypeOf((*MockHostsFilter)(nil).GetRemoteHosts))
 }
 
 // MockHostRepository is a mock of HostRepository interface.

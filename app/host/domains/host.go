@@ -16,8 +16,9 @@ type HostUseCase interface {
 	GetHosts() []Host
 }
 
-type LocalHostFilter interface {
+type HostsFilter interface {
 	GetLocalHosts() ([]Host, error)
+	GetRemoteHosts() ([]Host, error)
 }
 
 type HostRepository interface {
