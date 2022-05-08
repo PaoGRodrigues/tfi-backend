@@ -165,3 +165,19 @@ func TestGetRemoteHostCallingGetHostFromRepoInSearcherReturnRemoteHosts(t *testi
 		t.Errorf("expected:\n%+v\ngot:\n%+v", remote, got)
 	}
 }
+
+func TestGetRemoteHostAndGetAllHostsInSearcherReturnAnError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockSearcher := mocks.NewMockHostUseCase(ctrl)
+	mockSearcher.EXPECT().GetHosts().Return([]domains.Host{})
+	mockSearcher.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
+
+	filter := usecase.NewHostsFilter(mockSearcher)
+	_, err := filter.GetRemoteHosts()
+
+	if err == nil {
+		t.Fail()
+	}
+}
