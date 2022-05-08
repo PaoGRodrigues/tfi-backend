@@ -95,3 +95,38 @@ func TestGetLocalHostAndGetAllHostsInSearcherReturnError(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestGetRemoteHostAndCallGetAllHostsInSearcherReturnRemoteHostsSuccessfully(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	local := domains.Host{
+		Name:        "Test",
+		IP:          "13.13.13.13",
+		PrivateHost: true,
+	}
+	remote := domains.Host{
+		Name:        "Test2",
+		IP:          "172.172.172.172",
+		PrivateHost: false,
+	}
+
+	expected := []domains.Host{
+		local,
+		remote,
+	}
+
+	mockSearcher := mocks.NewMockHostUseCase(ctrl)
+	mockSearcher.EXPECT().GetHosts().Return(expected)
+
+	filter := usecase.NewHostsFilter(mockSearcher)
+	got, err := filter.GetRemoteHosts()
+	if err != nil {
+		t.Fail()
+	}
+
+	if !reflect.DeepEqual([]domains.Host{remote}, got) {
+		t.Errorf("expected:\n%+v\ngot:\n%+v", remote, got)
+	}
+
+}

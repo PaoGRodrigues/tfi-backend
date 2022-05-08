@@ -30,9 +30,11 @@ func (l *HostsFilter) GetLocalHosts() ([]domains.Host, error) {
 		return []domains.Host{}, err
 	}
 	localHosts := []domains.Host{}
-	for _, host := range current {
-		if host.PrivateHost {
-			localHosts = append(localHosts, host)
+	if len(current) != 0 {
+		for _, host := range current {
+			if host.PrivateHost {
+				localHosts = append(localHosts, host)
+			}
 		}
 	}
 	return localHosts, nil
@@ -44,9 +46,11 @@ func (l *HostsFilter) GetRemoteHosts() ([]domains.Host, error) {
 		return []domains.Host{}, err
 	}
 	remoteHosts := []domains.Host{}
-	for _, host := range current {
-		if !host.PrivateHost {
-			remoteHosts = append(remoteHosts, host)
+	if len(current) != 0 {
+		for _, host := range current {
+			if !host.PrivateHost {
+				remoteHosts = append(remoteHosts, host)
+			}
 		}
 	}
 	return remoteHosts, nil
