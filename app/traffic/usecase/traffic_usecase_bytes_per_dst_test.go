@@ -5,8 +5,10 @@ import (
 	"reflect"
 	"testing"
 
+	hosts "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
+	mock_host "github.com/PaoGRodrigues/tfi-backend/mocks/host"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"github.com/golang/mock/gomock"
 )
@@ -38,6 +40,19 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 		},
 	}
 
+	hosts := []hosts.Host{
+		hosts.Host{
+			Name:        "sarasa",
+			PrivateHost: false,
+			IP:          "8.8.8.8",
+		},
+		hosts.Host{
+			Name:        "sarasa2",
+			PrivateHost: false,
+			IP:          "198.8.8.8",
+		},
+	}
+
 	expected := []domains.BytesPerDestination{
 		domains.BytesPerDestination{
 			Bytes:       expectedFlowFromSearcher[0].Bytes,
@@ -47,8 +62,10 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 
 	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
 	mockSearcher.EXPECT().GetActiveFlows().Return(expectedFlowFromSearcher)
+	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
+	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(hosts, nil)
 
-	parser := usecase.NewBytesDestinationParser(mockSearcher)
+	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
 	got, err := parser.GetBytesPerDestination()
 
 	if err != nil {
@@ -94,11 +111,26 @@ func TestGetBytesPerDestSearcherActiveFlowsIsEmptyReturnsBytesSuccessfully(t *te
 		},
 	}
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(nil)
-	mockSearcher.EXPECT().GetAllActiveTraffic().Return(expectedFlowFromSearcher, nil)
+	hosts := []hosts.Host{
+		hosts.Host{
+			Name:        "sarasa",
+			PrivateHost: false,
+			IP:          "8.8.8.8",
+		},
+		hosts.Host{
+			Name:        "sarasa2",
+			PrivateHost: false,
+			IP:          "198.8.8.8",
+		},
+	}
 
-	parser := usecase.NewBytesDestinationParser(mockSearcher)
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.ActiveFlow{})
+	mockSearcher.EXPECT().GetAllActiveTraffic().Return(expectedFlowFromSearcher, nil)
+	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
+	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(hosts, nil)
+
+	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
 	got, err := parser.GetBytesPerDestination()
 
 	if err != nil {
@@ -118,8 +150,9 @@ func TestGetBytesPerDestSearcherActiveFlowsIsEmptyReturnsBytesFailedAndFailedThe
 	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
 	mockSearcher.EXPECT().GetActiveFlows().Return(nil)
 	mockSearcher.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Test Error"))
+	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
 
-	parser := usecase.NewBytesDestinationParser(mockSearcher)
+	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
 	_, err := parser.GetBytesPerDestination()
 
 	if err == nil {

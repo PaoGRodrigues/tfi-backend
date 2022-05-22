@@ -1,27 +1,36 @@
 package usecase
 
-import "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+import (
+	host_domains "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+)
 
 type BytesDestinationParser struct {
-	searcher domains.TrafficUseCase
+	trafficSearcher domains.TrafficUseCase
+	hostsFilter     host_domains.HostsFilter
 }
 
-func NewBytesDestinationParser(trafSearcher domains.TrafficUseCase) *BytesDestinationParser {
+func NewBytesDestinationParser(trafSearcher domains.TrafficUseCase, hostsFilter host_domains.HostsFilter) *BytesDestinationParser {
 	return &BytesDestinationParser{
-		searcher: trafSearcher,
+		trafficSearcher: trafSearcher,
+		hostsFilter:     hostsFilter,
 	}
 }
 
 func (parser *BytesDestinationParser) GetBytesPerDestination() ([]domains.BytesPerDestination, error) {
-	activeFlows := parser.searcher.GetActiveFlows()
+	activeFlows := parser.trafficSearcher.GetActiveFlows()
 	if len(activeFlows) == 0 {
-		current, err := parser.searcher.GetAllActiveTraffic()
+		current, err := parser.trafficSearcher.GetAllActiveTraffic()
 		if err != nil {
-			return nil, err
+			return []domains.BytesPerDestination{}, err
 		}
 		activeFlows = current
 	}
-	bytesDst := parse(activeFlows)
+	actF, err := parser.getRemoteServerActiveFlows(activeFlows)
+	if err != nil {
+		return []domains.BytesPerDestination{}, err
+	}
+	bytesDst := parse(actF)
 	return bytesDst, nil
 }
 
@@ -36,4 +45,21 @@ func parse(actFlows []domains.ActiveFlow) []domains.BytesPerDestination {
 		bytesDst = append(bytesDst, bpd)
 	}
 	return bytesDst
+}
+
+func (parser *BytesDestinationParser) getRemoteServerActiveFlows(activeFlows []domains.ActiveFlow) ([]domains.ActiveFlow, error) {
+	remoteServerActiveFlows := []domains.ActiveFlow{}
+	remoteHosts, err := parser.hostsFilter.GetRemoteHosts()
+
+	if err != nil {
+		return []domains.ActiveFlow{}, err
+	}
+	for _, ac := range activeFlows {
+		for _, remh := range remoteHosts {
+			if ac.Server.IP == remh.IP {
+				remoteServerActiveFlows = append(remoteServerActiveFlows, ac)
+			}
+		}
+	}
+	return remoteServerActiveFlows, nil
 }
