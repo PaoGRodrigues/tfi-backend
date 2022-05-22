@@ -159,3 +159,44 @@ func TestGetBytesPerDestSearcherActiveFlowsIsEmptyReturnsBytesFailedAndFailedThe
 		t.Fail()
 	}
 }
+
+func TestGetBytesPerDestSearcherHostFilterGetRemoteReturnsErrorAndThenReturnsBytesSuccessfully(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	expectedFlowFromSearcher := []domains.ActiveFlow{
+		domains.ActiveFlow{
+			Client: domains.Client{
+				Name: "Local",
+				Port: 12345,
+				IP:   "192.168.4.1",
+			},
+			Server: domains.Server{
+				IP:                "8.8.8.8",
+				IsBroadcastDomain: false,
+				IsDHCP:            false,
+				Port:              443,
+				Name:              "google.com.ar",
+			},
+			Protocol: domains.Protocol{
+				L4: "TCP",
+				L7: "TLS.Google",
+			},
+			Bytes: 5566778,
+		},
+	}
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.ActiveFlow{})
+	mockSearcher.EXPECT().GetAllActiveTraffic().Return(expectedFlowFromSearcher, nil)
+	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
+	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(nil, fmt.Errorf("Test error"))
+
+	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	_, err := parser.GetBytesPerDestination()
+
+	if err == nil {
+		t.Fail()
+	}
+}
