@@ -26,40 +26,31 @@ func (parser *BytesDestinationParser) GetBytesPerDestination() ([]domains.BytesP
 		}
 		activeFlows = current
 	}
-	actF, err := parser.getRemoteServerActiveFlows(activeFlows)
+
+	remoteHosts, err := parser.hostsFilter.GetRemoteHosts()
 	if err != nil {
 		return []domains.BytesPerDestination{}, err
 	}
-	bytesDst := parse(actF)
+
+	bytesDst := parse(activeFlows, remoteHosts)
 	return bytesDst, nil
 }
 
-func parse(actFlows []domains.ActiveFlow) []domains.BytesPerDestination {
+func parse(actFlows []domains.ActiveFlow, remoteHosts []host_domains.Host) []domains.BytesPerDestination {
 	bytesDst := []domains.BytesPerDestination{}
 
 	for _, flow := range actFlows {
-		bpd := domains.BytesPerDestination{
-			Bytes:       flow.Bytes,
-			Destination: flow.Server.Name,
-		}
-		bytesDst = append(bytesDst, bpd)
-	}
-	return bytesDst
-}
-
-func (parser *BytesDestinationParser) getRemoteServerActiveFlows(activeFlows []domains.ActiveFlow) ([]domains.ActiveFlow, error) {
-	remoteServerActiveFlows := []domains.ActiveFlow{}
-	remoteHosts, err := parser.hostsFilter.GetRemoteHosts()
-
-	if err != nil {
-		return []domains.ActiveFlow{}, err
-	}
-	for _, ac := range activeFlows {
 		for _, remh := range remoteHosts {
-			if ac.Server.IP == remh.IP {
-				remoteServerActiveFlows = append(remoteServerActiveFlows, ac)
+			if flow.Server.IP == remh.IP {
+				bpd := domains.BytesPerDestination{
+					Bytes:       flow.Bytes,
+					Destination: flow.Server.Name,
+					City:        remh.City,
+					Country:     remh.Country,
+				}
+				bytesDst = append(bytesDst, bpd)
 			}
 		}
 	}
-	return remoteServerActiveFlows, nil
+	return bytesDst
 }

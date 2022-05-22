@@ -45,6 +45,8 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 			Name:        "sarasa",
 			PrivateHost: false,
 			IP:          "8.8.8.8",
+			Country:     "USA",
+			City:        "California",
 		},
 		hosts.Host{
 			Name:        "sarasa2",
@@ -57,6 +59,8 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 		domains.BytesPerDestination{
 			Bytes:       expectedFlowFromSearcher[0].Bytes,
 			Destination: expectedFlowFromSearcher[0].Server.Name,
+			City:        hosts[0].City,
+			Country:     hosts[0].Country,
 		},
 	}
 
