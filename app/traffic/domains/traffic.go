@@ -29,6 +29,8 @@ type Protocol struct {
 type BytesPerDestination struct {
 	Bytes       int
 	Destination string
+	City        string
+	Country     string
 }
 
 type TrafficUseCase interface {

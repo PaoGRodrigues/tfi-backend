@@ -1,39 +1,56 @@
 package usecase
 
-import "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+import (
+	host_domains "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+)
 
 type BytesDestinationParser struct {
-	searcher domains.TrafficUseCase
+	trafficSearcher domains.TrafficUseCase
+	hostsFilter     host_domains.HostsFilter
 }
 
-func NewBytesDestinationParser(trafSearcher domains.TrafficUseCase) *BytesDestinationParser {
+func NewBytesDestinationParser(trafSearcher domains.TrafficUseCase, hostsFilter host_domains.HostsFilter) *BytesDestinationParser {
 	return &BytesDestinationParser{
-		searcher: trafSearcher,
+		trafficSearcher: trafSearcher,
+		hostsFilter:     hostsFilter,
 	}
 }
 
 func (parser *BytesDestinationParser) GetBytesPerDestination() ([]domains.BytesPerDestination, error) {
-	activeFlows := parser.searcher.GetActiveFlows()
+	activeFlows := parser.trafficSearcher.GetActiveFlows()
 	if len(activeFlows) == 0 {
-		current, err := parser.searcher.GetAllActiveTraffic()
+		current, err := parser.trafficSearcher.GetAllActiveTraffic()
 		if err != nil {
-			return nil, err
+			return []domains.BytesPerDestination{}, err
 		}
 		activeFlows = current
 	}
-	bytesDst := parse(activeFlows)
+
+	remoteHosts, err := parser.hostsFilter.GetRemoteHosts()
+	if err != nil {
+		return []domains.BytesPerDestination{}, err
+	}
+
+	bytesDst := parse(activeFlows, remoteHosts)
 	return bytesDst, nil
 }
 
-func parse(actFlows []domains.ActiveFlow) []domains.BytesPerDestination {
+func parse(actFlows []domains.ActiveFlow, remoteHosts []host_domains.Host) []domains.BytesPerDestination {
 	bytesDst := []domains.BytesPerDestination{}
 
 	for _, flow := range actFlows {
-		bpd := domains.BytesPerDestination{
-			Bytes:       flow.Bytes,
-			Destination: flow.Server.Name,
+		for _, remh := range remoteHosts {
+			if flow.Server.IP == remh.IP {
+				bpd := domains.BytesPerDestination{
+					Bytes:       flow.Bytes,
+					Destination: flow.Server.Name,
+					City:        remh.City,
+					Country:     remh.Country,
+				}
+				bytesDst = append(bytesDst, bpd)
+			}
 		}
-		bytesDst = append(bytesDst, bpd)
 	}
 	return bytesDst
 }

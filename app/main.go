@@ -16,7 +16,7 @@ func main() {
 
 	tool := newTool()
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
-	trafficSearcher, trafficActiveFlowsSearcher := initializeTrafficDependencies(tool)
+	trafficSearcher, trafficActiveFlowsSearcher := initializeTrafficDependencies(tool, hostsFilter)
 
 	api := &api.Api{
 		Tool:                tool,
@@ -42,10 +42,10 @@ func initializeHostDependencies(tool *services_tool.Tool) (hostDomain.HostUseCas
 	return hostSearcher, hostsFilter
 }
 
-func initializeTrafficDependencies(tool *services_tool.Tool) (trafficDomain.TrafficUseCase, trafficDomain.TrafficActiveFlowsSearcher) {
+func initializeTrafficDependencies(tool *services_tool.Tool, hostsFilter hostDomain.HostsFilter) (trafficDomain.TrafficUseCase, trafficDomain.TrafficActiveFlowsSearcher) {
 	trafficRepo := trafficRepo.NewActiveFlowClient(tool, "/lua/rest/v2/get/flow/active.lua")
 	trafficSearcher := trafficUseCase.NewTrafficSearcher(trafficRepo)
-	trafficActiveFlowsSearcher := trafficUseCase.NewBytesDestinationParser(trafficSearcher)
+	trafficActiveFlowsSearcher := trafficUseCase.NewBytesDestinationParser(trafficSearcher, hostsFilter)
 	return trafficSearcher, trafficActiveFlowsSearcher
 }
 
