@@ -5,11 +5,11 @@ import (
 )
 
 type TrafficSearcher struct {
-	trafficRepo domains.TrafficRepository
+	trafficRepo domains.TrafficRepoClient
 	activeFlows []domains.ActiveFlow
 }
 
-func NewTrafficSearcher(repo domains.TrafficRepository) *TrafficSearcher {
+func NewTrafficSearcher(repo domains.TrafficRepoClient) *TrafficSearcher {
 
 	return &TrafficSearcher{
 		trafficRepo: repo,

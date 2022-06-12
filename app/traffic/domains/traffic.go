@@ -1,5 +1,6 @@
 package domains
 
+//*********** Entities
 type ActiveFlow struct {
 	Client   Client
 	Server   Server
@@ -33,6 +34,7 @@ type BytesPerDestination struct {
 	Country     string
 }
 
+//*********** Use Cases
 type TrafficUseCase interface {
 	GetAllActiveTraffic() ([]ActiveFlow, error)
 	GetActiveFlows() []ActiveFlow
@@ -42,6 +44,15 @@ type TrafficActiveFlowsSearcher interface {
 	GetBytesPerDestination() ([]BytesPerDestination, error)
 }
 
-type TrafficRepository interface {
+type ActiveFlowsStorage interface {
+	StoreFlows() error
+}
+
+//*********** Repositories
+type TrafficRepoClient interface {
 	GetAllActiveTraffic() ([]ActiveFlow, error)
+}
+
+type TrafficRepoStore interface {
+	StoreActiveFlows([]ActiveFlow) error
 }

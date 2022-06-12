@@ -1,5 +1,6 @@
 package domains
 
+//*********** Entities
 // Host connected to the network
 type Host struct {
 	Name        string
@@ -10,6 +11,7 @@ type Host struct {
 	Country     string `json:"-"`
 }
 
+//*********** Use Cases
 //HostUseCase needs to be implemented in Host use cases
 type HostUseCase interface {
 	GetAllHosts() ([]Host, error)
@@ -21,6 +23,7 @@ type HostsFilter interface {
 	GetRemoteHosts() ([]Host, error)
 }
 
+//*********** Repositories
 type HostRepository interface {
 	GetAll() ([]Host, error)
 }

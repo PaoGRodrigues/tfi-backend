@@ -42,7 +42,7 @@ func TestGetAllTrafficReturnAListOfTrafficJsons(t *testing.T) {
 		},
 	}
 
-	mockTrafficRepo := mocks.NewMockTrafficRepository(ctrl)
+	mockTrafficRepo := mocks.NewMockTrafficRepoClient(ctrl)
 	mockTrafficRepo.EXPECT().GetAllActiveTraffic().Return(expected, nil)
 
 	trafficSearcher := usecase.NewTrafficSearcher(mockTrafficRepo)
@@ -61,7 +61,7 @@ func TestGetAllTrafficReturnAnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockTrafficRepo := mocks.NewMockTrafficRepository(ctrl)
+	mockTrafficRepo := mocks.NewMockTrafficRepoClient(ctrl)
 	mockTrafficRepo.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Testing Error"))
 
 	trafficSearcher := usecase.NewTrafficSearcher(mockTrafficRepo)
