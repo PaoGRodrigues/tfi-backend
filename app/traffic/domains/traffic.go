@@ -2,6 +2,7 @@ package domains
 
 //*********** Entities
 type ActiveFlow struct {
+	Key      string
 	Client   Client
 	Server   Server
 	Bytes    int

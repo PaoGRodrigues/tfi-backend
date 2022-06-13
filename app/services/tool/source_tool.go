@@ -17,15 +17,11 @@ func NewTool(urlClient string, interfaceId int, usr string, pass string) *Tool {
 }
 
 type DatabaseConn struct {
-	Usr              string
-	Pass             string
-	ConnectionString string
+	File string
 }
 
-func NewDatabase(Usr string, Pass string, ConnectionString string) *DatabaseConn {
+func NewDatabase(file string) *DatabaseConn {
 	return &DatabaseConn{
-		Usr:              Usr,
-		Pass:             Pass,
-		ConnectionString: ConnectionString,
+		File: file,
 	}
 }
