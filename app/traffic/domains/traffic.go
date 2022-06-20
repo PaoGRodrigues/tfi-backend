@@ -2,7 +2,7 @@ package domains
 
 //*********** Entities
 type ActiveFlow struct {
-	Key      string
+	Key      int
 	FistSeen uint64 //Unix timestamp
 	LastSeen uint64 //Unix timestamp
 	Client   Client

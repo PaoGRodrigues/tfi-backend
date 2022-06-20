@@ -78,6 +78,54 @@ func NewDatabaseConnection(file string) (*SQLite, error) {
 	}, nil
 }
 
-func (sqlLite *SQLite) InsertActiveFlow(domains.ActiveFlow) (domains.ActiveFlow, error) {
-	return domains.ActiveFlow{}, nil
+func (client *SQLite) InsertActiveFlow(currentFlow domains.ActiveFlow) (int, error) {
+	flowKey := currentFlow.Key
+	_, err := client.db.Exec("INSERT INTO traffic VALUES(?,?,?,?);",
+		currentFlow.Key, currentFlow.FistSeen, currentFlow.LastSeen, currentFlow.Bytes)
+	if err != nil {
+		return flowKey, err
+	}
+
+	err = client.insertClient(currentFlow.Client, flowKey)
+	if err != nil {
+		return 0, err
+	}
+	err = client.insertServer(currentFlow.Server, flowKey)
+	if err != nil {
+		return 0, err
+	}
+	err = client.insertProtocol(currentFlow.Protocol, flowKey)
+	if err != nil {
+		return 0, err
+	}
+
+	return flowKey, nil
+}
+
+func (client *SQLite) insertClient(currentClient domains.Client, key int) error {
+	_, err := client.db.Exec("INSERT INTO clients VALUES(?,?,?,?);",
+		key, currentClient.Name, currentClient.IP, currentClient.Port)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (client *SQLite) insertServer(currentServer domains.Server, key int) error {
+	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?,?,?,?);",
+		key, currentServer.Name, currentServer.IP, currentServer.Port, currentServer.IsBroadcastDomain,
+		currentServer.IsDHCP)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (client *SQLite) insertProtocol(currentProto domains.Protocol, key int) error {
+	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?);",
+		key, currentProto.L4, currentProto.L7)
+	if err != nil {
+		return err
+	}
+	return nil
 }
