@@ -11,11 +11,11 @@ type Storage interface {
 }
 
 type DBService struct {
-	Storage Storage
+	Strg Storage
 }
 
 func NewDatabaseService(strg Storage) *DBService {
 	return &DBService{
-		Storage: strg,
+		Strg: strg,
 	}
 }

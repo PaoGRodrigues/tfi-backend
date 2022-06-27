@@ -73,23 +73,27 @@ func (api *Api) GetActiveFlowsPerDestination(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": activeFlows})
 }
 
-func (api *Api) StoreActiveTraffic(c *gin.Context) {
+func (api *Api) GetActiveTraffic(c *gin.Context) {
 	currentActiveFlows, err := api.TrafficSearcher.GetAllActiveTraffic()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})
 		c.AbortWithStatus(http.StatusInternalServerError)
+		c.JSON(http.StatusOK, gin.H{"data": currentActiveFlows})
 		return
 	}
-	err = api.Storage.Storage.CreateTables()
+}
+
+func (api *Api) storeActiveTraffic(c *gin.Context) {
+	err = api.Storage.Strg.CreateTables()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-	i, err := api.Storage.Storage.InsertActiveFlow(currentActiveFlows)
+	i, err := api.Storage.Strg.InsertActiveFlow(currentActiveFlows)
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
-	c.Header("Access-Control-Allow-Methods", "GET")
+	c.Header("Access-Control-Allow-Methods", "POST")
 	c.JSON(http.StatusOK, gin.H{"data": activeFlows})
 }
