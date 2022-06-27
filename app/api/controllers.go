@@ -84,7 +84,15 @@ func (api *Api) GetActiveTraffic(c *gin.Context) {
 	}
 }
 
-func (api *Api) storeActiveTraffic(c *gin.Context) {
+func (api *Api) StoreActiveTraffic(c *gin.Context) {
+	currentActiveFlows, err := api.TrafficSearcher.GetAllActiveTraffic()
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(500, gin.H{"data": "error"})
+		c.AbortWithStatus(http.StatusInternalServerError)
+		c.JSON(http.StatusOK, gin.H{"data": currentActiveFlows})
+		return
+	}
 	err = api.Storage.Strg.CreateTables()
 	if err != nil {
 		fmt.Println(err)
@@ -92,8 +100,16 @@ func (api *Api) storeActiveTraffic(c *gin.Context) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
-	i, err := api.Storage.Strg.InsertActiveFlow(currentActiveFlows)
+	for _, current := range currentActiveFlows {
+		_, err := api.Storage.Strg.InsertActiveFlow(current)
+		if err != nil {
+			fmt.Println(err)
+			c.JSON(500, gin.H{"data": "error"})
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+	}
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "POST")
-	c.JSON(http.StatusOK, gin.H{"data": activeFlows})
+	c.JSON(http.StatusOK, gin.H{"message": "ok"})
 }
