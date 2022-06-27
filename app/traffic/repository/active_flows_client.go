@@ -6,12 +6,12 @@ import (
 	"net/http"
 	"strconv"
 
-	tool "github.com/PaoGRodrigues/tfi-backend/app/services/tool"
+	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
 type ActiveFlowsClient struct {
-	tool     *tool.Tool
+	tool     *services.Tool
 	endpoint string
 }
 
@@ -27,7 +27,7 @@ type RspData struct {
 	PerPage     int
 }
 
-func NewActiveFlowClient(tool *tool.Tool, endpoint string) *ActiveFlowsClient {
+func NewActiveFlowClient(tool *services.Tool, endpoint string) *ActiveFlowsClient {
 	return &ActiveFlowsClient{
 		tool:     tool,
 		endpoint: endpoint,

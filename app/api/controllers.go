@@ -5,17 +5,18 @@ import (
 	"net/http"
 
 	host "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
-	services_tool "github.com/PaoGRodrigues/tfi-backend/app/services/tool"
+	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/gin-gonic/gin"
 )
 
 type Api struct {
-	Tool                *services_tool.Tool
+	Tool                *services.Tool
 	HostUseCase         host.HostUseCase
 	TrafficSearcher     traffic.TrafficUseCase
 	HostsFilter         host.HostsFilter
 	ActiveFlowsSearcher traffic.TrafficActiveFlowsSearcher
+	Storage             *services.DBService
 	*gin.Engine
 }
 
@@ -67,6 +68,27 @@ func (api *Api) GetActiveFlowsPerDestination(c *gin.Context) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
+	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
+	c.Header("Access-Control-Allow-Methods", "GET")
+	c.JSON(http.StatusOK, gin.H{"data": activeFlows})
+}
+
+func (api *Api) StoreActiveTraffic(c *gin.Context) {
+	currentActiveFlows, err := api.TrafficSearcher.GetAllActiveTraffic()
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(500, gin.H{"data": "error"})
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	err = api.Storage.Storage.CreateTables()
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(500, gin.H{"data": "error"})
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	i, err := api.Storage.Storage.InsertActiveFlow(currentActiveFlows)
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "GET")
 	c.JSON(http.StatusOK, gin.H{"data": activeFlows})

@@ -51,34 +51,32 @@ const protocolsTable string = `
 			ON DELETE CASCADE
 	);`
 
-type SQLite struct {
+type SQLClient struct {
 	db *sql.DB
+}
+
+func NewSQLClient(dbConn *sql.DB) *SQLClient {
+	return &SQLClient{
+		db: dbConn,
+	}
 }
 
 func getTables() []string {
 	return []string{trafficTable, clientsTable, serversTable, protocolsTable}
 }
 
-func NewDatabaseConnection(file string) (*SQLite, error) {
-
-	db, err := sql.Open("sqlite3", file)
-	if err != nil {
-		return nil, err
-	}
+func (client *SQLClient) CreateTables() error {
 	tables := getTables()
 
 	for _, table := range tables {
-		if _, err := db.Exec(table); err != nil {
-			return nil, err
+		if _, err := client.db.Exec(table); err != nil {
+			return err
 		}
 	}
-
-	return &SQLite{
-		db: db,
-	}, nil
+	return nil
 }
 
-func (client *SQLite) InsertActiveFlow(currentFlow domains.ActiveFlow) (int, error) {
+func (client *SQLClient) InsertActiveFlow(currentFlow domains.ActiveFlow) (int, error) {
 	flowKey := currentFlow.Key
 	_, err := client.db.Exec("INSERT INTO traffic VALUES(?,?,?,?);",
 		currentFlow.Key, currentFlow.FistSeen, currentFlow.LastSeen, currentFlow.Bytes)
@@ -86,15 +84,15 @@ func (client *SQLite) InsertActiveFlow(currentFlow domains.ActiveFlow) (int, err
 		return flowKey, err
 	}
 
-	err = client.insertClient(currentFlow.Client, flowKey)
+	err = client.InsertClient(currentFlow.Client, flowKey)
 	if err != nil {
 		return 0, err
 	}
-	err = client.insertServer(currentFlow.Server, flowKey)
+	err = client.InsertServer(currentFlow.Server, flowKey)
 	if err != nil {
 		return 0, err
 	}
-	err = client.insertProtocol(currentFlow.Protocol, flowKey)
+	err = client.InsertProtocol(currentFlow.Protocol, flowKey)
 	if err != nil {
 		return 0, err
 	}
@@ -102,7 +100,7 @@ func (client *SQLite) InsertActiveFlow(currentFlow domains.ActiveFlow) (int, err
 	return flowKey, nil
 }
 
-func (client *SQLite) insertClient(currentClient domains.Client, key int) error {
+func (client *SQLClient) InsertClient(currentClient domains.Client, key int) error {
 	_, err := client.db.Exec("INSERT INTO clients VALUES(?,?,?,?);",
 		key, currentClient.Name, currentClient.IP, currentClient.Port)
 	if err != nil {
@@ -111,7 +109,7 @@ func (client *SQLite) insertClient(currentClient domains.Client, key int) error 
 	return nil
 }
 
-func (client *SQLite) insertServer(currentServer domains.Server, key int) error {
+func (client *SQLClient) InsertServer(currentServer domains.Server, key int) error {
 	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?,?,?,?);",
 		key, currentServer.Name, currentServer.IP, currentServer.Port, currentServer.IsBroadcastDomain,
 		currentServer.IsDHCP)
@@ -121,7 +119,7 @@ func (client *SQLite) insertServer(currentServer domains.Server, key int) error 
 	return nil
 }
 
-func (client *SQLite) insertProtocol(currentProto domains.Protocol, key int) error {
+func (client *SQLClient) InsertProtocol(currentProto domains.Protocol, key int) error {
 	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?);",
 		key, currentProto.L4, currentProto.L7)
 	if err != nil {

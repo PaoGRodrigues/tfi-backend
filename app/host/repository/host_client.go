@@ -7,11 +7,11 @@ import (
 	"strconv"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/host/domains"
-	tool "github.com/PaoGRodrigues/tfi-backend/app/services/tool"
+	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 )
 
 type HostClient struct {
-	tool     *tool.Tool
+	tool     *services.Tool
 	endpoint string
 }
 type HttpResponse struct {
@@ -20,7 +20,7 @@ type HttpResponse struct {
 	Rsp   []domains.Host
 }
 
-func NewHostClient(tool *tool.Tool, endpoint string) *HostClient {
+func NewHostClient(tool *services.Tool, endpoint string) *HostClient {
 
 	return &HostClient{
 		tool:     tool,
