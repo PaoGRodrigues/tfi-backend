@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"strconv"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
@@ -77,8 +78,11 @@ func (client *SQLClient) CreateTables() error {
 }
 
 func (client *SQLClient) InsertActiveFlow(currentFlow domains.ActiveFlow) (int, error) {
-	flowKey := currentFlow.Key
-	_, err := client.db.Exec("INSERT INTO traffic VALUES(?,?,?,?);",
+	flowKey, err := strconv.Atoi(currentFlow.Key)
+	if err != nil {
+		return 0, err
+	}
+	_, err = client.db.Exec("INSERT INTO traffic VALUES(?,?,?,?);",
 		currentFlow.Key, currentFlow.FistSeen, currentFlow.LastSeen, currentFlow.Bytes)
 	if err != nil {
 		return flowKey, err

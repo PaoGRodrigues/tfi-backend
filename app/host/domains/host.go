@@ -7,8 +7,8 @@ type Host struct {
 	PrivateHost bool
 	IP          string
 	Mac         string
-	City        string `json:"-"`
-	Country     string `json:"-"`
+	City        string
+	Country     string
 }
 
 //*********** Use Cases

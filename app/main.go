@@ -38,6 +38,8 @@ func main() {
 	api.MapGetHostsURL()
 	api.MapGetTrafficURL()
 	api.MapGetLocalHostsURL()
+	api.MapGetActiveFlowsPerDestinationURL()
+	api.MapStoreActiveFlows()
 
 	api.Run(":8080")
 }
@@ -57,7 +59,7 @@ func initializeTrafficDependencies(tool *services.Tool, hostsFilter hostDomain.H
 }
 
 func newTool() *services.Tool {
-	tool := services.NewTool("http://192.168.0.16:3000", 2, "XX", "XX")
+	tool := services.NewTool("http://192.168.0.13:3000", 2, "admin", "admin")
 	return tool
 }
 
