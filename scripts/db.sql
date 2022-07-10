@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS traffic  (
 );
 
 CREATE TABLE IF NOT EXISTS clients (
-    key INTEGER PRIMARY KEY,
+    key INTEGER,
     name TEXT,
     ip VARCHAR(48),
     port UNSIGNED SMALLINT(5),
@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS clients (
         ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS clients (
-    key INTEGER PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS servers (
+    key INTEGER,
     name TEXT,
     ip VARCHAR(48),
     port UNSIGNED SMALLINT(5),
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS clients (
 );
 
 CREATE TABLE IF NOT EXISTS protocols (
-    key INTEGER PRIMARY KEY,
+    key INTEGER,
     l4 VARCHAR(15),
     l7 VARCHAR(45),
 

@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	hostDomain "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
@@ -12,6 +11,7 @@ import (
 	trafficRepo "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	trafficUseCase "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	"github.com/gin-gonic/gin"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
@@ -19,9 +19,9 @@ func main() {
 	tool := newTool()
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
 	trafficSearcher, trafficActiveFlowsSearcher := initializeTrafficDependencies(tool, hostsFilter)
-	activeFlowsStorage, err := initializeActiveFlowsStorage("/file.db", trafficSearcher)
+	activeFlowsStorage, err := initializeActiveFlowsStorage("./file.sqlite", trafficSearcher)
 	if err != nil {
-		fmt.Println(err.Error())
+		panic(err.Error())
 	}
 
 	api := &api.Api{
@@ -67,7 +67,7 @@ func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomain.Tra
 }
 
 func newTool() *services.Tool {
-	tool := services.NewTool("http://192.168.0.13:3000", 2, "xxxx", "xxxx")
+	tool := services.NewTool("http://192.168.0.13:3000", 2, "admin", "admin")
 	return tool
 }
 

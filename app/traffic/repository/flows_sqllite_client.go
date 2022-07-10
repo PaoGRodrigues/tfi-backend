@@ -33,8 +33,8 @@ func (client *SQLClient) addActiveFlow(currentFlow domains.ActiveFlow) (int, err
 	if err != nil {
 		return 0, err
 	}
-	_, err = client.db.Exec("INSERT INTO traffic VALUES(?,?,?,?);",
-		currentFlow.Key, currentFlow.FistSeen, currentFlow.LastSeen, currentFlow.Bytes)
+	_, err = client.db.Exec("INSERT INTO traffic VALUES(?,?,?,?) ON CONFLICT(key) DO UPDATE SET bytes=?;",
+		currentFlow.Key, currentFlow.FistSeen, currentFlow.LastSeen, currentFlow.Bytes, currentFlow.Bytes)
 	if err != nil {
 		return flowKey, err
 	}
@@ -75,7 +75,7 @@ func (client *SQLClient) insertServer(currentServer domains.Server, key int) err
 }
 
 func (client *SQLClient) insertProtocol(currentProto domains.Protocol, key int) error {
-	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?);",
+	_, err := client.db.Exec("INSERT INTO protocols VALUES(?,?,?);",
 		key, currentProto.L4, currentProto.L7)
 	if err != nil {
 		return err
