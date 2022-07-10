@@ -6,7 +6,6 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	hostDomain "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
-	hostRepo "github.com/PaoGRodrigues/tfi-backend/app/host/repository"
 	hostUseCase "github.com/PaoGRodrigues/tfi-backend/app/host/usecase"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	trafficDomain "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
@@ -46,15 +45,13 @@ func main() {
 }
 
 func initializeHostDependencies(tool *services.Tool) (hostDomain.HostUseCase, hostDomain.HostsFilter) {
-	hostRepo := hostRepo.NewHostClient(tool, "/lua/rest/v2/get/host/custom_data.lua")
-	hostSearcher := hostUseCase.NewHostSearcher(hostRepo)
+	hostSearcher := hostUseCase.NewHostSearcher(tool)
 	hostsFilter := hostUseCase.NewHostsFilter(hostSearcher)
 	return hostSearcher, hostsFilter
 }
 
 func initializeTrafficDependencies(tool *services.Tool, hostsFilter hostDomain.HostsFilter) (trafficDomain.TrafficUseCase, trafficDomain.TrafficActiveFlowsSearcher) {
-	trafficRepo := trafficRepo.NewActiveFlowClient(tool, "/lua/rest/v2/get/flow/active.lua")
-	trafficSearcher := trafficUseCase.NewTrafficSearcher(trafficRepo)
+	trafficSearcher := trafficUseCase.NewTrafficSearcher(tool)
 	trafficActiveFlowsSearcher := trafficUseCase.NewBytesDestinationParser(trafficSearcher, hostsFilter)
 	return trafficSearcher, trafficActiveFlowsSearcher
 }

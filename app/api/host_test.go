@@ -21,49 +21,34 @@ func TestCreateHostUseCaseAndGetAllHosts(t *testing.T) {
 		name = "Test"
 		ip   = "13.13.13.13"
 	)
-
-	gin.SetMode(gin.TestMode)
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockHostSearcherUseCase := mocks.NewMockHostUseCase(ctrl)
-
-	api := &api.Api{
-		HostUseCase: mockHostSearcherUseCase,
-		Engine:      gin.Default(),
-	}
-
-	r := gin.Default()
-
-	r.GET("/hosts", api.GetHosts,
-		func(c *gin.Context) {
-			c.Status(http.StatusOK)
-		})
-
-	executeWithContext := func() *httptest.ResponseRecorder {
-		response := httptest.NewRecorder()
-
-		requestUrl := "/hosts"
-		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
-
-		r.ServeHTTP(response, httpRequest)
-		return response
-	}
-
-	createdHosts := []domains.Host{
+	expectedHosts := []domains.Host{
 		domains.Host{
 			Name: name,
 			IP:   ip,
 		},
 	}
 
-	t.Run("Ok", func(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 
-		mockHostSearcherUseCase.EXPECT().GetAllHosts().Return(createdHosts, nil)
+	mockHostSearcherUseCase := mocks.NewMockHostUseCase(ctrl)
+	mockHostSearcherUseCase.EXPECT().GetAllHosts().Return(expectedHosts, nil)
 
-		res := executeWithContext()
-		assert.Equal(t, http.StatusOK, res.Code)
-	})
+	api := &api.Api{
+		HostUseCase: mockHostSearcherUseCase,
+		Engine:      gin.Default(),
+	}
+
+	api.MapGetHostsURL()
+
+	response := httptest.NewRecorder()
+	requestUrl := "/hosts"
+	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusOK, response.Code)
+
 }
 
 func TestCreateAHostUsecaseAndGetHostsReturnsAnError(t *testing.T) {
@@ -73,36 +58,24 @@ func TestCreateAHostUsecaseAndGetHostsReturnsAnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockHostSearcherUseCase := mocks.NewMockHostUseCase(ctrl)
+	mockHostSearcherUseCase.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing error case"))
 
 	api := &api.Api{
 		HostUseCase: mockHostSearcherUseCase,
 		Engine:      gin.Default(),
 	}
 
-	r := gin.Default()
+	api.MapGetHostsURL()
 
-	r.GET("/hosts", api.GetHosts,
-		func(c *gin.Context) {
-			c.Status(http.StatusOK)
-		})
+	response := httptest.NewRecorder()
 
-	executeWithContext := func() *httptest.ResponseRecorder {
-		response := httptest.NewRecorder()
+	requestUrl := "/hosts"
+	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
 
-		requestUrl := "/hosts"
-		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+	api.Engine.ServeHTTP(response, httpRequest)
 
-		r.ServeHTTP(response, httpRequest)
-		return response
-	}
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
 
-	t.Run("Ok", func(t *testing.T) {
-
-		mockHostSearcherUseCase.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing error case"))
-
-		res := executeWithContext()
-		assert.Equal(t, http.StatusInternalServerError, res.Code)
-	})
 }
 
 func TestCreateHostFilterCaseAndGetAllLocalHosts(t *testing.T) {
@@ -113,34 +86,6 @@ func TestCreateHostFilterCaseAndGetAllLocalHosts(t *testing.T) {
 		privateHost = true
 	)
 
-	gin.SetMode(gin.TestMode)
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockHostFilter := mocks.NewMockHostsFilter(ctrl)
-
-	api := &api.Api{
-		HostsFilter: mockHostFilter,
-		Engine:      gin.Default(),
-	}
-
-	r := gin.Default()
-
-	r.GET("/localhosts", api.GetLocalHosts,
-		func(c *gin.Context) {
-			c.Status(http.StatusOK)
-		})
-
-	executeWithContext := func() *httptest.ResponseRecorder {
-		response := httptest.NewRecorder()
-
-		requestUrl := "/localhosts"
-		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
-
-		r.ServeHTTP(response, httpRequest)
-		return response
-	}
-
 	localhosts := []domains.Host{
 		domains.Host{
 			Name:        name,
@@ -149,13 +94,28 @@ func TestCreateHostFilterCaseAndGetAllLocalHosts(t *testing.T) {
 		},
 	}
 
-	t.Run("Ok", func(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
 
-		mockHostFilter.EXPECT().GetLocalHosts().Return(localhosts, nil)
+	mockHostFilter := mocks.NewMockHostsFilter(ctrl)
+	mockHostFilter.EXPECT().GetLocalHosts().Return(localhosts, nil)
 
-		res := executeWithContext()
-		assert.Equal(t, http.StatusOK, res.Code)
-	})
+	api := &api.Api{
+		HostsFilter: mockHostFilter,
+		Engine:      gin.Default(),
+	}
+
+	api.MapGetLocalHostsURL()
+
+	response := httptest.NewRecorder()
+
+	requestUrl := "/localhosts"
+	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusOK, response.Code)
 }
 
 func TestCreateHostFilterCaseAndReturnsAnError(t *testing.T) {
@@ -165,34 +125,21 @@ func TestCreateHostFilterCaseAndReturnsAnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockHostFilter := mocks.NewMockHostsFilter(ctrl)
+	mockHostFilter.EXPECT().GetLocalHosts().Return(nil, fmt.Errorf("Testing error case"))
 
 	api := &api.Api{
 		HostsFilter: mockHostFilter,
 		Engine:      gin.Default(),
 	}
 
-	r := gin.Default()
+	api.MapGetLocalHostsURL()
 
-	r.GET("/localhosts", api.GetLocalHosts,
-		func(c *gin.Context) {
-			c.Status(http.StatusOK)
-		})
+	response := httptest.NewRecorder()
 
-	executeWithContext := func() *httptest.ResponseRecorder {
-		response := httptest.NewRecorder()
+	requestUrl := "/localhosts"
+	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
 
-		requestUrl := "/localhosts"
-		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+	api.Engine.ServeHTTP(response, httpRequest)
 
-		r.ServeHTTP(response, httpRequest)
-		return response
-	}
-
-	t.Run("Ok", func(t *testing.T) {
-
-		mockHostFilter.EXPECT().GetLocalHosts().Return(nil, fmt.Errorf("Testing error case"))
-
-		res := executeWithContext()
-		assert.Equal(t, http.StatusInternalServerError, res.Code)
-	})
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
 }

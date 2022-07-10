@@ -45,36 +45,23 @@ func TestStoreTrafficSuccessfullyReturn200(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	//	_ := mocks.NewMockTrafficUseCase(ctrl)
 	mockActiveFlowsStorage := mocks.NewMockActiveFlowsStorage(ctrl)
-	//	_ := mocks.NewMockTrafficRepository(ctrl)
+	mockActiveFlowsStorage.EXPECT().StoreFlows().Return(nil)
 
 	api := &api.Api{
 		ActiveFlowsStorage: mockActiveFlowsStorage,
 		Engine:             gin.Default(),
 	}
 
-	r := gin.Default()
+	api.MapStoreActiveFlows()
 
-	r.GET("/activeflows", api.StoreActiveTraffic,
-		func(c *gin.Context) {
-			c.Status(http.StatusOK)
-		})
+	response := httptest.NewRecorder()
 
-	executeWithContext := func() *httptest.ResponseRecorder {
-		response := httptest.NewRecorder()
+	requestUrl := "/activeflows"
+	httpRequest, _ := http.NewRequest("POST", requestUrl, strings.NewReader(string("")))
 
-		requestUrl := "/activeflows"
-		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+	api.Engine.ServeHTTP(response, httpRequest)
 
-		r.ServeHTTP(response, httpRequest)
-		return response
-	}
+	assert.Equal(t, http.StatusOK, response.Code)
 
-	t.Run("Ok", func(t *testing.T) {
-		mockActiveFlowsStorage.EXPECT().StoreFlows().Return(nil)
-
-		res := executeWithContext()
-		assert.Equal(t, http.StatusOK, res.Code)
-	})
 }

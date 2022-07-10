@@ -51,11 +51,12 @@ type ActiveFlowsStorage interface {
 	StoreFlows() error
 }
 
-//*********** Repositories
-type TrafficRepoClient interface {
+//*********** Services
+type TrafficService interface {
 	GetAllActiveTraffic() ([]ActiveFlow, error)
 }
 
+//*********** Repositories
 type TrafficRepository interface {
 	AddActiveFlows([]ActiveFlow) error
 }

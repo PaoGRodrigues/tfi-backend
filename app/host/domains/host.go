@@ -23,7 +23,7 @@ type HostsFilter interface {
 	GetRemoteHosts() ([]Host, error)
 }
 
-//*********** Repositories
-type HostRepository interface {
-	GetAll() ([]Host, error)
+//*********** Services
+type HostService interface {
+	GetAllHosts() ([]Host, error)
 }

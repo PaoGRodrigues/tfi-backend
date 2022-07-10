@@ -24,7 +24,7 @@ func TestGetAllHostsSearcherReturnAListOfHosts(t *testing.T) {
 	}
 
 	mockHostRepository := mocks.NewMockHostRepository(ctrl)
-	mockHostRepository.EXPECT().GetAll().Return(expected, nil)
+	mockHostRepository.EXPECT().GetAllHosts().Return(expected, nil)
 
 	HostSearcher := usecase.NewHostSearcher(mockHostRepository)
 	got, err := HostSearcher.GetAllHosts()
@@ -44,7 +44,7 @@ func TestGetAllHostsSearcherReturnAnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockHostRepository := mocks.NewMockHostRepository(ctrl)
-	mockHostRepository.EXPECT().GetAll().Return(nil, fmt.Errorf("Testing Error"))
+	mockHostRepository.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
 
 	HostSearcher := usecase.NewHostSearcher(mockHostRepository)
 	_, err := HostSearcher.GetAllHosts()
