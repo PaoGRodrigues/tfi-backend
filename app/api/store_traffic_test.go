@@ -1,7 +1,6 @@
 package api_test
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -46,12 +45,13 @@ func TestStoreTrafficSuccessfullyReturn200(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockTrafficSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockTrafficSearcher.EXPECT().GetAllActiveTraffic().Return(expected, nil)
+	//	_ := mocks.NewMockTrafficUseCase(ctrl)
+	mockActiveFlowsStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	//	_ := mocks.NewMockTrafficRepository(ctrl)
 
 	api := &api.Api{
-		TrafficSearcher: mockTrafficSearcher,
-		Engine:          gin.Default(),
+		ActiveFlowsStorage: mockActiveFlowsStorage,
+		Engine:             gin.Default(),
 	}
 
 	r := gin.Default()
@@ -72,11 +72,9 @@ func TestStoreTrafficSuccessfullyReturn200(t *testing.T) {
 	}
 
 	t.Run("Ok", func(t *testing.T) {
-
-		mockTrafficSearcher.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Testing error case"))
+		mockActiveFlowsStorage.EXPECT().StoreFlows().Return(nil)
 
 		res := executeWithContext()
-		assert.Equal(t, http.StatusInternalServerError, res.Code)
+		assert.Equal(t, http.StatusOK, res.Code)
 	})
-
 }

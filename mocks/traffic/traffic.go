@@ -124,18 +124,18 @@ func (m *MockActiveFlowsStorage) EXPECT() *MockActiveFlowsStorageMockRecorder {
 	return m.recorder
 }
 
-// Store mocks base method.
-func (m *MockActiveFlowsStorage) Store(arg0 []domains.ActiveFlow) error {
+// StoreFlows mocks base method.
+func (m *MockActiveFlowsStorage) StoreFlows() error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Store", arg0)
+	ret := m.ctrl.Call(m, "StoreFlows")
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Store indicates an expected call of Store.
-func (mr *MockActiveFlowsStorageMockRecorder) Store(arg0 interface{}) *gomock.Call {
+// StoreFlows indicates an expected call of StoreFlows.
+func (mr *MockActiveFlowsStorageMockRecorder) StoreFlows() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockActiveFlowsStorage)(nil).Store), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreFlows", reflect.TypeOf((*MockActiveFlowsStorage)(nil).StoreFlows))
 }
 
 // MockTrafficRepoClient is a mock of TrafficRepoClient interface.
@@ -176,39 +176,39 @@ func (mr *MockTrafficRepoClientMockRecorder) GetAllActiveTraffic() *gomock.Call 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActiveTraffic", reflect.TypeOf((*MockTrafficRepoClient)(nil).GetAllActiveTraffic))
 }
 
-// MockTrafficRepoStore is a mock of TrafficRepoStore interface.
-type MockTrafficRepoStore struct {
+// MockTrafficRepository is a mock of TrafficRepository interface.
+type MockTrafficRepository struct {
 	ctrl     *gomock.Controller
-	recorder *MockTrafficRepoStoreMockRecorder
+	recorder *MockTrafficRepositoryMockRecorder
 }
 
-// MockTrafficRepoStoreMockRecorder is the mock recorder for MockTrafficRepoStore.
-type MockTrafficRepoStoreMockRecorder struct {
-	mock *MockTrafficRepoStore
+// MockTrafficRepositoryMockRecorder is the mock recorder for MockTrafficRepository.
+type MockTrafficRepositoryMockRecorder struct {
+	mock *MockTrafficRepository
 }
 
-// NewMockTrafficRepoStore creates a new mock instance.
-func NewMockTrafficRepoStore(ctrl *gomock.Controller) *MockTrafficRepoStore {
-	mock := &MockTrafficRepoStore{ctrl: ctrl}
-	mock.recorder = &MockTrafficRepoStoreMockRecorder{mock}
+// NewMockTrafficRepository creates a new mock instance.
+func NewMockTrafficRepository(ctrl *gomock.Controller) *MockTrafficRepository {
+	mock := &MockTrafficRepository{ctrl: ctrl}
+	mock.recorder = &MockTrafficRepositoryMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockTrafficRepoStore) EXPECT() *MockTrafficRepoStoreMockRecorder {
+func (m *MockTrafficRepository) EXPECT() *MockTrafficRepositoryMockRecorder {
 	return m.recorder
 }
 
-// StoreActiveFlows mocks base method.
-func (m *MockTrafficRepoStore) StoreActiveFlows(arg0 []domains.ActiveFlow) error {
+// AddActiveFlows mocks base method.
+func (m *MockTrafficRepository) AddActiveFlows(arg0 []domains.ActiveFlow) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "StoreActiveFlows", arg0)
+	ret := m.ctrl.Call(m, "AddActiveFlows", arg0)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// StoreActiveFlows indicates an expected call of StoreActiveFlows.
-func (mr *MockTrafficRepoStoreMockRecorder) StoreActiveFlows(arg0 interface{}) *gomock.Call {
+// AddActiveFlows indicates an expected call of AddActiveFlows.
+func (mr *MockTrafficRepositoryMockRecorder) AddActiveFlows(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreActiveFlows", reflect.TypeOf((*MockTrafficRepoStore)(nil).StoreActiveFlows), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddActiveFlows", reflect.TypeOf((*MockTrafficRepository)(nil).AddActiveFlows), arg0)
 }

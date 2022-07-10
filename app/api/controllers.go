@@ -16,7 +16,7 @@ type Api struct {
 	TrafficSearcher     traffic.TrafficUseCase
 	HostsFilter         host.HostsFilter
 	ActiveFlowsSearcher traffic.TrafficActiveFlowsSearcher
-	Storage             *services.DBService
+	ActiveFlowsStorage  traffic.ActiveFlowsStorage
 	*gin.Engine
 }
 
@@ -88,29 +88,12 @@ func (api *Api) GetActiveTraffic(c *gin.Context) {
 }
 
 func (api *Api) StoreActiveTraffic(c *gin.Context) {
-	currentActiveFlows, err := api.TrafficSearcher.GetAllActiveTraffic()
-	if err != nil {
-		fmt.Println(err)
-		c.JSON(500, gin.H{"data": "error"})
-		c.AbortWithStatus(http.StatusInternalServerError)
-		c.JSON(http.StatusOK, gin.H{"data": currentActiveFlows})
-		return
-	}
-	err = api.Storage.Strg.CreateTables()
+	err := api.ActiveFlowsStorage.StoreFlows()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
-	}
-	for _, current := range currentActiveFlows {
-		_, err := api.Storage.Strg.InsertActiveFlow(current)
-		if err != nil {
-			fmt.Println(err)
-			c.JSON(500, gin.H{"data": "error"})
-			c.AbortWithStatus(http.StatusInternalServerError)
-			return
-		}
 	}
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "POST")

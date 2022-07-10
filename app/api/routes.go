@@ -29,5 +29,5 @@ func (api *Api) MapGetActiveFlowsPerDestinationURL() {
 }
 
 func (api *Api) MapStoreActiveFlows() {
-	api.POST("/activeflowsperdest1", api.StoreActiveTraffic)
+	api.GET("/activeflows", api.StoreActiveTraffic)
 }

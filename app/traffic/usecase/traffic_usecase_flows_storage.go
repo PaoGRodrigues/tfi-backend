@@ -2,19 +2,19 @@ package usecase
 
 import "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 
-type FlowsStorage struct {
+type FlowsRepository struct {
 	trafficSearcher domains.TrafficUseCase
-	trafficStorage  domains.TrafficRepoStore
+	trafficRepo     domains.TrafficRepository
 }
 
-func NewFlowsStorage(trafSearcher domains.TrafficUseCase, trafStorage domains.TrafficRepoStore) *FlowsStorage {
-	return &FlowsStorage{
+func NewFlowsStorage(trafSearcher domains.TrafficUseCase, trafRepo domains.TrafficRepository) *FlowsRepository {
+	return &FlowsRepository{
 		trafficSearcher: trafSearcher,
-		trafficStorage:  trafStorage,
+		trafficRepo:     trafRepo,
 	}
 }
 
-func (fs *FlowsStorage) Store() error {
+func (fs *FlowsRepository) StoreFlows() error {
 	activeFlows := fs.trafficSearcher.GetActiveFlows()
 	if len(activeFlows) == 0 {
 		current, err := fs.trafficSearcher.GetAllActiveTraffic()
@@ -23,6 +23,6 @@ func (fs *FlowsStorage) Store() error {
 		}
 		activeFlows = current
 	}
-	err := fs.trafficStorage.StoreActiveFlows(activeFlows)
+	err := fs.trafficRepo.AddActiveFlows(activeFlows)
 	return err
 }

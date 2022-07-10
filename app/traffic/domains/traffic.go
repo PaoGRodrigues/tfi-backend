@@ -56,6 +56,6 @@ type TrafficRepoClient interface {
 	GetAllActiveTraffic() ([]ActiveFlow, error)
 }
 
-type TrafficRepoStore interface {
-	StoreActiveFlows([]ActiveFlow) error
+type TrafficRepository interface {
+	AddActiveFlows([]ActiveFlow) error
 }

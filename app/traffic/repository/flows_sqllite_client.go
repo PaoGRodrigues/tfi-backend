@@ -77,7 +77,18 @@ func (client *SQLClient) CreateTables() error {
 	return nil
 }
 
-func (client *SQLClient) InsertActiveFlow(currentFlow domains.ActiveFlow) (int, error) {
+func (client *SQLClient) AddActiveFlows(flows []domains.ActiveFlow) error {
+
+	for _, flow := range flows {
+		_, err := client.addActiveFlow(flow)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (client *SQLClient) addActiveFlow(currentFlow domains.ActiveFlow) (int, error) {
 	flowKey, err := strconv.Atoi(currentFlow.Key)
 	if err != nil {
 		return 0, err
@@ -88,15 +99,15 @@ func (client *SQLClient) InsertActiveFlow(currentFlow domains.ActiveFlow) (int, 
 		return flowKey, err
 	}
 
-	err = client.InsertClient(currentFlow.Client, flowKey)
+	err = client.insertClient(currentFlow.Client, flowKey)
 	if err != nil {
 		return 0, err
 	}
-	err = client.InsertServer(currentFlow.Server, flowKey)
+	err = client.insertServer(currentFlow.Server, flowKey)
 	if err != nil {
 		return 0, err
 	}
-	err = client.InsertProtocol(currentFlow.Protocol, flowKey)
+	err = client.insertProtocol(currentFlow.Protocol, flowKey)
 	if err != nil {
 		return 0, err
 	}
@@ -104,7 +115,7 @@ func (client *SQLClient) InsertActiveFlow(currentFlow domains.ActiveFlow) (int, 
 	return flowKey, nil
 }
 
-func (client *SQLClient) InsertClient(currentClient domains.Client, key int) error {
+func (client *SQLClient) insertClient(currentClient domains.Client, key int) error {
 	_, err := client.db.Exec("INSERT INTO clients VALUES(?,?,?,?);",
 		key, currentClient.Name, currentClient.IP, currentClient.Port)
 	if err != nil {
@@ -113,7 +124,7 @@ func (client *SQLClient) InsertClient(currentClient domains.Client, key int) err
 	return nil
 }
 
-func (client *SQLClient) InsertServer(currentServer domains.Server, key int) error {
+func (client *SQLClient) insertServer(currentServer domains.Server, key int) error {
 	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?,?,?,?);",
 		key, currentServer.Name, currentServer.IP, currentServer.Port, currentServer.IsBroadcastDomain,
 		currentServer.IsDHCP)
@@ -123,7 +134,7 @@ func (client *SQLClient) InsertServer(currentServer domains.Server, key int) err
 	return nil
 }
 
-func (client *SQLClient) InsertProtocol(currentProto domains.Protocol, key int) error {
+func (client *SQLClient) insertProtocol(currentProto domains.Protocol, key int) error {
 	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?);",
 		key, currentProto.L4, currentProto.L7)
 	if err != nil {

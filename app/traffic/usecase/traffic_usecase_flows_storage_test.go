@@ -42,11 +42,11 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromSearcher(t *testing.T) {
 
 	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
 	mockSearcher.EXPECT().GetActiveFlows().Return(activeFlowToStore)
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepoStore(ctrl)
-	mockTrafficRepoStorage.EXPECT().StoreActiveFlows(activeFlowToStore).Return(nil)
+	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockTrafficRepoStorage.EXPECT().AddActiveFlows(activeFlowToStore).Return(nil)
 
 	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage)
-	err := trafficStorage.Store()
+	err := trafficStorage.StoreFlows()
 
 	if err != nil {
 		t.Fail()
@@ -87,11 +87,11 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromEmptySearcherFirstly(t *testi
 	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.ActiveFlow{})
 	mockSearcher.EXPECT().GetAllActiveTraffic().Return(activeFlowToStore, nil)
 
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepoStore(ctrl)
-	mockTrafficRepoStorage.EXPECT().StoreActiveFlows(activeFlowToStore).Return(nil)
+	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockTrafficRepoStorage.EXPECT().AddActiveFlows(activeFlowToStore).Return(nil)
 
 	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage)
-	err := trafficStorage.Store()
+	err := trafficStorage.StoreFlows()
 
 	if err != nil {
 		t.Fail()
@@ -113,11 +113,11 @@ func TestStoreTrafficWithError(t *testing.T) {
 
 	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
 	mockSearcher.EXPECT().GetActiveFlows().Return(activeFlowToStore)
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepoStore(ctrl)
-	mockTrafficRepoStorage.EXPECT().StoreActiveFlows(activeFlowToStore).Return(fmt.Errorf("Testing Error"))
+	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockTrafficRepoStorage.EXPECT().AddActiveFlows(activeFlowToStore).Return(fmt.Errorf("Testing Error"))
 
 	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage)
-	err := trafficStorage.Store()
+	err := trafficStorage.StoreFlows()
 
 	if err == nil {
 		t.Fail()

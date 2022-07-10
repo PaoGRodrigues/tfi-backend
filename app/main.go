@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	hostDomain "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
@@ -19,9 +20,9 @@ func main() {
 	tool := newTool()
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
 	trafficSearcher, trafficActiveFlowsSearcher := initializeTrafficDependencies(tool, hostsFilter)
-	storageClient, err := newDB()
+	storageClient, err := initializeActiveFlowsStorage("/file.db", trafficSearcher)
 	if err != nil {
-
+		fmt.Errorf(err.Error())
 	}
 
 	api := &api.Api{
@@ -30,7 +31,7 @@ func main() {
 		HostsFilter:         hostsFilter,
 		TrafficSearcher:     trafficSearcher,
 		ActiveFlowsSearcher: trafficActiveFlowsSearcher,
-		Storage:             storageClient,
+		ActiveFlowsStorage:  storageClient,
 		Engine:              gin.Default(),
 	}
 
@@ -58,25 +59,26 @@ func initializeTrafficDependencies(tool *services.Tool, hostsFilter hostDomain.H
 	return trafficSearcher, trafficActiveFlowsSearcher
 }
 
+func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomain.TrafficUseCase) (trafficDomain.ActiveFlowsStorage, error) {
+	db, err := newDB(file)
+	if err != nil {
+		return nil, err
+	}
+
+	activeFlowsStorage := trafficUseCase.NewFlowsStorage(trafficSearcher, db)
+	return activeFlowsStorage, nil
+}
+
 func newTool() *services.Tool {
 	tool := services.NewTool("http://192.168.0.13:3000", 2, "admin", "admin")
 	return tool
 }
 
-func newDB() (*services.DBService, error) {
-	SQLiteClient, err := NewSQLite("/file.db")
-	if err != nil {
-		return nil, err
-	}
-	databaseConn := trafficRepo.NewSQLClient(SQLiteClient)
-	database := services.NewDatabaseService(databaseConn)
-	return database, nil
-}
-
-func NewSQLite(file string) (*sql.DB, error) {
+func newDB(file string) (*trafficRepo.SQLClient, error) {
 	db, err := sql.Open("sqlite3", file)
 	if err != nil {
 		return nil, err
 	}
-	return db, nil
+	databaseConn := trafficRepo.NewSQLClient(db)
+	return databaseConn, nil
 }
