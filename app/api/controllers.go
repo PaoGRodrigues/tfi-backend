@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	host "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	host "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/gin-gonic/gin"

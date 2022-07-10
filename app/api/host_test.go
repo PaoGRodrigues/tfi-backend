@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	"github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/host"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"

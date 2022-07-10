@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 )
 
 type HostSearcher struct {

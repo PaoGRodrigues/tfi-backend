@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	domains_host "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	domains_host "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 )
 
 type HttpHostResponse struct {

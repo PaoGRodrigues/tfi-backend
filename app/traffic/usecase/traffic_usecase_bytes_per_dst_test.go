@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	hosts "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	hosts "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	mock_host "github.com/PaoGRodrigues/tfi-backend/mocks/host"

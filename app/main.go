@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	hostDomain "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
-	hostUseCase "github.com/PaoGRodrigues/tfi-backend/app/host/usecase"
+	hostDomain "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	hostUseCase "github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	trafficDomain "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	trafficRepo "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"

@@ -7,51 +7,6 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
-const trafficTable string = `
-	CREATE TABLE IF NOT EXISTS traffic  (
-		key INTEGER PRIMARY KEY,
-		first_seen INT(10),
-		last_seen INT(10),
-		bytes BIGINT(20)
-	);`
-
-const clientsTable string = `
-	CREATE TABLE IF NOT EXISTS clients (
-		key INTEGER PRIMARY KEY,
-		name TEXT,
-		ip VARCHAR(48),
-		port UNSIGNED SMALLINT(5),
-
-		FOREIGN KEY (key)
-			REFERENCES traffic (key)
-			ON DELETE CASCADE
-	);`
-
-const serversTable string = `
-	CREATE TABLE IF NOT EXISTS clients (
-		key INTEGER PRIMARY KEY,
-		name TEXT,
-		ip VARCHAR(48),
-		port UNSIGNED SMALLINT(5),
-		is_broadcast_domain BOOLEAN,
-		is_dhcp BOOLEAN,
-
-		FOREIGN KEY (key)
-			REFERENCES traffic (key)
-			ON DELETE CASCADE
-	);`
-
-const protocolsTable string = `
-	CREATE TABLE IF NOT EXISTS protocols (
-		key INTEGER PRIMARY KEY,
-		l4 VARCHAR(15),
-		l7 VARCHAR(45),
-
-		FOREIGN KEY (key)
-			REFERENCES traffic (key)
-			ON DELETE CASCADE
-	);`
-
 type SQLClient struct {
 	db *sql.DB
 }
@@ -60,21 +15,6 @@ func NewSQLClient(dbConn *sql.DB) *SQLClient {
 	return &SQLClient{
 		db: dbConn,
 	}
-}
-
-func getTables() []string {
-	return []string{trafficTable, clientsTable, serversTable, protocolsTable}
-}
-
-func (client *SQLClient) CreateTables() error {
-	tables := getTables()
-
-	for _, table := range tables {
-		if _, err := client.db.Exec(table); err != nil {
-			return err
-		}
-	}
-	return nil
 }
 
 func (client *SQLClient) AddActiveFlows(flows []domains.ActiveFlow) error {

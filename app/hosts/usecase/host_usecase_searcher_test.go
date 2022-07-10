@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/host/domains"
-	"github.com/PaoGRodrigues/tfi-backend/app/host/usecase"
+	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/host"
 	"github.com/golang/mock/gomock"
 )
