@@ -20,9 +20,9 @@ func main() {
 	tool := newTool()
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
 	trafficSearcher, trafficActiveFlowsSearcher := initializeTrafficDependencies(tool, hostsFilter)
-	storageClient, err := initializeActiveFlowsStorage("/file.db", trafficSearcher)
+	activeFlowsStorage, err := initializeActiveFlowsStorage("/file.db", trafficSearcher)
 	if err != nil {
-		fmt.Errorf(err.Error())
+		fmt.Println(err.Error())
 	}
 
 	api := &api.Api{
@@ -31,7 +31,7 @@ func main() {
 		HostsFilter:         hostsFilter,
 		TrafficSearcher:     trafficSearcher,
 		ActiveFlowsSearcher: trafficActiveFlowsSearcher,
-		ActiveFlowsStorage:  storageClient,
+		ActiveFlowsStorage:  activeFlowsStorage,
 		Engine:              gin.Default(),
 	}
 
@@ -70,7 +70,7 @@ func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomain.Tra
 }
 
 func newTool() *services.Tool {
-	tool := services.NewTool("http://192.168.0.13:3000", 2, "admin", "admin")
+	tool := services.NewTool("http://192.168.0.13:3000", 2, "xxxx", "xxxx")
 	return tool
 }
 
