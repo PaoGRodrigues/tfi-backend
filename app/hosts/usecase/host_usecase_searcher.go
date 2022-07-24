@@ -1,23 +1,23 @@
 package usecase
 
 import (
-	"github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 )
 
 type HostSearcher struct {
-	hostRepo     domains.HostRepository
+	hostService  domains.HostService
 	currentHosts []domains.Host
 }
 
-func NewHostSearcher(repo domains.HostRepository) *HostSearcher {
+func NewHostSearcher(repo domains.HostService) *HostSearcher {
 
 	return &HostSearcher{
-		hostRepo: repo,
+		hostService: repo,
 	}
 }
 
 func (hs *HostSearcher) GetAllHosts() ([]domains.Host, error) {
-	res, err := hs.hostRepo.GetAll()
+	res, err := hs.hostService.GetAllHosts()
 	if err != nil {
 		return nil, err
 	}

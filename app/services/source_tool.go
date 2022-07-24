@@ -1,4 +1,4 @@
-package domains
+package services
 
 type Tool struct {
 	UrlClient   string

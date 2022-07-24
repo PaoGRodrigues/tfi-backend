@@ -1,4 +1,4 @@
-package repository
+package services
 
 import (
 	"encoding/json"
@@ -6,14 +6,8 @@ import (
 	"net/http"
 	"strconv"
 
-	tool "github.com/PaoGRodrigues/tfi-backend/app/services/tool"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
-
-type ActiveFlowsClient struct {
-	tool     *tool.Tool
-	endpoint string
-}
 
 type HttpResponse struct {
 	Rc    int
@@ -27,30 +21,23 @@ type RspData struct {
 	PerPage     int
 }
 
-func NewActiveFlowClient(tool *tool.Tool, endpoint string) *ActiveFlowsClient {
-	return &ActiveFlowsClient{
-		tool:     tool,
-		endpoint: endpoint,
-	}
-}
-
-func (actF *ActiveFlowsClient) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
-	activeFlows, err := actF.getActiveFlows()
+func (t *Tool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
+	activeFlows, err := t.getActiveFlows()
 	if err != nil {
 		return nil, err
 	}
 	return activeFlows, nil
 }
 
-func (actF *ActiveFlowsClient) getActiveFlows() ([]domains.ActiveFlow, error) {
+func (t *Tool) getActiveFlows() ([]domains.ActiveFlow, error) {
 	activeFlows := []domains.ActiveFlow{}
-	resp, err := actF.getActiveFlowsSinglePage(1)
+	resp, err := t.getActiveFlowsSinglePage(1)
 	if err != nil {
 		return nil, err
 	}
 	for len(resp.Rsp.Data) > resp.Rsp.PerPage {
 		activeFlows = append(activeFlows, resp.Rsp.Data...)
-		resp, err = actF.getActiveFlowsSinglePage(resp.Rsp.CurrentPage + 1)
+		resp, err = t.getActiveFlowsSinglePage(resp.Rsp.CurrentPage + 1)
 		if err != nil {
 			return nil, err
 		}
@@ -59,17 +46,19 @@ func (actF *ActiveFlowsClient) getActiveFlows() ([]domains.ActiveFlow, error) {
 	return activeFlows, nil
 }
 
-func (actF *ActiveFlowsClient) getActiveFlowsSinglePage(page int) (HttpResponse, error) {
+func (t *Tool) getActiveFlowsSinglePage(page int) (HttpResponse, error) {
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", actF.tool.UrlClient+actF.endpoint, nil)
+	endpoint := "/lua/rest/v2/get/flow/active.lua"
+
+	req, err := http.NewRequest("GET", t.UrlClient+endpoint, nil)
 	if err != nil {
 		return HttpResponse{}, err
 	}
-	req.SetBasicAuth(actF.tool.Usr, actF.tool.Pass)
 	req.Header.Add("Content-Type", "application/json")
+	req.SetBasicAuth(t.Usr, t.Pass)
 
 	query := req.URL.Query()
-	query.Add("ifid", strconv.Itoa(actF.tool.InterfaceId))
+	query.Add("ifid", strconv.Itoa(t.InterfaceId))
 	query.Add("currentPage", strconv.Itoa(page))
 
 	req.URL.RawQuery = query.Encode()

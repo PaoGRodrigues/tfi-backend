@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	host_domains "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	host_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 

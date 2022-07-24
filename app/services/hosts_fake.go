@@ -1,7 +1,7 @@
-package repository
+package services
 
 import (
-	"github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 )
 
 type HostFakeClient struct {

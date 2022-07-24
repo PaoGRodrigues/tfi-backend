@@ -1,4 +1,4 @@
-package repository
+package services
 
 import (
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"

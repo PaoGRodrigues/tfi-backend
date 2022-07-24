@@ -5,19 +5,19 @@ import (
 )
 
 type TrafficSearcher struct {
-	trafficRepo domains.TrafficRepository
-	activeFlows []domains.ActiveFlow
+	trafficService domains.TrafficService
+	activeFlows    []domains.ActiveFlow
 }
 
-func NewTrafficSearcher(repo domains.TrafficRepository) *TrafficSearcher {
+func NewTrafficSearcher(trafSrv domains.TrafficService) *TrafficSearcher {
 
 	return &TrafficSearcher{
-		trafficRepo: repo,
+		trafficService: trafSrv,
 	}
 }
 
 func (gw *TrafficSearcher) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
-	res, err := gw.trafficRepo.GetAllActiveTraffic()
+	res, err := gw.trafficService.GetAllActiveTraffic()
 	if err != nil {
 		return []domains.ActiveFlow{}, err
 	}

@@ -38,30 +38,6 @@ func TestCreateTrafficUseCaseAndGetAllTraffic(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockTrafficSearcherUseCase := mocks.NewMockTrafficUseCase(ctrl)
-
-	api := &api.Api{
-		TrafficSearcher: mockTrafficSearcherUseCase,
-		Engine:          gin.Default(),
-	}
-
-	r := gin.Default()
-
-	r.GET("/traffic", api.GetTraffic,
-		func(c *gin.Context) {
-			c.Status(http.StatusOK)
-		})
-
-	executeWithContext := func() *httptest.ResponseRecorder {
-		response := httptest.NewRecorder()
-
-		requestUrl := "/traffic"
-		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
-
-		r.ServeHTTP(response, httpRequest)
-		return response
-	}
-
 	createdTraffic := []domains.ActiveFlow{
 		domains.ActiveFlow{
 			Client:   client,
@@ -71,13 +47,25 @@ func TestCreateTrafficUseCaseAndGetAllTraffic(t *testing.T) {
 		},
 	}
 
-	t.Run("Ok", func(t *testing.T) {
+	mockTrafficSearcherUseCase := mocks.NewMockTrafficUseCase(ctrl)
+	mockTrafficSearcherUseCase.EXPECT().GetAllActiveTraffic().Return(createdTraffic, nil)
 
-		mockTrafficSearcherUseCase.EXPECT().GetAllActiveTraffic().Return(createdTraffic, nil)
+	api := &api.Api{
+		TrafficSearcher: mockTrafficSearcherUseCase,
+		Engine:          gin.Default(),
+	}
 
-		res := executeWithContext()
-		assert.Equal(t, http.StatusOK, res.Code)
-	})
+	api.MapGetTrafficURL()
+
+	response := httptest.NewRecorder()
+
+	requestUrl := "/traffic"
+	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusOK, response.Code)
+
 }
 
 func TestCreateATrafficUsecaseAndGetTrafficReturnAnError(t *testing.T) {
@@ -87,36 +75,24 @@ func TestCreateATrafficUsecaseAndGetTrafficReturnAnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockTrafficSearcherUseCase := mocks.NewMockTrafficUseCase(ctrl)
+	mockTrafficSearcherUseCase.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Testing error case"))
 
 	api := &api.Api{
 		TrafficSearcher: mockTrafficSearcherUseCase,
 		Engine:          gin.Default(),
 	}
 
-	r := gin.Default()
+	api.MapGetTrafficURL()
 
-	r.GET("/traffic", api.GetTraffic,
-		func(c *gin.Context) {
-			c.Status(http.StatusOK)
-		})
+	response := httptest.NewRecorder()
 
-	executeWithContext := func() *httptest.ResponseRecorder {
-		response := httptest.NewRecorder()
+	requestUrl := "/traffic"
+	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
 
-		requestUrl := "/traffic"
-		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+	api.Engine.ServeHTTP(response, httpRequest)
 
-		r.ServeHTTP(response, httpRequest)
-		return response
-	}
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
 
-	t.Run("Ok", func(t *testing.T) {
-
-		mockTrafficSearcherUseCase.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Testing error case"))
-
-		res := executeWithContext()
-		assert.Equal(t, http.StatusInternalServerError, res.Code)
-	})
 }
 
 func TestCreateTrafficActiveFlowsAndGetBytesPerDest(t *testing.T) {
@@ -125,30 +101,6 @@ func TestCreateTrafficActiveFlowsAndGetBytesPerDest(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockActiveFlowsSearcher := mocks.NewMockTrafficActiveFlowsSearcher(ctrl)
-
-	api := &api.Api{
-		ActiveFlowsSearcher: mockActiveFlowsSearcher,
-		Engine:              gin.Default(),
-	}
-
-	r := gin.Default()
-
-	r.GET("/activeflowsperdest", api.GetActiveFlowsPerDestination,
-		func(c *gin.Context) {
-			c.Status(http.StatusOK)
-		})
-
-	executeWithContext := func() *httptest.ResponseRecorder {
-		response := httptest.NewRecorder()
-
-		requestUrl := "/activeflowsperdest"
-		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
-
-		r.ServeHTTP(response, httpRequest)
-		return response
-	}
-
 	expected := []domains.BytesPerDestination{
 		domains.BytesPerDestination{
 			Bytes:       3454567,
@@ -156,50 +108,48 @@ func TestCreateTrafficActiveFlowsAndGetBytesPerDest(t *testing.T) {
 		},
 	}
 
-	t.Run("Ok", func(t *testing.T) {
-
-		mockActiveFlowsSearcher.EXPECT().GetBytesPerDestination().Return(expected, nil)
-
-		res := executeWithContext()
-		assert.Equal(t, http.StatusOK, res.Code)
-	})
-}
-
-func TestCreateTrafficActiveFlowsAndGetAnError(t *testing.T) {
-
-	gin.SetMode(gin.TestMode)
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
 	mockActiveFlowsSearcher := mocks.NewMockTrafficActiveFlowsSearcher(ctrl)
+	mockActiveFlowsSearcher.EXPECT().GetBytesPerDestination().Return(expected, nil)
 
 	api := &api.Api{
 		ActiveFlowsSearcher: mockActiveFlowsSearcher,
 		Engine:              gin.Default(),
 	}
 
-	r := gin.Default()
+	api.MapGetActiveFlowsPerDestinationURL()
 
-	r.GET("/activeflowsperdest", api.GetActiveFlowsPerDestination,
-		func(c *gin.Context) {
-			c.Status(http.StatusOK)
-		})
+	response := httptest.NewRecorder()
 
-	executeWithContext := func() *httptest.ResponseRecorder {
-		response := httptest.NewRecorder()
+	requestUrl := "/activeflowsperdest"
+	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+	api.Engine.ServeHTTP(response, httpRequest)
 
-		requestUrl := "/activeflowsperdest"
-		httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+	assert.Equal(t, http.StatusOK, response.Code)
 
-		r.ServeHTTP(response, httpRequest)
-		return response
+}
+
+func TestCreateTrafficActiveFlowsPerDestAndGetAnError(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockActiveFlowsSearcher := mocks.NewMockTrafficActiveFlowsSearcher(ctrl)
+	mockActiveFlowsSearcher.EXPECT().GetBytesPerDestination().Return(nil, fmt.Errorf("Testing error case"))
+
+	api := &api.Api{
+		ActiveFlowsSearcher: mockActiveFlowsSearcher,
+		Engine:              gin.Default(),
 	}
 
-	t.Run("Ok", func(t *testing.T) {
+	api.MapGetActiveFlowsPerDestinationURL()
 
-		mockActiveFlowsSearcher.EXPECT().GetBytesPerDestination().Return(nil, fmt.Errorf("Testing error case"))
+	response := httptest.NewRecorder()
 
-		res := executeWithContext()
-		assert.Equal(t, http.StatusInternalServerError, res.Code)
-	})
+	requestUrl := "/activeflowsperdest"
+	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
 }

@@ -1,15 +1,17 @@
 package main
 
 import (
+	"database/sql"
+
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	hostDomain "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
-	hostRepo "github.com/PaoGRodrigues/tfi-backend/app/host/repository"
-	hostUseCase "github.com/PaoGRodrigues/tfi-backend/app/host/usecase"
-	services_tool "github.com/PaoGRodrigues/tfi-backend/app/services/tool"
+	hostDomain "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	hostUseCase "github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
+	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	trafficDomain "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	trafficRepo "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	trafficUseCase "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	"github.com/gin-gonic/gin"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
@@ -17,6 +19,10 @@ func main() {
 	tool := newTool()
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
 	trafficSearcher, trafficActiveFlowsSearcher := initializeTrafficDependencies(tool, hostsFilter)
+	activeFlowsStorage, err := initializeActiveFlowsStorage("./file.sqlite", trafficSearcher)
+	if err != nil {
+		panic(err.Error())
+	}
 
 	api := &api.Api{
 		Tool:                tool,
@@ -24,6 +30,7 @@ func main() {
 		HostsFilter:         hostsFilter,
 		TrafficSearcher:     trafficSearcher,
 		ActiveFlowsSearcher: trafficActiveFlowsSearcher,
+		ActiveFlowsStorage:  activeFlowsStorage,
 		Engine:              gin.Default(),
 	}
 
@@ -31,25 +38,44 @@ func main() {
 	api.MapGetHostsURL()
 	api.MapGetTrafficURL()
 	api.MapGetLocalHostsURL()
+	api.MapGetActiveFlowsPerDestinationURL()
+	api.MapStoreActiveFlows()
 
 	api.Run(":8080")
 }
 
-func initializeHostDependencies(tool *services_tool.Tool) (hostDomain.HostUseCase, hostDomain.HostsFilter) {
-	hostRepo := hostRepo.NewHostClient(tool, "/lua/rest/v2/get/host/custom_data.lua")
-	hostSearcher := hostUseCase.NewHostSearcher(hostRepo)
+func initializeHostDependencies(tool *services.Tool) (hostDomain.HostUseCase, hostDomain.HostsFilter) {
+	hostSearcher := hostUseCase.NewHostSearcher(tool)
 	hostsFilter := hostUseCase.NewHostsFilter(hostSearcher)
 	return hostSearcher, hostsFilter
 }
 
-func initializeTrafficDependencies(tool *services_tool.Tool, hostsFilter hostDomain.HostsFilter) (trafficDomain.TrafficUseCase, trafficDomain.TrafficActiveFlowsSearcher) {
-	trafficRepo := trafficRepo.NewActiveFlowClient(tool, "/lua/rest/v2/get/flow/active.lua")
-	trafficSearcher := trafficUseCase.NewTrafficSearcher(trafficRepo)
+func initializeTrafficDependencies(tool *services.Tool, hostsFilter hostDomain.HostsFilter) (trafficDomain.TrafficUseCase, trafficDomain.TrafficActiveFlowsSearcher) {
+	trafficSearcher := trafficUseCase.NewTrafficSearcher(tool)
 	trafficActiveFlowsSearcher := trafficUseCase.NewBytesDestinationParser(trafficSearcher, hostsFilter)
 	return trafficSearcher, trafficActiveFlowsSearcher
 }
 
-func newTool() *services_tool.Tool {
-	tool := services_tool.NewTool("http://192.168.0.16:3000", 2, "XX", "XX")
+func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomain.TrafficUseCase) (trafficDomain.ActiveFlowsStorage, error) {
+	db, err := newDB(file)
+	if err != nil {
+		return nil, err
+	}
+
+	activeFlowsStorage := trafficUseCase.NewFlowsStorage(trafficSearcher, db)
+	return activeFlowsStorage, nil
+}
+
+func newTool() *services.Tool {
+	tool := services.NewTool("http://192.168.0.13:3000", 2, "admin", "admin")
 	return tool
+}
+
+func newDB(file string) (*trafficRepo.SQLClient, error) {
+	db, err := sql.Open("sqlite3", file)
+	if err != nil {
+		return nil, err
+	}
+	databaseConn := trafficRepo.NewSQLClient(db)
+	return databaseConn, nil
 }

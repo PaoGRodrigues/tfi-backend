@@ -101,6 +101,81 @@ func (mr *MockTrafficActiveFlowsSearcherMockRecorder) GetBytesPerDestination() *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBytesPerDestination", reflect.TypeOf((*MockTrafficActiveFlowsSearcher)(nil).GetBytesPerDestination))
 }
 
+// MockActiveFlowsStorage is a mock of ActiveFlowsStorage interface.
+type MockActiveFlowsStorage struct {
+	ctrl     *gomock.Controller
+	recorder *MockActiveFlowsStorageMockRecorder
+}
+
+// MockActiveFlowsStorageMockRecorder is the mock recorder for MockActiveFlowsStorage.
+type MockActiveFlowsStorageMockRecorder struct {
+	mock *MockActiveFlowsStorage
+}
+
+// NewMockActiveFlowsStorage creates a new mock instance.
+func NewMockActiveFlowsStorage(ctrl *gomock.Controller) *MockActiveFlowsStorage {
+	mock := &MockActiveFlowsStorage{ctrl: ctrl}
+	mock.recorder = &MockActiveFlowsStorageMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockActiveFlowsStorage) EXPECT() *MockActiveFlowsStorageMockRecorder {
+	return m.recorder
+}
+
+// StoreFlows mocks base method.
+func (m *MockActiveFlowsStorage) StoreFlows() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StoreFlows")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// StoreFlows indicates an expected call of StoreFlows.
+func (mr *MockActiveFlowsStorageMockRecorder) StoreFlows() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreFlows", reflect.TypeOf((*MockActiveFlowsStorage)(nil).StoreFlows))
+}
+
+// MockTrafficRepoClient is a mock of TrafficRepoClient interface.
+type MockTrafficRepoClient struct {
+	ctrl     *gomock.Controller
+	recorder *MockTrafficRepoClientMockRecorder
+}
+
+// MockTrafficRepoClientMockRecorder is the mock recorder for MockTrafficRepoClient.
+type MockTrafficRepoClientMockRecorder struct {
+	mock *MockTrafficRepoClient
+}
+
+// NewMockTrafficRepoClient creates a new mock instance.
+func NewMockTrafficRepoClient(ctrl *gomock.Controller) *MockTrafficRepoClient {
+	mock := &MockTrafficRepoClient{ctrl: ctrl}
+	mock.recorder = &MockTrafficRepoClientMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockTrafficRepoClient) EXPECT() *MockTrafficRepoClientMockRecorder {
+	return m.recorder
+}
+
+// GetAllActiveTraffic mocks base method.
+func (m *MockTrafficRepoClient) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllActiveTraffic")
+	ret0, _ := ret[0].([]domains.ActiveFlow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllActiveTraffic indicates an expected call of GetAllActiveTraffic.
+func (mr *MockTrafficRepoClientMockRecorder) GetAllActiveTraffic() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActiveTraffic", reflect.TypeOf((*MockTrafficRepoClient)(nil).GetAllActiveTraffic))
+}
+
 // MockTrafficRepository is a mock of TrafficRepository interface.
 type MockTrafficRepository struct {
 	ctrl     *gomock.Controller
@@ -124,17 +199,16 @@ func (m *MockTrafficRepository) EXPECT() *MockTrafficRepositoryMockRecorder {
 	return m.recorder
 }
 
-// GetAllActiveTraffic mocks base method.
-func (m *MockTrafficRepository) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
+// AddActiveFlows mocks base method.
+func (m *MockTrafficRepository) AddActiveFlows(arg0 []domains.ActiveFlow) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllActiveTraffic")
-	ret0, _ := ret[0].([]domains.ActiveFlow)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret := m.ctrl.Call(m, "AddActiveFlows", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
 }
 
-// GetAllActiveTraffic indicates an expected call of GetAllActiveTraffic.
-func (mr *MockTrafficRepositoryMockRecorder) GetAllActiveTraffic() *gomock.Call {
+// AddActiveFlows indicates an expected call of AddActiveFlows.
+func (mr *MockTrafficRepositoryMockRecorder) AddActiveFlows(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActiveTraffic", reflect.TypeOf((*MockTrafficRepository)(nil).GetAllActiveTraffic))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddActiveFlows", reflect.TypeOf((*MockTrafficRepository)(nil).AddActiveFlows), arg0)
 }

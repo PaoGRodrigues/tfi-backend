@@ -7,7 +7,7 @@ package mock_domains
 import (
 	reflect "reflect"
 
-	domains "github.com/PaoGRodrigues/tfi-backend/app/host/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -139,17 +139,17 @@ func (m *MockHostRepository) EXPECT() *MockHostRepositoryMockRecorder {
 	return m.recorder
 }
 
-// GetAll mocks base method.
-func (m *MockHostRepository) GetAll() ([]domains.Host, error) {
+// GetAllHosts mocks base method.
+func (m *MockHostRepository) GetAllHosts() ([]domains.Host, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAll")
+	ret := m.ctrl.Call(m, "GetAllHosts")
 	ret0, _ := ret[0].([]domains.Host)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAll indicates an expected call of GetAll.
-func (mr *MockHostRepositoryMockRecorder) GetAll() *gomock.Call {
+// GetAllHosts indicates an expected call of GetAllHosts.
+func (mr *MockHostRepositoryMockRecorder) GetAllHosts() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockHostRepository)(nil).GetAll))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllHosts", reflect.TypeOf((*MockHostRepository)(nil).GetAllHosts))
 }

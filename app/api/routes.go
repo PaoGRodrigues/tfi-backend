@@ -27,3 +27,7 @@ func (api *Api) MapGetLocalHostsURL() {
 func (api *Api) MapGetActiveFlowsPerDestinationURL() {
 	api.GET("/activeflowsperdest", api.GetActiveFlowsPerDestination)
 }
+
+func (api *Api) MapStoreActiveFlows() {
+	api.POST("/activeflows", api.StoreActiveTraffic)
+}
