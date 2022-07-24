@@ -1,6 +1,7 @@
 package api_test
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -64,4 +65,29 @@ func TestStoreTrafficSuccessfullyReturn200(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, response.Code)
 
+}
+
+func TestStoreTrafficFailedAndReturn500(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockActiveFlowsStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockActiveFlowsStorage.EXPECT().StoreFlows().Return(fmt.Errorf("Testing error case"))
+
+	api := &api.Api{
+		ActiveFlowsStorage: mockActiveFlowsStorage,
+		Engine:             gin.Default(),
+	}
+
+	api.MapStoreActiveFlows()
+
+	response := httptest.NewRecorder()
+
+	requestUrl := "/activeflows"
+	httpRequest, _ := http.NewRequest("POST", requestUrl, strings.NewReader(string("")))
+
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
 }

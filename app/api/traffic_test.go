@@ -128,7 +128,7 @@ func TestCreateTrafficActiveFlowsAndGetBytesPerDest(t *testing.T) {
 
 }
 
-func TestCreateTrafficActiveFlowsAndGetAnError(t *testing.T) {
+func TestCreateTrafficActiveFlowsPerDestAndGetAnError(t *testing.T) {
 
 	gin.SetMode(gin.TestMode)
 	ctrl := gomock.NewController(t)

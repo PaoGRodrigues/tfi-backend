@@ -73,20 +73,6 @@ func (api *Api) GetActiveFlowsPerDestination(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": activeFlows})
 }
 
-func (api *Api) GetActiveTraffic(c *gin.Context) {
-	currentActiveFlows, err := api.TrafficSearcher.GetAllActiveTraffic()
-	if err != nil {
-		fmt.Println(err)
-		c.JSON(500, gin.H{"data": "error"})
-		c.AbortWithStatus(http.StatusInternalServerError)
-		//c.JSON(http.StatusOK, gin.H{"data": currentActiveFlows})
-		return
-	}
-	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
-	c.Header("Access-Control-Allow-Methods", "GET")
-	c.JSON(http.StatusOK, gin.H{"data": currentActiveFlows})
-}
-
 func (api *Api) StoreActiveTraffic(c *gin.Context) {
 	err := api.ActiveFlowsStorage.StoreFlows()
 	if err != nil {
