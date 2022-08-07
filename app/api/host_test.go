@@ -9,7 +9,7 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/host"
+	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"

@@ -9,10 +9,10 @@ type HostSearcher struct {
 	currentHosts []domains.Host
 }
 
-func NewHostSearcher(repo domains.HostService) *HostSearcher {
+func NewHostSearcher(service domains.HostService) *HostSearcher {
 
 	return &HostSearcher{
-		hostService: repo,
+		hostService: service,
 	}
 }
 

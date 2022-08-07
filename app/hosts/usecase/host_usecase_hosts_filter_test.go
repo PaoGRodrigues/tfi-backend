@@ -7,7 +7,7 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/host"
+	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	"github.com/golang/mock/gomock"
 )
 

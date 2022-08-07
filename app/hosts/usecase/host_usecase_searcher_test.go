@@ -7,7 +7,7 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/host"
+	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	"github.com/golang/mock/gomock"
 )
 
@@ -23,10 +23,10 @@ func TestGetAllHostsSearcherReturnAListOfHosts(t *testing.T) {
 		},
 	}
 
-	mockHostRepository := mocks.NewMockHostRepository(ctrl)
-	mockHostRepository.EXPECT().GetAllHosts().Return(expected, nil)
+	mockHostService := mocks.NewMockHostService(ctrl)
+	mockHostService.EXPECT().GetAllHosts().Return(expected, nil)
 
-	HostSearcher := usecase.NewHostSearcher(mockHostRepository)
+	HostSearcher := usecase.NewHostSearcher(mockHostService)
 	got, err := HostSearcher.GetAllHosts()
 
 	if err != nil {
@@ -43,10 +43,10 @@ func TestGetAllHostsSearcherReturnAnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockHostRepository := mocks.NewMockHostRepository(ctrl)
-	mockHostRepository.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
+	mockHostService := mocks.NewMockHostService(ctrl)
+	mockHostService.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
 
-	HostSearcher := usecase.NewHostSearcher(mockHostRepository)
+	HostSearcher := usecase.NewHostSearcher(mockHostService)
 	_, err := HostSearcher.GetAllHosts()
 
 	if err == nil {
