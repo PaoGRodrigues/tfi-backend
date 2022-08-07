@@ -72,17 +72,17 @@ func (m *MockAlertService) EXPECT() *MockAlertServiceMockRecorder {
 	return m.recorder
 }
 
-// GetAllHosts mocks base method.
-func (m *MockAlertService) GetAllHosts() ([]domains.Alert, error) {
+// GetAllAlerts mocks base method.
+func (m *MockAlertService) GetAllAlerts() ([]domains.Alert, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllHosts")
+	ret := m.ctrl.Call(m, "GetAllAlerts")
 	ret0, _ := ret[0].([]domains.Alert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAllHosts indicates an expected call of GetAllHosts.
-func (mr *MockAlertServiceMockRecorder) GetAllHosts() *gomock.Call {
+// GetAllAlerts indicates an expected call of GetAllAlerts.
+func (mr *MockAlertServiceMockRecorder) GetAllAlerts() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllHosts", reflect.TypeOf((*MockAlertService)(nil).GetAllHosts))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllAlerts", reflect.TypeOf((*MockAlertService)(nil).GetAllAlerts))
 }

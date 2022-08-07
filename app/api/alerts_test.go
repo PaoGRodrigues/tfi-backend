@@ -1,6 +1,7 @@
 package api_test
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -51,4 +52,30 @@ func TestCreateAlertsUsecaseGetAllAlertsReturnAlerts(t *testing.T) {
 	api.Engine.ServeHTTP(response, httpRequest)
 
 	assert.Equal(t, http.StatusOK, response.Code)
+}
+
+func TestCreateAlertsUsecaseGetAllAlertsReturnError(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockAlertSearcher := mocks.NewMockAlertUseCase(ctrl)
+	mockAlertSearcher.EXPECT().GetAllAlerts().Return([]domains.Alert{}, fmt.Errorf("Error test"))
+
+	api := &api.Api{
+		AlertsSearcher: mockAlertSearcher,
+		Engine:         gin.Default(),
+	}
+
+	api.MapAlertsURL()
+
+	response := httptest.NewRecorder()
+
+	requestUrl := "/alerts"
+	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
 }

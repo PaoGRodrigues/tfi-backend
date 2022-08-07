@@ -22,5 +22,5 @@ type AlertUseCase interface {
 
 //*********** Services
 type AlertService interface {
-	GetAllHosts() ([]Alert, error)
+	GetAllAlerts() ([]Alert, error)
 }

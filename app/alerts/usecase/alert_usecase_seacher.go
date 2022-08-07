@@ -14,7 +14,7 @@ func NewAlertSearcher(service domains.AlertService) *AlertSearcher {
 }
 
 func (searcher *AlertSearcher) GetAllAlerts() ([]domains.Alert, error) {
-	res, err := searcher.alertService.GetAllHosts()
+	res, err := searcher.alertService.GetAllAlerts()
 	if err != nil {
 		return []domains.Alert{}, err
 	}
