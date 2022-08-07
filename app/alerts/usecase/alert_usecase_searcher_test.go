@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 	"time"
@@ -40,5 +41,20 @@ func TestGetAllAlertsReturnListOfAlerts(t *testing.T) {
 
 	if !reflect.DeepEqual(got, expected) {
 		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
+	}
+}
+
+func TestGetAllAlertsReturnErrorWhenCallService(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockService := mocks.NewMockAlertService(ctrl)
+	mockService.EXPECT().GetAllHosts().Return([]domains.Alert{}, fmt.Errorf("test error"))
+
+	alertSearcher := usecase.NewAlertSearcher(mockService)
+	_, err := alertSearcher.GetAllAlerts()
+
+	if err == nil {
+		t.Fail()
 	}
 }
