@@ -30,7 +30,7 @@ func TestGetAllAlertsReturnListOfAlerts(t *testing.T) {
 	}
 
 	mockService := mocks.NewMockAlertService(ctrl)
-	mockService.EXPECT().GetAllAlerts().Return(expected, nil)
+	mockService.EXPECT().GetAllAlerts(0, 0).Return(expected, nil)
 
 	alertSearcher := usecase.NewAlertSearcher(mockService)
 	got, err := alertSearcher.GetAllAlerts()
@@ -49,7 +49,7 @@ func TestGetAllAlertsReturnErrorWhenCallService(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockService := mocks.NewMockAlertService(ctrl)
-	mockService.EXPECT().GetAllAlerts().Return([]domains.Alert{}, fmt.Errorf("test error"))
+	mockService.EXPECT().GetAllAlerts(0, 0).Return([]domains.Alert{}, fmt.Errorf("test error"))
 
 	alertSearcher := usecase.NewAlertSearcher(mockService)
 	_, err := alertSearcher.GetAllAlerts()

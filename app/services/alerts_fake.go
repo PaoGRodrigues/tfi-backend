@@ -14,7 +14,7 @@ func NewAlertsFakeClient() *AlersFakeClient {
 	return &AlersFakeClient{}
 }
 
-func (d *AlersFakeClient) GetAllAlerts() ([]domains.Alert, error) {
+func (d *AlersFakeClient) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
 
 	alerts := []domains.Alert{
 		domains.Alert{

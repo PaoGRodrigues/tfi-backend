@@ -20,8 +20,8 @@ type Records struct {
 	alerts []domains.Alert
 }
 
-func (t *Tool) GetAllAlerts() ([]domains.Alert, error) {
-	alertsListResponse, err := t.getAlertsList(0, 0)
+func (t *Tool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
+	alertsListResponse, err := t.getAlertsList(epoch_begin, epoch_end)
 	if err != nil {
 		return nil, err
 	}
