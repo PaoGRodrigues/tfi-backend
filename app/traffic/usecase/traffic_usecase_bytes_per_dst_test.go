@@ -8,7 +8,7 @@ import (
 	hosts "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
-	mock_host "github.com/PaoGRodrigues/tfi-backend/mocks/host"
+	mock_host "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"github.com/golang/mock/gomock"
 )

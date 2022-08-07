@@ -3,13 +3,15 @@ package main
 import (
 	"database/sql"
 
+	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	alertsUseCases "github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	hostDomain "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
-	hostUseCase "github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
+	hostsDomains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	hostsUseCases "github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
-	trafficDomain "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	trafficDomains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	trafficRepo "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
-	trafficUseCase "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
+	trafficUseCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -23,6 +25,7 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
+	alertsSearcher := initializeAlertsDependencies(tool)
 
 	api := &api.Api{
 		Tool:                tool,
@@ -31,6 +34,7 @@ func main() {
 		TrafficSearcher:     trafficSearcher,
 		ActiveFlowsSearcher: trafficActiveFlowsSearcher,
 		ActiveFlowsStorage:  activeFlowsStorage,
+		AlertsSearcher:      alertsSearcher,
 		Engine:              gin.Default(),
 	}
 
@@ -40,34 +44,41 @@ func main() {
 	api.MapGetLocalHostsURL()
 	api.MapGetActiveFlowsPerDestinationURL()
 	api.MapStoreActiveFlows()
+	api.MapAlertsURL()
 
 	api.Run(":8080")
 }
 
-func initializeHostDependencies(tool *services.Tool) (hostDomain.HostUseCase, hostDomain.HostsFilter) {
-	hostSearcher := hostUseCase.NewHostSearcher(tool)
-	hostsFilter := hostUseCase.NewHostsFilter(hostSearcher)
+func initializeHostDependencies(tool *services.Tool) (hostsDomains.HostUseCase, hostsDomains.HostsFilter) {
+	hostSearcher := hostsUseCases.NewHostSearcher(tool)
+	hostsFilter := hostsUseCases.NewHostsFilter(hostSearcher)
 	return hostSearcher, hostsFilter
 }
 
-func initializeTrafficDependencies(tool *services.Tool, hostsFilter hostDomain.HostsFilter) (trafficDomain.TrafficUseCase, trafficDomain.TrafficActiveFlowsSearcher) {
-	trafficSearcher := trafficUseCase.NewTrafficSearcher(tool)
-	trafficActiveFlowsSearcher := trafficUseCase.NewBytesDestinationParser(trafficSearcher, hostsFilter)
+func initializeTrafficDependencies(tool *services.Tool, hostsFilter hostsDomains.HostsFilter) (trafficDomains.TrafficUseCase, trafficDomains.TrafficActiveFlowsSearcher) {
+	trafficSearcher := trafficUseCases.NewTrafficSearcher(tool)
+	trafficActiveFlowsSearcher := trafficUseCases.NewBytesDestinationParser(trafficSearcher, hostsFilter)
 	return trafficSearcher, trafficActiveFlowsSearcher
 }
 
-func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomain.TrafficUseCase) (trafficDomain.ActiveFlowsStorage, error) {
+func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomains.TrafficUseCase) (trafficDomains.ActiveFlowsStorage, error) {
 	db, err := newDB(file)
 	if err != nil {
 		return nil, err
 	}
 
-	activeFlowsStorage := trafficUseCase.NewFlowsStorage(trafficSearcher, db)
+	activeFlowsStorage := trafficUseCases.NewFlowsStorage(trafficSearcher, db)
 	return activeFlowsStorage, nil
 }
 
+func initializeAlertsDependencies(tool *services.Tool) domains.AlertUseCase {
+	alertsService := services.NewAlertsFakeClient()
+	alertsSearcher := alertsUseCases.NewAlertSearcher(alertsService)
+	return alertsSearcher
+}
+
 func newTool() *services.Tool {
-	tool := services.NewTool("http://192.168.0.13:3000", 2, "admin", "admin")
+	tool := services.NewTool("http://192.168.0.13:3000", 2, "XXXX", "XXXX")
 	return tool
 }
 
