@@ -31,3 +31,7 @@ func (api *Api) MapGetActiveFlowsPerDestinationURL() {
 func (api *Api) MapStoreActiveFlows() {
 	api.POST("/activeflows", api.StoreActiveTraffic)
 }
+
+func (api *Api) MapAlertsURL() {
+	api.GET("/alerts", api.GetAlerts)
+}

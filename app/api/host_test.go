@@ -48,7 +48,6 @@ func TestCreateHostUseCaseAndGetAllHosts(t *testing.T) {
 	api.Engine.ServeHTTP(response, httpRequest)
 
 	assert.Equal(t, http.StatusOK, response.Code)
-
 }
 
 func TestCreateAHostUsecaseAndGetHostsReturnsAnError(t *testing.T) {
