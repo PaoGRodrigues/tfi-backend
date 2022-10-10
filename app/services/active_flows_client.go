@@ -21,7 +21,7 @@ type RspData struct {
 	PerPage     int
 }
 
-func (t *Tool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
+func (t *NtopNG) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 	activeFlows, err := t.getActiveFlows()
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (t *Tool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 	return activeFlows, nil
 }
 
-func (t *Tool) getActiveFlows() ([]domains.ActiveFlow, error) {
+func (t *NtopNG) getActiveFlows() ([]domains.ActiveFlow, error) {
 	activeFlows := []domains.ActiveFlow{}
 	resp, err := t.getActiveFlowsSinglePage(1)
 	if err != nil {
@@ -46,7 +46,7 @@ func (t *Tool) getActiveFlows() ([]domains.ActiveFlow, error) {
 	return activeFlows, nil
 }
 
-func (t *Tool) getActiveFlowsSinglePage(page int) (HttpResponse, error) {
+func (t *NtopNG) getActiveFlowsSinglePage(page int) (HttpResponse, error) {
 	client := &http.Client{}
 	endpoint := "/lua/rest/v2/get/flow/active.lua"
 

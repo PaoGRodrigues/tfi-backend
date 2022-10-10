@@ -20,7 +20,7 @@ type Records struct {
 	alerts []domains.Alert
 }
 
-func (t *Tool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
+func (t *NtopNG) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
 	alertsListResponse, err := t.getAlertsList(epoch_begin, epoch_end)
 	if err != nil {
 		return nil, err
@@ -28,7 +28,7 @@ func (t *Tool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error)
 	return alertsListResponse.Rsp.alerts, nil
 }
 
-func (t *Tool) getAlertsList(epoch_begin, epoch_end int) (HttpAlertResponse, error) {
+func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int) (HttpAlertResponse, error) {
 	client := &http.Client{}
 	endpoint := "/lua/rest/v2/get/all/alert/list.lua"
 

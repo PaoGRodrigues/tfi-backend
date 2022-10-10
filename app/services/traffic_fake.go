@@ -4,15 +4,7 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
-type TrafficFakeClient struct {
-}
-
-func NewTrafficFakeClient() *TrafficFakeClient {
-
-	return &TrafficFakeClient{}
-}
-
-func (trff *TrafficFakeClient) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
+func (trff *FakeTool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 	client := domains.Client{
 		Name: "test",
 		Port: 55672,
