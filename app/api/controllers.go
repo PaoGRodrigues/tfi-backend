@@ -13,7 +13,7 @@ import (
 )
 
 type Api struct {
-	Tool                *services.Tool
+	Tool                services.Tool
 	HostUseCase         hosts.HostUseCase
 	TrafficSearcher     traffic.TrafficUseCase
 	HostsFilter         hosts.HostsFilter

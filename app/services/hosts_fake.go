@@ -4,15 +4,7 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 )
 
-type HostFakeClient struct {
-}
-
-func NewHostFakeClient() *HostFakeClient {
-
-	return &HostFakeClient{}
-}
-
-func (d *HostFakeClient) GetAll() ([]domains.Host, error) {
+func (d *FakeTool) GetAllHosts() ([]domains.Host, error) {
 	Hosts := []domains.Host{
 		domains.Host{
 			Name: "Test1",

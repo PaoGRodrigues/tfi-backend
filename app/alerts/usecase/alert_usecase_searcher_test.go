@@ -29,8 +29,12 @@ func TestGetAllAlertsReturnListOfAlerts(t *testing.T) {
 		},
 	}
 
+	now := time.Now()
+	epoch_end := int(now.Unix())
+	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
+
 	mockService := mocks.NewMockAlertService(ctrl)
-	mockService.EXPECT().GetAllAlerts().Return(expected, nil)
+	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return(expected, nil)
 
 	alertSearcher := usecase.NewAlertSearcher(mockService)
 	got, err := alertSearcher.GetAllAlerts()
@@ -48,8 +52,12 @@ func TestGetAllAlertsReturnErrorWhenCallService(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
+	now := time.Now()
+	epoch_end := int(now.Unix())
+	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
+
 	mockService := mocks.NewMockAlertService(ctrl)
-	mockService.EXPECT().GetAllAlerts().Return([]domains.Alert{}, fmt.Errorf("test error"))
+	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return([]domains.Alert{}, fmt.Errorf("test error"))
 
 	alertSearcher := usecase.NewAlertSearcher(mockService)
 	_, err := alertSearcher.GetAllAlerts()

@@ -15,7 +15,7 @@ type HttpHostResponse struct {
 	Rsp   []domains_host.Host
 }
 
-func (t *Tool) GetAllHosts() ([]domains_host.Host, error) {
+func (t *NtopNG) GetAllHosts() ([]domains_host.Host, error) {
 
 	HostsListResponse, err := t.getHostsList()
 	if err != nil {
@@ -25,7 +25,7 @@ func (t *Tool) GetAllHosts() ([]domains_host.Host, error) {
 	return HostsListResponse.Rsp, nil
 }
 
-func (t *Tool) getHostsList() (HttpHostResponse, error) {
+func (t *NtopNG) getHostsList() (HttpHostResponse, error) {
 	client := &http.Client{}
 	endpoint := "/lua/rest/v2/get/host/custom_data.lua"
 
