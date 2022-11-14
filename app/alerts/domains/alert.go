@@ -1,26 +1,43 @@
 package domains
 
-import "time"
+import (
+	"time"
 
-//*********** Entities
+	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+)
+
+// *********** Entities
 // Alerts
 type Alert struct {
-	Name      string
-	Subtype   string
-	Family    string
-	Timestamp time.Time
-	Score     string
-	Severity  string
-	Msg       string
+	Name          string
+	Family        string
+	Timestamp     time.Time
+	Score         string
+	Severity      Severity
+	AlertFlow     AlertFlow
+	AlertProtocol AlertProtocol
 }
 
-//*********** Use Cases
-//AlertUseCase needs to be implemented in Alert use cases
+type Severity struct {
+	Label string
+}
+
+type AlertFlow struct {
+	Client flow.Client
+	Server flow.Server
+}
+
+type AlertProtocol struct {
+	Protocol flow.Protocol
+}
+
+// *********** Use Cases
+// AlertUseCase needs to be implemented in Alert use cases
 type AlertUseCase interface {
 	GetAllAlerts() ([]Alert, error)
 }
 
-//*********** Services
+// *********** Services
 type AlertService interface {
-	GetAllAlerts(int, int) ([]Alert, error)
+	GetAllAlerts(int, int, string) ([]Alert, error)
 }
