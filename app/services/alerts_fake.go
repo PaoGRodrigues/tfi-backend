@@ -7,7 +7,7 @@ import (
 	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
-func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
+func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int, host string) ([]domains.Alert, error) {
 
 	alerts := []domains.Alert{
 		domains.Alert{
