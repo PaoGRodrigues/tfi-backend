@@ -3,7 +3,10 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 
+	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	alerts "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	hosts "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
@@ -21,6 +24,16 @@ type Api struct {
 	ActiveFlowsStorage  traffic.ActiveFlowsStorage
 	AlertsSearcher      alerts.AlertUseCase
 	*gin.Engine
+}
+
+type AlertsResponse struct {
+	Name     string
+	Family   string
+	Time     string
+	Score    string
+	Severity string
+	Flow     string
+	Protocol string
 }
 
 func (api *Api) GetHosts(c *gin.Context) {
@@ -97,7 +110,49 @@ func (api *Api) GetAlerts(c *gin.Context) {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
+	alertsResponse := api.parseAlertsData(alerts)
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "GET")
-	c.JSON(http.StatusOK, gin.H{"data": alerts})
+	c.JSON(http.StatusOK, gin.H{"data": alertsResponse})
+}
+
+func (api *Api) parseAlertsData(alerts []domains.Alert) []AlertsResponse {
+	response := []AlertsResponse{}
+	for _, alert := range alerts {
+		ar := AlertsResponse{
+			Name:     alert.Name,
+			Family:   alert.Family,
+			Time:     alert.Time.Label,
+			Score:    alert.Score,
+			Severity: alert.Severity.Label,
+			Flow:     createFlowString(alert.AlertFlow),
+			Protocol: createProtocolString(alert.AlertProtocol),
+		}
+		response = append(response, ar)
+	}
+	return response
+}
+
+func createFlowString(flow alerts.AlertFlow) string {
+	var str strings.Builder
+
+	str.WriteString(flow.Client.Name)
+	str.WriteString(":")
+	str.WriteString(strconv.Itoa(flow.Client.Port))
+	str.WriteString(" => ")
+	str.WriteString(flow.Server.Name)
+	str.WriteString(":")
+	str.WriteString(strconv.Itoa(flow.Server.Port))
+
+	return str.String()
+}
+
+func createProtocolString(proto alerts.AlertProtocol) string {
+	var str strings.Builder
+
+	str.WriteString(proto.Protocol.L4)
+	str.WriteString(":")
+	str.WriteString(proto.Protocol.L7)
+
+	return str.String()
 }

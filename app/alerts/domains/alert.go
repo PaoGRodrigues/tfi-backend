@@ -1,17 +1,18 @@
 package domains
 
 import (
-	"time"
-
 	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
 // *********** Entities
 // Alerts
 type Alert struct {
-	Name          string
-	Family        string
-	Timestamp     time.Time
+	Row_id string `json:"-"`
+	Name   string
+	Family string
+	Time   struct {
+		Label string
+	} `json:"tstamp"`
 	Score         string
 	Severity      Severity
 	AlertFlow     AlertFlow

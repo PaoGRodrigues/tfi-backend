@@ -17,11 +17,11 @@ import (
 
 var expected = []domains.Alert{
 	domains.Alert{
-		Name:      "test",
-		Family:    "flow",
-		Timestamp: time.Time{},
-		Score:     "10",
-		Severity:  domains.Severity{Label: "2"},
+		Name:     "test",
+		Family:   "flow",
+		Time:     struct{ Label string }{"10/10/10 11:11:11"},
+		Score:    "10",
+		Severity: domains.Severity{Label: "2"},
 		AlertFlow: domains.AlertFlow{
 			Client: flow.Client{
 				Name: "test1",
