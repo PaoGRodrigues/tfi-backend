@@ -26,7 +26,7 @@ func main() {
 	if *scope != "prod" {
 		tool = services.NewFakeTool()
 	} else {
-		tool = services.NewTool("http://192.168.0.13:3000", 2, "admin", "admin")
+		tool = services.NewTool("http://192.168.0.13:3000", 2, "XXX", "XXX")
 	}
 
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
