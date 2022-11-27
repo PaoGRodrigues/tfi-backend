@@ -11,25 +11,25 @@ import (
 	"github.com/golang/mock/gomock"
 )
 
+var local = domains.Host{
+	Name:        "Test",
+	IP:          "13.13.13.13",
+	PrivateHost: true,
+}
+var remote = domains.Host{
+	Name:        "Test2",
+	IP:          "172.172.172.172",
+	PrivateHost: false,
+}
+
+var expected = []domains.Host{
+	local,
+	remote,
+}
+
 func TestGetLocalHostWithHostsReturnedFromSearcherReturnLocalHosts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	local := domains.Host{
-		Name:        "Test",
-		IP:          "13.13.13.13",
-		PrivateHost: true,
-	}
-	remote := domains.Host{
-		Name:        "Test2",
-		IP:          "172.172.172.172",
-		PrivateHost: false,
-	}
-
-	expected := []domains.Host{
-		local,
-		remote,
-	}
 
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
 	mockSearcher.EXPECT().GetHosts().Return(expected)
@@ -48,22 +48,6 @@ func TestGetLocalHostWithHostsReturnedFromSearcherReturnLocalHosts(t *testing.T)
 func TestGetLocalHostCallingGetHostFromRepoInSearcherReturnLocalHosts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	local := domains.Host{
-		Name:        "Test",
-		IP:          "13.13.13.13",
-		PrivateHost: true,
-	}
-	remote := domains.Host{
-		Name:        "Test2",
-		IP:          "172.172.172.172",
-		PrivateHost: false,
-	}
-
-	expected := []domains.Host{
-		local,
-		remote,
-	}
 
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
 	mockSearcher.EXPECT().GetHosts().Return([]domains.Host{})
@@ -100,22 +84,6 @@ func TestGetRemoteHostAndCallGetAllHostsInSearcherReturnRemoteHostsSuccessfully(
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	local := domains.Host{
-		Name:        "Test",
-		IP:          "13.13.13.13",
-		PrivateHost: true,
-	}
-	remote := domains.Host{
-		Name:        "Test2",
-		IP:          "172.172.172.172",
-		PrivateHost: false,
-	}
-
-	expected := []domains.Host{
-		local,
-		remote,
-	}
-
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
 	mockSearcher.EXPECT().GetHosts().Return(expected)
 
@@ -134,22 +102,6 @@ func TestGetRemoteHostAndCallGetAllHostsInSearcherReturnRemoteHostsSuccessfully(
 func TestGetRemoteHostCallingGetHostFromRepoInSearcherReturnRemoteHosts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
-
-	local := domains.Host{
-		Name:        "Test",
-		IP:          "13.13.13.13",
-		PrivateHost: true,
-	}
-	remote := domains.Host{
-		Name:        "Test2",
-		IP:          "172.172.172.172",
-		PrivateHost: false,
-	}
-
-	expected := []domains.Host{
-		local,
-		remote,
-	}
 
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
 	mockSearcher.EXPECT().GetHosts().Return([]domains.Host{})
