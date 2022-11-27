@@ -34,7 +34,7 @@ func (client *SQLClient) addActiveFlow(currentFlow domains.ActiveFlow) (int, err
 		return 0, err
 	}
 	_, err = client.db.Exec("INSERT INTO traffic VALUES(?,?,?,?) ON CONFLICT(key) DO UPDATE SET bytes=?;",
-		currentFlow.Key, currentFlow.FistSeen, currentFlow.LastSeen, currentFlow.Bytes, currentFlow.Bytes)
+		currentFlow.Key, currentFlow.FirstSeen, currentFlow.LastSeen, currentFlow.Bytes, currentFlow.Bytes)
 	if err != nil {
 		return flowKey, err
 	}
