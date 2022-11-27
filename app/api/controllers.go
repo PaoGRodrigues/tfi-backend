@@ -159,3 +159,16 @@ func createProtocolString(proto alerts.AlertProtocol) string {
 
 	return str.String()
 }
+
+func (api *Api) BlockFlow(c *gin.Context) {
+	/****
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(500, gin.H{"data": "error"})
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
+	c.Header("Access-Control-Allow-Methods", "POST")
+	c.JSON(http.StatusOK, gin.H{"message": "ok"})*/
+}

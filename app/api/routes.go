@@ -35,3 +35,7 @@ func (api *Api) MapStoreActiveFlows() {
 func (api *Api) MapAlertsURL() {
 	api.GET("/alerts", api.GetAlerts)
 }
+
+func (api *Api) MapBlockURL() {
+	api.POST("/blockedflows", api.BlockFlow)
+}

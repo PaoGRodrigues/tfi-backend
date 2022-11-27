@@ -1,6 +1,10 @@
 package usecase
 
-import "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+import (
+	"errors"
+
+	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+)
 
 type HostsFilter struct {
 	searcher domains.HostUseCase
@@ -54,4 +58,17 @@ func (l *HostsFilter) GetRemoteHosts() ([]domains.Host, error) {
 		}
 	}
 	return remoteHosts, nil
+}
+
+func (l *HostsFilter) GetHost(ip string) (domains.Host, error) {
+	current, err := l.checkHosts()
+	if err != nil {
+		return domains.Host{}, err
+	}
+	for _, host := range current {
+		if host.IP == ip {
+			return host, nil
+		}
+	}
+	return domains.Host{}, errors.New("There's no host with this IP")
 }
