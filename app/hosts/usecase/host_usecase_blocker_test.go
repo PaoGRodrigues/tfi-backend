@@ -60,3 +60,21 @@ func TestBlockSourceIPGetHostReturnError(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestBlockSourceIPBlockHostReturnError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockFilter := mocks.NewMockHostsFilter(ctrl)
+	mockFilter.EXPECT().GetHost(hosts[0].IP).Return(hosts[0], nil)
+
+	mockBlockerService := mocks.NewMockHostBlockService(ctrl)
+	mockBlockerService.EXPECT().BlockHost(hosts[0]).Return(fmt.Errorf("Error Test"))
+
+	blocker := usecase.NewBlocker(mockFilter, mockBlockerService)
+	_, err := blocker.Block(hosts[0].IP)
+
+	if err == nil {
+		t.Fail()
+	}
+}
