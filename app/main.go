@@ -26,7 +26,7 @@ func main() {
 	if *scope != "prod" {
 		tool = services.NewFakeTool()
 	} else {
-		tool = services.NewTool("http://192.168.0.13:3000", 2, "XXXX", "XXXX")
+		tool = services.NewTool("http://192.168.0.13:3000", 2, "XXX", "XXX")
 	}
 
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
@@ -35,7 +35,7 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	alertsSearcher := initializeAlertsDependencies(tool)
+	alertsSearcher := initializeAlertsDependencies(tool, hostsFilter)
 
 	api := &api.Api{
 		Tool:                tool,
@@ -81,8 +81,8 @@ func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomains.Tr
 	return activeFlowsStorage, nil
 }
 
-func initializeAlertsDependencies(tool services.Tool) domains.AlertUseCase {
-	alertsSearcher := alertsUseCases.NewAlertSearcher(tool)
+func initializeAlertsDependencies(tool services.Tool, hostsFilter hostsDomains.HostsFilter) domains.AlertUseCase {
+	alertsSearcher := alertsUseCases.NewAlertSearcher(tool, hostsFilter)
 	return alertsSearcher
 }
 

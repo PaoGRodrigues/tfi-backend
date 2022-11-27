@@ -9,7 +9,7 @@ import (
 type Tool interface {
 	GetAllHosts() ([]domains_host.Host, error)
 	GetAllActiveTraffic() ([]domains_traffic.ActiveFlow, error)
-	GetAllAlerts(epoch_begin, epoch_end int) ([]domains_alert.Alert, error)
+	GetAllAlerts(epoch_begin, epoch_end int, host string) ([]domains_alert.Alert, error)
 }
 
 type NtopNG struct {

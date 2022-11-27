@@ -13,24 +13,24 @@ type HttpAlertResponse struct {
 	Rc      int
 	RcStrHr string
 	RcStr   string
-	Rsp     Records
+	Rsp     []domains.Alert
 }
 
 type Records struct {
 	alerts []domains.Alert
 }
 
-func (t *NtopNG) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
-	alertsListResponse, err := t.getAlertsList(epoch_begin, epoch_end)
+func (t *NtopNG) GetAllAlerts(epoch_begin, epoch_end int, host string) ([]domains.Alert, error) {
+	alertsListResponse, err := t.getAlertsList(epoch_begin, epoch_end, host)
 	if err != nil {
 		return nil, err
 	}
-	return alertsListResponse.Rsp.alerts, nil
+	return alertsListResponse.Rsp, nil
 }
 
-func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int) (HttpAlertResponse, error) {
+func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int, host string) (HttpAlertResponse, error) {
 	client := &http.Client{}
-	endpoint := "/lua/rest/v2/get/all/alert/list.lua"
+	endpoint := "/lua/rest/v2/get/flow/alert/list.lua"
 
 	req, err := http.NewRequest("GET", t.UrlClient+endpoint, nil)
 	if err != nil {
@@ -43,6 +43,7 @@ func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int) (HttpAlertResponse, e
 	query.Add("ifid", strconv.Itoa(t.InterfaceId))
 	query.Add("epoch_begin", strconv.Itoa(epoch_begin))
 	query.Add("epoch_end", strconv.Itoa(epoch_end))
+	query.Add("host", host)
 
 	req.URL.RawQuery = query.Encode()
 
