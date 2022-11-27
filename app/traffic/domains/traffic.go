@@ -1,14 +1,14 @@
 package domains
 
-//*********** Entities
+// *********** Entities
 type ActiveFlow struct {
-	Key      string
-	FistSeen uint64 //Unix timestamp
-	LastSeen uint64 //Unix timestamp
-	Client   Client
-	Server   Server
-	Bytes    int
-	Protocol Protocol
+	Key       string
+	FirstSeen uint64 //Unix timestamp
+	LastSeen  uint64 //Unix timestamp
+	Client    Client
+	Server    Server
+	Bytes     int
+	Protocol  Protocol
 }
 
 type Client struct {
@@ -37,7 +37,7 @@ type BytesPerDestination struct {
 	Country     string
 }
 
-//*********** Use Cases
+// *********** Use Cases
 type TrafficUseCase interface {
 	GetAllActiveTraffic() ([]ActiveFlow, error)
 	GetActiveFlows() []ActiveFlow
@@ -51,12 +51,12 @@ type ActiveFlowsStorage interface {
 	StoreFlows() error
 }
 
-//*********** Services
+// *********** Services
 type TrafficService interface {
 	GetAllActiveTraffic() ([]ActiveFlow, error)
 }
 
-//*********** Repositories
+// *********** Repositories
 type TrafficRepository interface {
 	AddActiveFlows([]ActiveFlow) error
 }

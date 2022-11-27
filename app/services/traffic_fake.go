@@ -15,7 +15,8 @@ func (trff *FakeTool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 		L7: "TLS.GoogleServices",
 	}
 	activeFlowStruct := []domains.ActiveFlow{
-		domains.ActiveFlow{
+		{
+			Key:    "345",
 			Client: client,
 			Server: domains.Server{
 				IP:                "123.1.5.1",
@@ -24,10 +25,13 @@ func (trff *FakeTool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 				Port:              443,
 				Name:              "lib.gen.rus",
 			},
-			Bytes:    345,
-			Protocol: protocols,
+			FirstSeen: 1589741868,
+			LastSeen:  1589741868,
+			Bytes:     345,
+			Protocol:  protocols,
 		},
-		domains.ActiveFlow{
+		{
+			Key:    "346",
 			Client: client,
 			Server: domains.Server{
 				IP:                "123.123.123.123",
@@ -36,10 +40,13 @@ func (trff *FakeTool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 				Port:              443,
 				Name:              "lib.gen.rus",
 			},
-			Bytes:    10000,
-			Protocol: protocols,
+			Bytes:     10000,
+			FirstSeen: 1589741868,
+			LastSeen:  1589741868,
+			Protocol:  protocols,
 		},
-		domains.ActiveFlow{
+		{
+			Key:    "347",
 			Client: client,
 			Server: domains.Server{
 				IP:                "172.98.98.109",
@@ -48,8 +55,10 @@ func (trff *FakeTool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 				Port:              443,
 				Name:              "lib.gen.rus",
 			},
-			Bytes:    1000,
-			Protocol: protocols,
+			FirstSeen: 1589741868,
+			LastSeen:  1589741868,
+			Bytes:     1000,
+			Protocol:  protocols,
 		},
 	}
 
