@@ -27,13 +27,14 @@ type Api struct {
 }
 
 type AlertsResponse struct {
-	Name     string
-	Family   string
-	Time     string
-	Score    string
-	Severity string
-	Flow     string
-	Protocol string
+	Name        string
+	Family      string
+	Time        string
+	Score       string
+	Severity    string
+	Source      string
+	Destination string
+	Protocol    string
 }
 
 func (api *Api) GetHosts(c *gin.Context) {
@@ -119,32 +120,34 @@ func (api *Api) GetAlerts(c *gin.Context) {
 func (api *Api) parseAlertsData(alerts []domains.Alert) []AlertsResponse {
 	response := []AlertsResponse{}
 	for _, alert := range alerts {
+		source, destination := createFlowString(alert.AlertFlow)
 		ar := AlertsResponse{
-			Name:     alert.Name,
-			Family:   alert.Family,
-			Time:     alert.Time.Label,
-			Score:    alert.Score,
-			Severity: alert.Severity.Label,
-			Flow:     createFlowString(alert.AlertFlow),
-			Protocol: createProtocolString(alert.AlertProtocol),
+			Name:        alert.Name,
+			Family:      alert.Family,
+			Time:        alert.Time.Label,
+			Score:       alert.Score,
+			Severity:    alert.Severity.Label,
+			Source:      source,
+			Destination: destination,
+			Protocol:    createProtocolString(alert.AlertProtocol),
 		}
 		response = append(response, ar)
 	}
 	return response
 }
 
-func createFlowString(flow alerts.AlertFlow) string {
-	var str strings.Builder
+func createFlowString(flow alerts.AlertFlow) (string, string) {
+	var source strings.Builder
+	var destination strings.Builder
 
-	str.WriteString(flow.Client.Name)
-	str.WriteString(":")
-	str.WriteString(strconv.Itoa(flow.Client.Port))
-	str.WriteString(" => ")
-	str.WriteString(flow.Server.Name)
-	str.WriteString(":")
-	str.WriteString(strconv.Itoa(flow.Server.Port))
+	source.WriteString(flow.Client.Name)
+	source.WriteString(":")
+	source.WriteString(strconv.Itoa(flow.Client.Port))
+	destination.WriteString(flow.Server.Name)
+	destination.WriteString(":")
+	destination.WriteString(strconv.Itoa(flow.Server.Port))
 
-	return str.String()
+	return source.String(), destination.String()
 }
 
 func createProtocolString(proto alerts.AlertProtocol) string {
