@@ -36,6 +36,6 @@ func (api *Api) MapAlertsURL() {
 	api.GET("/alerts", api.GetAlerts)
 }
 
-func (api *Api) MapBlockURL() {
-	api.POST("/blockedflows", api.BlockFlow)
+func (api *Api) MapBlockHost() {
+	api.POST("/blockedhosts", api.BlockHost)
 }

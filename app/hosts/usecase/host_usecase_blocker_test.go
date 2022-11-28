@@ -34,7 +34,7 @@ func TestBlockSourceIPReturnCorrectHost(t *testing.T) {
 	mockBlockerService := mocks.NewMockHostBlockService(ctrl)
 	mockBlockerService.EXPECT().BlockHost(hosts[0]).Return(nil)
 
-	blocker := usecase.NewBlocker(mockFilter, mockBlockerService)
+	blocker := usecase.NewBlocker(mockBlockerService, mockFilter)
 	get, err := blocker.Block(hosts[0].IP)
 
 	if err != nil {
@@ -53,7 +53,7 @@ func TestBlockSourceIPGetHostReturnError(t *testing.T) {
 
 	mockBlockerService := mocks.NewMockHostBlockService(ctrl)
 
-	blocker := usecase.NewBlocker(mockFilter, mockBlockerService)
+	blocker := usecase.NewBlocker(mockBlockerService, mockFilter)
 	_, err := blocker.Block(hosts[0].IP)
 
 	if err == nil {
@@ -71,7 +71,7 @@ func TestBlockSourceIPBlockHostReturnError(t *testing.T) {
 	mockBlockerService := mocks.NewMockHostBlockService(ctrl)
 	mockBlockerService.EXPECT().BlockHost(hosts[0]).Return(fmt.Errorf("Error Test"))
 
-	blocker := usecase.NewBlocker(mockFilter, mockBlockerService)
+	blocker := usecase.NewBlocker(mockBlockerService, mockFilter)
 	_, err := blocker.Block(hosts[0].IP)
 
 	if err == nil {

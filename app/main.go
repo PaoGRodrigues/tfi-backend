@@ -36,6 +36,7 @@ func main() {
 		panic(err.Error())
 	}
 	alertsSearcher := initializeAlertsDependencies(tool, hostsFilter)
+	hostBlocker := initializeHostBlocker(hostsFilter)
 
 	api := &api.Api{
 		Tool:                tool,
@@ -45,6 +46,7 @@ func main() {
 		ActiveFlowsSearcher: trafficActiveFlowsSearcher,
 		ActiveFlowsStorage:  activeFlowsStorage,
 		AlertsSearcher:      alertsSearcher,
+		HostBlocker:         hostBlocker,
 		Engine:              gin.Default(),
 	}
 
@@ -55,6 +57,7 @@ func main() {
 	api.MapGetActiveFlowsPerDestinationURL()
 	api.MapStoreActiveFlows()
 	api.MapAlertsURL()
+	api.MapBlockHost()
 
 	api.Run(":8080")
 }
@@ -93,4 +96,10 @@ func newDB(file string) (*trafficRepo.SQLClient, error) {
 	}
 	databaseConn := trafficRepo.NewSQLClient(db)
 	return databaseConn, nil
+}
+
+func initializeHostBlocker(filter hostsDomains.HostsFilter) hostsDomains.HostBlocker {
+	console := services.NewConsole()
+	hostBlocker := hostsUseCases.NewBlocker(console, filter)
+	return hostBlocker
 }

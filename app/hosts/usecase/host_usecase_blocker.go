@@ -7,7 +7,7 @@ type Blocker struct {
 	blockService domains.HostBlockerService
 }
 
-func NewBlocker(filter domains.HostsFilter, srv domains.HostBlockerService) domains.HostBlocker {
+func NewBlocker(srv domains.HostBlockerService, filter domains.HostsFilter) domains.HostBlocker {
 	return &Blocker{
 		filter:       filter,
 		blockService: srv,
