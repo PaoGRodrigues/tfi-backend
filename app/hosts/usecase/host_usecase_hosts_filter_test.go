@@ -156,3 +156,18 @@ func TestGetHostByIPGetAllHostsReturnError(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestGetHostByIPWithAnUnexistingIPReturnError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockSearcher := mocks.NewMockHostUseCase(ctrl)
+	mockSearcher.EXPECT().GetHosts().Return(expected)
+
+	filter := usecase.NewHostsFilter(mockSearcher)
+	_, err := filter.GetHost("10.10.10.10")
+
+	if err == nil {
+		t.Fail()
+	}
+}
