@@ -162,7 +162,7 @@ func createProtocolString(proto alerts.AlertProtocol) string {
 }
 
 type blockHostRequest struct {
-	Ip string `json:"ip" binding:"required"`
+	Host string `json:"host" binding:"required"` // Host can be IP or URL
 }
 
 func (api *Api) BlockHost(c *gin.Context) {
@@ -173,7 +173,7 @@ func (api *Api) BlockHost(c *gin.Context) {
 		return
 	}
 
-	_, err := api.HostBlocker.Block(host.Ip)
+	_, err := api.HostBlocker.Block(host.Host)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
@@ -181,5 +181,5 @@ func (api *Api) BlockHost(c *gin.Context) {
 
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "POST")
-	c.JSON(http.StatusOK, gin.H{"message": "ok"})
+	c.JSON(http.StatusOK, gin.H{"message": "Host has been blocked"})
 }

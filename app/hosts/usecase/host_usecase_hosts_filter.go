@@ -60,13 +60,16 @@ func (l *HostsFilter) GetRemoteHosts() ([]domains.Host, error) {
 	return remoteHosts, nil
 }
 
-func (l *HostsFilter) GetHost(ip string) (domains.Host, error) {
+func (l *HostsFilter) GetHost(attr string) (domains.Host, error) {
 	current, err := l.checkHosts()
 	if err != nil {
 		return domains.Host{}, err
 	}
 	for _, host := range current {
-		if host.IP == ip {
+		if host.IP == attr {
+			return host, nil
+		}
+		if host.Name == attr {
 			return host, nil
 		}
 	}

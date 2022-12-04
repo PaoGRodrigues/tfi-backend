@@ -17,7 +17,7 @@ var local = domains.Host{
 	PrivateHost: true,
 }
 var remote = domains.Host{
-	Name:        "Test2",
+	Name:        "Test2.google.com",
 	IP:          "172.172.172.172",
 	PrivateHost: false,
 }
@@ -166,6 +166,38 @@ func TestGetHostByIPWithAnUnexistingIPReturnError(t *testing.T) {
 
 	filter := usecase.NewHostsFilter(mockSearcher)
 	_, err := filter.GetHost("10.10.10.10")
+
+	if err == nil {
+		t.Fail()
+	}
+}
+
+func TestGetHostByURLReturnCorrectHost(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockSearcher := mocks.NewMockHostUseCase(ctrl)
+	mockSearcher.EXPECT().GetHosts().Return(expected)
+
+	filter := usecase.NewHostsFilter(mockSearcher)
+	got, err := filter.GetHost(remote.Name)
+
+	if err != nil {
+		t.Fail()
+	}
+
+	assert.Equal(t, remote, got)
+}
+
+func TestGetHostByAnUnexistingURLReturnError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockSearcher := mocks.NewMockHostUseCase(ctrl)
+	mockSearcher.EXPECT().GetHosts().Return(expected)
+
+	filter := usecase.NewHostsFilter(mockSearcher)
+	_, err := filter.GetHost("test.test.com")
 
 	if err == nil {
 		t.Fail()

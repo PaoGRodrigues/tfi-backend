@@ -14,8 +14,8 @@ func NewBlocker(srv domains.HostBlockerService, filter domains.HostsFilter) doma
 	}
 }
 
-func (blocker *Blocker) Block(ip string) (domains.Host, error) {
-	host, err := blocker.filter.GetHost(ip)
+func (blocker *Blocker) Block(attr string) (domains.Host, error) {
+	host, err := blocker.filter.GetHost(attr)
 	if err != nil {
 		return domains.Host{}, err
 	}
