@@ -3,6 +3,7 @@ package api_test
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -84,4 +85,62 @@ func TestBlockHostURLReturn200(t *testing.T) {
 	api.Engine.ServeHTTP(response, httpRequest)
 
 	assert.Equal(t, http.StatusOK, response.Code)
+}
+
+func TestBlockHostRouteReceiveWrongBodyReturn500(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	api := &api.Api{
+		Engine: gin.Default(),
+	}
+
+	api.MapBlockHost()
+
+	response := httptest.NewRecorder()
+
+	req := blockHostRequest{
+		Host: "",
+	}
+
+	body, _ := json.Marshal(req)
+
+	requestUrl := "/blockedhosts"
+	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
+
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
+}
+
+func TestBlockHostFunctionReturningErrorReturn500(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockBlocker := mocks.NewMockHostBlocker(ctrl)
+	mockBlocker.EXPECT().Block(Host.Name).Return(domains.Host{}, fmt.Errorf("Test error"))
+
+	api := &api.Api{
+		HostBlocker: mockBlocker,
+		Engine:      gin.Default(),
+	}
+
+	api.MapBlockHost()
+
+	response := httptest.NewRecorder()
+
+	req := blockHostRequest{
+		Host: Host.Name,
+	}
+
+	body, _ := json.Marshal(req)
+
+	requestUrl := "/blockedhosts"
+	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
+
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
 }
