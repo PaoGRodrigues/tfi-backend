@@ -169,13 +169,13 @@ func (api *Api) BlockHost(c *gin.Context) {
 	var host blockHostRequest
 	if err := c.ShouldBindJSON(&host); err != nil {
 		c.JSON(500, gin.H{"data": "error"})
-		c.AbortWithStatus(http.StatusInternalServerError)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
 	_, err := api.HostBlocker.Block(host.Host)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 
