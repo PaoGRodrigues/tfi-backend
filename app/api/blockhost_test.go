@@ -42,7 +42,38 @@ func TestBlockHostByIPReturn200(t *testing.T) {
 	response := httptest.NewRecorder()
 
 	req := blockHostRequest{
-		Host: "192.192.192.10",
+		Host: Host.IP,
+	}
+
+	body, _ := json.Marshal(req)
+
+	requestUrl := "/blockedhosts"
+	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
+
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusOK, response.Code)
+}
+
+func TestBlockHostURLReturn200(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockBlocker := mocks.NewMockHostBlocker(ctrl)
+	mockBlocker.EXPECT().Block(Host.Name).Return(Host, nil)
+
+	api := &api.Api{
+		HostBlocker: mockBlocker,
+		Engine:      gin.Default(),
+	}
+
+	api.MapBlockHost()
+
+	response := httptest.NewRecorder()
+
+	req := blockHostRequest{
+		Host: Host.Name,
 	}
 
 	body, _ := json.Marshal(req)
