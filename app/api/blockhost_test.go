@@ -87,7 +87,7 @@ func TestBlockHostURLReturn200(t *testing.T) {
 	assert.Equal(t, http.StatusOK, response.Code)
 }
 
-func TestBlockHostRouteReceiveWrongBodyReturn500(t *testing.T) {
+func TestBlockHostRouteReceiveWrongBodyReturn400(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -111,10 +111,10 @@ func TestBlockHostRouteReceiveWrongBodyReturn500(t *testing.T) {
 
 	api.Engine.ServeHTTP(response, httpRequest)
 
-	assert.Equal(t, http.StatusInternalServerError, response.Code)
+	assert.Equal(t, http.StatusBadRequest, response.Code)
 }
 
-func TestBlockHostFunctionReturningErrorReturn500(t *testing.T) {
+func TestBlockHostFunctionReturningErrorReturn400(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -142,5 +142,5 @@ func TestBlockHostFunctionReturningErrorReturn500(t *testing.T) {
 
 	api.Engine.ServeHTTP(response, httpRequest)
 
-	assert.Equal(t, http.StatusInternalServerError, response.Code)
+	assert.Equal(t, http.StatusBadRequest, response.Code)
 }
