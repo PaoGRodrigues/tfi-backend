@@ -13,6 +13,7 @@ import (
 	trafficDomains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	trafficRepo "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	trafficUseCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
+	"github.com/coreos/go-iptables/iptables"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -36,7 +37,10 @@ func main() {
 		panic(err.Error())
 	}
 	alertsSearcher := initializeAlertsDependencies(tool, hostsFilter)
-	hostBlocker := initializeHostBlocker(hostsFilter)
+	hostBlocker, err := initializeHostBlocker(hostsFilter)
+	if err != nil {
+		panic(err.Error())
+	}
 
 	api := &api.Api{
 		Tool:                tool,
@@ -98,8 +102,12 @@ func newDB(file string) (*trafficRepo.SQLClient, error) {
 	return databaseConn, nil
 }
 
-func initializeHostBlocker(filter hostsDomains.HostsFilter) hostsDomains.HostBlocker {
-	console := services.NewConsole()
+func initializeHostBlocker(filter hostsDomains.HostsFilter) (hostsDomains.HostBlocker, error) {
+	iptables, err := iptables.New()
+	if err == nil {
+		return nil, err
+	}
+	console := services.NewConsole(iptables)
 	hostBlocker := hostsUseCases.NewBlocker(console, filter)
-	return hostBlocker
+	return hostBlocker, nil
 }
