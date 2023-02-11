@@ -4,23 +4,23 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	host_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
+	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	hosts_mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
+	traffic_mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
 
-var hosts = []domains.Host{
+var servers = []traffic_domains.Server{
 	{
-		Name:        "Test",
-		IP:          "13.13.13.13",
-		PrivateHost: true,
+		Name: "Test",
+		IP:   "13.13.13.13",
 	},
 	{
-		Name:        "Test2",
-		IP:          "172.172.172.172",
-		PrivateHost: false,
+		Name: "Test2",
+		IP:   "172.172.172.172",
 	},
 }
 
@@ -28,33 +28,35 @@ func TestBlockSourceIPReturnCorrectHost(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockFilter := mocks.NewMockHostsFilter(ctrl)
-	mockFilter.EXPECT().GetHost(hosts[0].IP).Return(hosts[0], nil)
+	mockFilter := traffic_mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFilter.EXPECT().GetFlows(servers[0].IP).Return(servers[0], nil)
 
-	mockBlockerService := mocks.NewMockHostBlockService(ctrl)
-	mockBlockerService.EXPECT().BlockHost(hosts[0]).Return(nil)
+	host := host_domains.Host{IP: servers[0].IP, Name: servers[0].Name}
+
+	mockBlockerService := hosts_mocks.NewMockHostBlockerService(ctrl)
+	mockBlockerService.EXPECT().BlockHost(host).Return(nil)
 
 	blocker := usecase.NewBlocker(mockBlockerService, mockFilter)
-	get, err := blocker.Block(hosts[0].IP)
+	get, err := blocker.Block(servers[0].IP)
 
 	if err != nil {
 		t.Fail()
 	}
 
-	assert.Equal(t, hosts[0], get)
+	assert.Equal(t, host, get)
 }
 
 func TestBlockSourceIPGetHostReturnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockFilter := mocks.NewMockHostsFilter(ctrl)
-	mockFilter.EXPECT().GetHost(hosts[0].IP).Return(domains.Host{}, fmt.Errorf("Error Test"))
+	mockFilter := traffic_mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFilter.EXPECT().GetFlows(servers[0].IP).Return(traffic_domains.Server{}, fmt.Errorf("Error Test"))
 
-	mockBlockerService := mocks.NewMockHostBlockService(ctrl)
+	mockBlockerService := hosts_mocks.NewMockHostBlockerService(ctrl)
 
 	blocker := usecase.NewBlocker(mockBlockerService, mockFilter)
-	_, err := blocker.Block(hosts[0].IP)
+	_, err := blocker.Block(servers[0].IP)
 
 	if err == nil {
 		t.Fail()
@@ -65,14 +67,16 @@ func TestBlockSourceIPBlockHostReturnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockFilter := mocks.NewMockHostsFilter(ctrl)
-	mockFilter.EXPECT().GetHost(hosts[0].IP).Return(hosts[0], nil)
+	mockFilter := traffic_mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFilter.EXPECT().GetFlows(servers[0].IP).Return(servers[0], nil)
 
-	mockBlockerService := mocks.NewMockHostBlockService(ctrl)
-	mockBlockerService.EXPECT().BlockHost(hosts[0]).Return(fmt.Errorf("Error Test"))
+	host := host_domains.Host{IP: servers[0].IP, Name: servers[0].Name}
+
+	mockBlockerService := hosts_mocks.NewMockHostBlockerService(ctrl)
+	mockBlockerService.EXPECT().BlockHost(host).Return(fmt.Errorf("Error Test"))
 
 	blocker := usecase.NewBlocker(mockBlockerService, mockFilter)
-	_, err := blocker.Block(hosts[0].IP)
+	_, err := blocker.Block(servers[0].IP)
 
 	if err == nil {
 		t.Fail()

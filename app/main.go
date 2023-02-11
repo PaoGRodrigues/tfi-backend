@@ -37,7 +37,7 @@ func main() {
 		panic(err.Error())
 	}
 	alertsSearcher := initializeAlertsDependencies(tool, hostsFilter)
-	hostBlocker, err := initializeHostBlocker(hostsFilter)
+	hostBlocker, err := initializeHostBlocker(activeFlowsStorage)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -102,9 +102,9 @@ func newDB(file string) (*trafficRepo.SQLClient, error) {
 	return databaseConn, nil
 }
 
-func initializeHostBlocker(filter hostsDomains.HostsFilter) (hostsDomains.HostBlocker, error) {
+func initializeHostBlocker(filter trafficDomains.ActiveFlowsStorage) (hostsDomains.HostBlocker, error) {
 	iptables, err := iptables.New()
-	if err == nil {
+	if err != nil {
 		return nil, err
 	}
 	console := services.NewConsole(iptables)

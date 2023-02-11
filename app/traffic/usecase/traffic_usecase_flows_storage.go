@@ -26,3 +26,14 @@ func (fs *FlowsRepository) StoreFlows() error {
 	err := fs.trafficRepo.AddActiveFlows(activeFlows)
 	return err
 }
+
+func (fs *FlowsRepository) GetFlows(attr string) (domains.Server, error) {
+	flow, err := fs.trafficRepo.GetServerByAttr(attr)
+	if err != nil {
+		return domains.Server{}, nil
+	}
+
+	//CODE
+
+	return flow, nil
+}

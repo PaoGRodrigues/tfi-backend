@@ -1,13 +1,16 @@
 package usecase
 
-import "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+import (
+	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	trafficDomains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+)
 
 type Blocker struct {
-	filter       domains.HostsFilter
+	filter       trafficDomains.ActiveFlowsStorage
 	blockService domains.HostBlockerService
 }
 
-func NewBlocker(srv domains.HostBlockerService, filter domains.HostsFilter) domains.HostBlocker {
+func NewBlocker(srv domains.HostBlockerService, filter trafficDomains.ActiveFlowsStorage) domains.HostBlocker {
 	return &Blocker{
 		filter:       filter,
 		blockService: srv,
@@ -15,13 +18,22 @@ func NewBlocker(srv domains.HostBlockerService, filter domains.HostsFilter) doma
 }
 
 func (blocker *Blocker) Block(attr string) (domains.Host, error) {
-	host, err := blocker.filter.GetHost(attr)
+	server, err := blocker.filter.GetFlows(attr)
 	if err != nil {
 		return domains.Host{}, err
 	}
+	host := convertServerToHost(server)
 	err = blocker.blockService.BlockHost(host)
 	if err != nil {
 		return domains.Host{}, err
 	}
 	return host, nil
+}
+
+func convertServerToHost(server trafficDomains.Server) domains.Host {
+	host := domains.Host{
+		IP:   server.IP,
+		Name: server.Name,
+	}
+	return host
 }

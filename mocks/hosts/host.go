@@ -207,31 +207,31 @@ func (mr *MockHostServiceMockRecorder) GetAllHosts() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllHosts", reflect.TypeOf((*MockHostService)(nil).GetAllHosts))
 }
 
-// MockHostBlockService is a mock of HostBlockService interface.
-type MockHostBlockService struct {
+// MockHostBlockerService is a mock of HostBlockerService interface.
+type MockHostBlockerService struct {
 	ctrl     *gomock.Controller
-	recorder *MockHostBlockServiceMockRecorder
+	recorder *MockHostBlockerServiceMockRecorder
 }
 
-// MockHostBlockServiceMockRecorder is the mock recorder for MockHostBlockService.
-type MockHostBlockServiceMockRecorder struct {
-	mock *MockHostBlockService
+// MockHostBlockerServiceMockRecorder is the mock recorder for MockHostBlockerService.
+type MockHostBlockerServiceMockRecorder struct {
+	mock *MockHostBlockerService
 }
 
-// NewMockHostBlockService creates a new mock instance.
-func NewMockHostBlockService(ctrl *gomock.Controller) *MockHostBlockService {
-	mock := &MockHostBlockService{ctrl: ctrl}
-	mock.recorder = &MockHostBlockServiceMockRecorder{mock}
+// NewMockHostBlockerService creates a new mock instance.
+func NewMockHostBlockerService(ctrl *gomock.Controller) *MockHostBlockerService {
+	mock := &MockHostBlockerService{ctrl: ctrl}
+	mock.recorder = &MockHostBlockerServiceMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockHostBlockService) EXPECT() *MockHostBlockServiceMockRecorder {
+func (m *MockHostBlockerService) EXPECT() *MockHostBlockerServiceMockRecorder {
 	return m.recorder
 }
 
 // BlockHost mocks base method.
-func (m *MockHostBlockService) BlockHost(arg0 domains.Host) error {
+func (m *MockHostBlockerService) BlockHost(arg0 domains.Host) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BlockHost", arg0)
 	ret0, _ := ret[0].(error)
@@ -239,7 +239,7 @@ func (m *MockHostBlockService) BlockHost(arg0 domains.Host) error {
 }
 
 // BlockHost indicates an expected call of BlockHost.
-func (mr *MockHostBlockServiceMockRecorder) BlockHost(arg0 interface{}) *gomock.Call {
+func (mr *MockHostBlockerServiceMockRecorder) BlockHost(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockHost", reflect.TypeOf((*MockHostBlockService)(nil).BlockHost), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockHost", reflect.TypeOf((*MockHostBlockerService)(nil).BlockHost), arg0)
 }
