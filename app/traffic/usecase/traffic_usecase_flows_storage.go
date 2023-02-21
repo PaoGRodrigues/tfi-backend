@@ -30,10 +30,7 @@ func (fs *FlowsRepository) StoreFlows() error {
 func (fs *FlowsRepository) GetFlows(attr string) (domains.Server, error) {
 	flow, err := fs.trafficRepo.GetServerByAttr(attr)
 	if err != nil {
-		return domains.Server{}, nil
+		return domains.Server{}, err
 	}
-
-	//CODE
-
 	return flow, nil
 }
