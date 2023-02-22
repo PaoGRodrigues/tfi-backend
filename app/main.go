@@ -21,13 +21,20 @@ import (
 func main() {
 
 	var tool services.Tool
+	var console services.Terminal
+	var err error
 	scope := flag.String("s", "", "scope")
 	flag.Parse()
 
 	if *scope != "prod" {
 		tool = services.NewFakeTool()
+		console = services.NewFakeConsole()
 	} else {
 		tool = services.NewTool("http://192.168.0.13:3000", 2, "XXX", "XXX")
+		console, err = initializeConsole()
+		if err != nil {
+			panic(err.Error())
+		}
 	}
 
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
@@ -37,10 +44,7 @@ func main() {
 		panic(err.Error())
 	}
 	alertsSearcher := initializeAlertsDependencies(tool, hostsFilter)
-	hostBlocker, err := initializeHostBlocker(activeFlowsStorage)
-	if err != nil {
-		panic(err.Error())
-	}
+	hostBlocker := initializeHostBlocker(console, activeFlowsStorage)
 
 	api := &api.Api{
 		Tool:                tool,
@@ -102,12 +106,16 @@ func newDB(file string) (*trafficRepo.SQLClient, error) {
 	return databaseConn, nil
 }
 
-func initializeHostBlocker(filter trafficDomains.ActiveFlowsStorage) (hostsDomains.HostBlocker, error) {
+func initializeConsole() (*services.Console, error) {
 	iptables, err := iptables.New()
 	if err != nil {
 		return nil, err
 	}
 	console := services.NewConsole(iptables)
+	return console, nil
+}
+
+func initializeHostBlocker(console services.Terminal, filter trafficDomains.ActiveFlowsStorage) hostsDomains.HostBlocker {
 	hostBlocker := hostsUseCases.NewBlocker(console, filter)
-	return hostBlocker, nil
+	return hostBlocker
 }

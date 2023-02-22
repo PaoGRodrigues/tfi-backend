@@ -8,6 +8,10 @@ import (
 var chain = "FORWARD"
 var table = "filter"
 
+type Terminal interface {
+	BlockHost(domains.Host) error
+}
+
 type Console struct {
 	IPTables *iptables.IPTables
 }

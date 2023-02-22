@@ -48,7 +48,7 @@ func TestBlockHostByIPReturn200(t *testing.T) {
 
 	body, _ := json.Marshal(req)
 
-	requestUrl := "/blockedhosts"
+	requestUrl := "/blockhost"
 	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
 
 	api.Engine.ServeHTTP(response, httpRequest)
@@ -79,7 +79,7 @@ func TestBlockHostURLReturn200(t *testing.T) {
 
 	body, _ := json.Marshal(req)
 
-	requestUrl := "/blockedhosts"
+	requestUrl := "/blockhost"
 	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
 
 	api.Engine.ServeHTTP(response, httpRequest)
@@ -106,7 +106,7 @@ func TestBlockHostRouteReceiveWrongBodyReturn400(t *testing.T) {
 
 	body, _ := json.Marshal(req)
 
-	requestUrl := "/blockedhosts"
+	requestUrl := "/blockhost"
 	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
 
 	api.Engine.ServeHTTP(response, httpRequest)
@@ -137,7 +137,33 @@ func TestBlockHostFunctionReturningErrorReturn400(t *testing.T) {
 
 	body, _ := json.Marshal(req)
 
-	requestUrl := "/blockedhosts"
+	requestUrl := "/blockhost"
+	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
+
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusBadRequest, response.Code)
+}
+
+func TestBlockHostFunctionReturnErrorWhenTheBodyIsWrong(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockBlocker := mocks.NewMockHostBlocker(ctrl)
+
+	api := &api.Api{
+		HostBlocker: mockBlocker,
+		Engine:      gin.Default(),
+	}
+
+	api.MapBlockHost()
+
+	response := httptest.NewRecorder()
+
+	body, _ := json.Marshal("{\"Ip\": \"10.10.10.10\"}")
+
+	requestUrl := "/blockhost"
 	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
 
 	api.Engine.ServeHTTP(response, httpRequest)

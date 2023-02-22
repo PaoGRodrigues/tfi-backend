@@ -10,7 +10,7 @@ type Blocker struct {
 	blockService domains.HostBlockerService
 }
 
-func NewBlocker(srv domains.HostBlockerService, filter trafficDomains.ActiveFlowsStorage) domains.HostBlocker {
+func NewBlocker(srv domains.HostBlockerService, filter trafficDomains.ActiveFlowsStorage) *Blocker {
 	return &Blocker{
 		filter:       filter,
 		blockService: srv,

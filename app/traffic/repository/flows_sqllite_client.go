@@ -87,7 +87,7 @@ func (client *SQLClient) GetServerByAttr(attr string) (domains.Server, error) {
 	server := domains.Server{}
 	var id int
 
-	rows, err := client.db.Query("SELECT * INTO servers WHERE name LIKE ? LIMIT 1", attr)
+	rows, err := client.db.Query("SELECT * FROM servers WHERE name LIKE ? LIMIT 1", attr)
 	if err != nil {
 		return domains.Server{}, err
 	}
@@ -97,7 +97,7 @@ func (client *SQLClient) GetServerByAttr(attr string) (domains.Server, error) {
 			return domains.Server{}, err
 		}
 	} else {
-		rows, err = client.db.Query("SELECT * INTO servers WHERE ip LIKE ? LIMIT 1", attr)
+		rows, err = client.db.Query("SELECT * FROM servers WHERE ip LIKE ? LIMIT 1", attr)
 		if err != nil {
 			return domains.Server{}, err
 		}

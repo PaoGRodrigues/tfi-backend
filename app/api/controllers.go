@@ -166,8 +166,8 @@ type blockHostRequest struct {
 }
 
 func (api *Api) BlockHost(c *gin.Context) {
-	var host blockHostRequest
-	if err := c.ShouldBindJSON(&host); err != nil {
+	host := blockHostRequest{}
+	if err := c.BindJSON(&host); err != nil {
 		c.JSON(400, gin.H{"data": "error"})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
@@ -175,6 +175,7 @@ func (api *Api) BlockHost(c *gin.Context) {
 
 	_, err := api.HostBlocker.Block(host.Host)
 	if err != nil {
+		c.AbortWithStatus(http.StatusBadRequest)
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}

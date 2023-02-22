@@ -37,5 +37,5 @@ func (api *Api) MapAlertsURL() {
 }
 
 func (api *Api) MapBlockHost() {
-	api.POST("/blockedhosts", api.BlockHost)
+	api.POST("/blockhost", api.BlockHost)
 }
