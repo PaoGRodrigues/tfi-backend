@@ -111,3 +111,43 @@ func (client *SQLClient) GetServerByAttr(attr string) (domains.Server, error) {
 
 	return server, nil
 }
+
+func (client *SQLClient) GetClients() ([]domains.Client, error) {
+	clients := []domains.Client{}
+	var id int
+
+	rows, err := client.db.Query("SELECT * FROM clients GROUP BY ip")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		cli := domains.Client{}
+		err = rows.Scan(&id, &cli.Name, &cli.IP, &cli.Port)
+		if err != nil {
+			return nil, err
+		}
+		clients = append(clients, cli)
+	}
+
+	return clients, nil
+}
+
+func (client *SQLClient) GetServers() ([]domains.Server, error) {
+	servers := []domains.Server{}
+	var id int
+
+	rows, err := client.db.Query("SELECT * FROM servers GROUP BY ip")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		srv := domains.Server{}
+		err = rows.Scan(&id, &srv.Name, &srv.Port, &srv.IsBroadcastDomain, &srv.IsDHCP)
+		if err != nil {
+			return nil, err
+		}
+		servers = append(servers, srv)
+	}
+
+	return servers, nil
+}

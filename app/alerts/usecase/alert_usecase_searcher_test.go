@@ -12,6 +12,7 @@ import (
 	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/alerts"
 	mocks_host "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
+	mocks_traffic "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"github.com/golang/mock/gomock"
 )
 
@@ -55,11 +56,12 @@ func TestGetAllAlertsReturnListOfAlerts(t *testing.T) {
 	ip := "192.168.4.14"
 
 	mockService := mocks.NewMockAlertService(ctrl)
-	mockHostFilter := mocks_host.NewMockHostsFilter(ctrl)
-	mockHostFilter.EXPECT().GetLocalHosts().Return([]host.Host{host.Host{IP: ip}}, nil)
+	mockTrafficFilter := mocks_traffic.NewMockActiveFlowsStorage(ctrl)
+	mockTrafficFilter.EXPECT().GetClientsList().Return([]flow.Client{flow.Client{IP: ip}}, nil)
+	mockTrafficFilter.EXPECT().GetServersList().Return(nil, nil)
 	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end, ip).Return(expected, nil)
 
-	alertSearcher := usecase.NewAlertSearcher(mockService, mockHostFilter)
+	alertSearcher := usecase.NewAlertSearcher(mockService, mockTrafficFilter)
 	got, err := alertSearcher.GetAllAlerts()
 
 	if err != nil {
