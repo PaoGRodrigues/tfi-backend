@@ -173,10 +173,15 @@ func (api *Api) BlockHost(c *gin.Context) {
 		return
 	}
 
-	_, err := api.HostBlocker.Block(host.Host)
+	blockedHost, err := api.HostBlocker.Block(host.Host)
 	if err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		c.JSON(http.StatusBadRequest, err)
+		return
+	}
+	if (hosts.Host{} == blockedHost) {
+		c.JSON(400, gin.H{"data": "Server not found"})
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 

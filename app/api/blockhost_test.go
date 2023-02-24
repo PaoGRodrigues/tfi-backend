@@ -170,3 +170,34 @@ func TestBlockHostFunctionReturnErrorWhenTheBodyIsWrong(t *testing.T) {
 
 	assert.Equal(t, http.StatusBadRequest, response.Code)
 }
+
+func TestBlockHostFunctionReturningErrorReturn400WhenIPNotExist(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockBlocker := mocks.NewMockHostBlocker(ctrl)
+	mockBlocker.EXPECT().Block(Host.IP).Return(domains.Host{}, nil)
+
+	api := &api.Api{
+		HostBlocker: mockBlocker,
+		Engine:      gin.Default(),
+	}
+
+	api.MapBlockHost()
+
+	response := httptest.NewRecorder()
+
+	req := blockHostRequest{
+		Host: Host.IP,
+	}
+
+	body, _ := json.Marshal(req)
+
+	requestUrl := "/blockhost"
+	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
+
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusBadRequest, response.Code)
+}
