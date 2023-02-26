@@ -2,7 +2,6 @@ package usecase_test
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 	"time"
 
@@ -70,7 +69,7 @@ var expected = []domains.Alert{
 	},
 }
 
-func TestGetAllAlertsReturnListOfAlerts(t *testing.T) {
+func TestGetAllAlertsReturnListOfAlertsWhenServersListIsEmpty(t *testing.T) {
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -93,9 +92,33 @@ func TestGetAllAlertsReturnListOfAlerts(t *testing.T) {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(got, expected) {
-		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
+	assert.Equal(t, expected, got)
+}
+
+func TestGetAllAlertsReturnListOfAlertsWhenClientsListIsEmpty(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	now := time.Now()
+	epoch_end := int(now.Unix())
+	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
+	ip1 := "192.168.4.14"
+
+	mockService := mocks.NewMockAlertService(ctrl)
+	mockTrafficFilter := mocks_traffic.NewMockActiveFlowsStorage(ctrl)
+	mockTrafficFilter.EXPECT().GetClientsList().Return(nil, nil)
+	mockTrafficFilter.EXPECT().GetServersList().Return([]flow.Server{flow.Server{IP: ip1}}, nil)
+	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end, ip1).Return(expected, nil)
+
+	alertSearcher := usecase.NewAlertSearcher(mockService, mockTrafficFilter)
+	got, err := alertSearcher.GetAllAlerts()
+
+	if err != nil {
+		t.Fail()
 	}
+
+	assert.Equal(t, expected, got)
 }
 
 func TestGetAllAlertsReturnErrorWhenCallServiceForClients(t *testing.T) {
