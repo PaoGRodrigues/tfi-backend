@@ -43,7 +43,7 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	alertsSearcher := initializeAlertsDependencies(tool, hostsFilter)
+	alertsSearcher := initializeAlertsDependencies(tool, activeFlowsStorage)
 	hostBlocker := initializeHostBlocker(console, activeFlowsStorage)
 
 	api := &api.Api{
@@ -92,8 +92,8 @@ func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomains.Tr
 	return activeFlowsStorage, nil
 }
 
-func initializeAlertsDependencies(tool services.Tool, hostsFilter hostsDomains.HostsFilter) domains.AlertUseCase {
-	alertsSearcher := alertsUseCases.NewAlertSearcher(tool, hostsFilter)
+func initializeAlertsDependencies(tool services.Tool, trafficStorage trafficDomains.ActiveFlowsStorage) domains.AlertUseCase {
+	alertsSearcher := alertsUseCases.NewAlertSearcher(tool, trafficStorage)
 	return alertsSearcher
 }
 
