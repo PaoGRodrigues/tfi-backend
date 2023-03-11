@@ -142,7 +142,7 @@ func (client *SQLClient) GetServers() ([]domains.Server, error) {
 	}
 	for rows.Next() {
 		srv := domains.Server{}
-		err = rows.Scan(&id, &srv.Name, &srv.Port, &srv.IsBroadcastDomain, &srv.IsDHCP)
+		err = rows.Scan(&id, &srv.Name, &srv.IP, &srv.Port, &srv.IsBroadcastDomain, &srv.IsDHCP)
 		if err != nil {
 			return nil, err
 		}
