@@ -36,9 +36,14 @@ type AlertProtocol struct {
 // AlertUseCase needs to be implemented in Alert use cases
 type AlertUseCase interface {
 	GetAllAlerts() ([]Alert, error)
+	GetAllAlertsByTime(int, int) ([]Alert, error)
 }
 
 // *********** Services
 type AlertService interface {
 	GetAllAlerts(int, int, string) ([]Alert, error)
+}
+
+type Notifier interface {
+	SendMessage(string) error
 }

@@ -25,6 +25,14 @@ func (searcher *AlertSearcher) GetAllAlerts() ([]domains.Alert, error) {
 	epoch_end := int(now.Unix())
 	epoch_begin := int(now.AddDate(0, 0, -7).Unix()) //To get 7 days back
 
+	alerts, err := searcher.GetAllAlertsByTime(epoch_begin, epoch_end)
+	if err != nil {
+		return []domains.Alert{}, err
+	}
+	return alerts, nil
+}
+
+func (searcher *AlertSearcher) GetAllAlertsByTime(epochBegin int, epochEnd int) ([]domains.Alert, error) {
 	clients, err := searcher.trafficFilter.GetClientsList()
 	if err != nil {
 		return []domains.Alert{}, err
@@ -32,7 +40,7 @@ func (searcher *AlertSearcher) GetAllAlerts() ([]domains.Alert, error) {
 
 	alerts := []domains.Alert{}
 	for _, host := range clients {
-		res, err := searcher.alertService.GetAllAlerts(epoch_begin, epoch_end, host.IP)
+		res, err := searcher.alertService.GetAllAlerts(epochBegin, epochEnd, host.IP)
 		if err != nil {
 			return []domains.Alert{}, err
 		}
@@ -44,13 +52,12 @@ func (searcher *AlertSearcher) GetAllAlerts() ([]domains.Alert, error) {
 		return []domains.Alert{}, err
 	}
 	for _, host := range servers {
-		res, err := searcher.alertService.GetAllAlerts(epoch_begin, epoch_end, host.IP)
+		res, err := searcher.alertService.GetAllAlerts(epochBegin, epochEnd, host.IP)
 		if err != nil {
 			return []domains.Alert{}, err
 		}
 		alerts = append(alerts, res...)
 	}
 	searcher.alerts = alerts
-
 	return alerts, nil
 }
