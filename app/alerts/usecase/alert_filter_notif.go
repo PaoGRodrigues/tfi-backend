@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
@@ -32,14 +33,14 @@ func (an *AlertNotifier) SendLastAlertMessages() error {
 		return err
 	}
 	if len(lastAlerts) == 0 {
-		return fmt.Errorf("No alerts available")
+		return errors.New("No alerts available")
 	}
 	parsedAlerts := ParseAlerts(lastAlerts)
 
 	for _, alert := range parsedAlerts {
 		err := an.notifService.SendMessage(alert)
 		if err != nil {
-			fmt.Println(err)
+			return errors.New("Cannot send message")
 		}
 	}
 	return nil

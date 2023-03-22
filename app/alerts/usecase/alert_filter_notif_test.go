@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"errors"
 	"testing"
 	"time"
 
@@ -27,6 +28,25 @@ func TestSendMessageSuccessfully(t *testing.T) {
 	alertNotif := usecase.NewAlertNotifier(mockService, mockSearcher)
 	err := alertNotif.SendLastAlertMessages()
 	if err != nil {
+		t.Error("Testing error")
+	}
+}
+
+func TestSendMessageReturnErrorWhenCallGetAllAlertsByTime(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	now := time.Now()
+	epoch_end := int(now.Unix())
+	epoch_begin := epoch_end - 60
+
+	mockService := mocks.NewMockNotifier(ctrl)
+	mockSearcher := mocks.NewMockAlertUseCase(ctrl)
+	mockSearcher.EXPECT().GetAllAlertsByTime(epoch_begin, epoch_end).Return(nil, errors.New("No alerts available"))
+
+	alertNotif := usecase.NewAlertNotifier(mockService, mockSearcher)
+	err := alertNotif.SendLastAlertMessages()
+	if err == nil {
 		t.Error("Testing error")
 	}
 }
