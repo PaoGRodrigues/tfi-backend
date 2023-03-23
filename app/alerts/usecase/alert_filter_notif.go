@@ -40,7 +40,8 @@ func (an *AlertNotifier) SendLastAlertMessages() error {
 	for _, alert := range parsedAlerts {
 		err := an.notifService.SendMessage(alert)
 		if err != nil {
-			return errors.New("Cannot send message")
+			//It won't stop if a message can't be sent
+			fmt.Printf("Cannot send message")
 		}
 	}
 	return nil
