@@ -24,6 +24,7 @@ type Api struct {
 	ActiveFlowsStorage  traffic.ActiveFlowsStorage
 	AlertsSearcher      alerts.AlertUseCase
 	HostBlocker         hosts.HostBlocker
+	AlertNotifier       alerts.AlertsSender
 	*gin.Engine
 }
 
@@ -188,4 +189,16 @@ func (api *Api) BlockHost(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "POST")
 	c.JSON(http.StatusOK, gin.H{"message": "Host has been blocked"})
+}
+
+func (api *Api) SendAlertNotification(c *gin.Context) {
+	err := api.AlertNotifier.SendLastAlertMessages()
+	if err != nil {
+		c.JSON(500, gin.H{"data": "error getting last alerts"})
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
+	c.Header("Access-Control-Allow-Methods", "GET")
+	c.JSON(http.StatusOK, gin.H{"message": "Messages sent"})
 }

@@ -38,7 +38,7 @@ func TestBlockHostByIPReturn200(t *testing.T) {
 		Engine:      gin.Default(),
 	}
 
-	api.MapBlockHost()
+	api.MapBlockHostURL()
 
 	response := httptest.NewRecorder()
 
@@ -69,7 +69,7 @@ func TestBlockHostURLReturn200(t *testing.T) {
 		Engine:      gin.Default(),
 	}
 
-	api.MapBlockHost()
+	api.MapBlockHostURL()
 
 	response := httptest.NewRecorder()
 
@@ -96,7 +96,7 @@ func TestBlockHostRouteReceiveWrongBodyReturn400(t *testing.T) {
 		Engine: gin.Default(),
 	}
 
-	api.MapBlockHost()
+	api.MapBlockHostURL()
 
 	response := httptest.NewRecorder()
 
@@ -127,7 +127,7 @@ func TestBlockHostFunctionReturningErrorReturn400(t *testing.T) {
 		Engine:      gin.Default(),
 	}
 
-	api.MapBlockHost()
+	api.MapBlockHostURL()
 
 	response := httptest.NewRecorder()
 
@@ -157,7 +157,7 @@ func TestBlockHostFunctionReturnErrorWhenTheBodyIsWrong(t *testing.T) {
 		Engine:      gin.Default(),
 	}
 
-	api.MapBlockHost()
+	api.MapBlockHostURL()
 
 	response := httptest.NewRecorder()
 
@@ -184,7 +184,7 @@ func TestBlockHostFunctionReturningErrorReturn400WhenIPNotExist(t *testing.T) {
 		Engine:      gin.Default(),
 	}
 
-	api.MapBlockHost()
+	api.MapBlockHostURL()
 
 	response := httptest.NewRecorder()
 

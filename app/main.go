@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"flag"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	alertsDomains "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	alertsUseCases "github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	hostsDomains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
@@ -22,6 +22,7 @@ func main() {
 
 	var tool services.Tool
 	var console services.Terminal
+	var channel services.Channel
 	var err error
 	scope := flag.String("s", "", "scope")
 	flag.Parse()
@@ -29,12 +30,14 @@ func main() {
 	if *scope != "prod" {
 		tool = services.NewFakeTool()
 		console = services.NewFakeConsole()
+		channel = services.NewFakeBot()
 	} else {
 		tool = services.NewTool("http://192.168.0.13:3000", 2, "XXX", "XXX")
 		console, err = initializeConsole()
 		if err != nil {
 			panic(err.Error())
 		}
+		channel = initializedNotifChannel()
 	}
 
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
@@ -45,6 +48,8 @@ func main() {
 	}
 	alertsSearcher := initializeAlertsDependencies(tool, activeFlowsStorage)
 	hostBlocker := initializeHostBlocker(console, activeFlowsStorage)
+	channel = initializedNotifChannel()
+	alertSender := initializeAlertSender(channel, alertsSearcher)
 
 	api := &api.Api{
 		Tool:                tool,
@@ -55,6 +60,7 @@ func main() {
 		ActiveFlowsStorage:  activeFlowsStorage,
 		AlertsSearcher:      alertsSearcher,
 		HostBlocker:         hostBlocker,
+		AlertNotifier:       alertSender,
 		Engine:              gin.Default(),
 	}
 
@@ -63,9 +69,10 @@ func main() {
 	api.MapGetTrafficURL()
 	api.MapGetLocalHostsURL()
 	api.MapGetActiveFlowsPerDestinationURL()
-	api.MapStoreActiveFlows()
+	api.MapStoreActiveFlowsURL()
 	api.MapAlertsURL()
-	api.MapBlockHost()
+	api.MapBlockHostURL()
+	api.MapNotificationsURL()
 
 	api.Run(":8080")
 }
@@ -92,7 +99,7 @@ func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomains.Tr
 	return activeFlowsStorage, nil
 }
 
-func initializeAlertsDependencies(tool services.Tool, trafficStorage trafficDomains.ActiveFlowsStorage) domains.AlertUseCase {
+func initializeAlertsDependencies(tool services.Tool, trafficStorage trafficDomains.ActiveFlowsStorage) alertsDomains.AlertUseCase {
 	alertsSearcher := alertsUseCases.NewAlertSearcher(tool, trafficStorage)
 	return alertsSearcher
 }
@@ -118,4 +125,14 @@ func initializeConsole() (*services.Console, error) {
 func initializeHostBlocker(console services.Terminal, filter trafficDomains.ActiveFlowsStorage) hostsDomains.HostBlocker {
 	hostBlocker := hostsUseCases.NewBlocker(console, filter)
 	return hostBlocker
+}
+
+func initializeAlertSender(notifier services.Channel, searcher alertsDomains.AlertUseCase) alertsDomains.AlertsSender {
+	alertsSender := alertsUseCases.NewAlertNotifier(notifier, searcher)
+	return alertsSender
+}
+
+func initializedNotifChannel() services.Channel {
+	telegram := services.NewTelegramInterface()
+	return telegram
 }

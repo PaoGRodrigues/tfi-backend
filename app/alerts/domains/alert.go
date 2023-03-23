@@ -39,6 +39,10 @@ type AlertUseCase interface {
 	GetAllAlertsByTime(int, int) ([]Alert, error)
 }
 
+type AlertsSender interface {
+	SendLastAlertMessages() error
+}
+
 // *********** Services
 type AlertService interface {
 	GetAllAlerts(int, int, string) ([]Alert, error)
