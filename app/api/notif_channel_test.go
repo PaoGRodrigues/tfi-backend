@@ -49,7 +49,7 @@ func TestConfigureReturn200(t *testing.T) {
 
 	body, _ := json.Marshal(req)
 
-	requestUrl := "/configurebot"
+	requestUrl := "/configurechannel"
 	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
 
 	api.Engine.ServeHTTP(response, httpRequest)
@@ -80,7 +80,7 @@ func TestConfigurePostRequestWithWrongBodyReturn400(t *testing.T) {
 
 	body, _ := json.Marshal(req)
 
-	requestUrl := "/configurebot"
+	requestUrl := "/configurechannel"
 	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
 
 	api.Engine.ServeHTTP(response, httpRequest)
@@ -112,7 +112,7 @@ func TestConfigurePostRequestReturnErrorInConfigureFunctionAndReturn500(t *testi
 
 	body, _ := json.Marshal(req)
 
-	requestUrl := "/configurebot"
+	requestUrl := "/configurechannel"
 	httpRequest, _ := http.NewRequest("POST", requestUrl, bytes.NewBuffer(body))
 
 	api.Engine.ServeHTTP(response, httpRequest)
