@@ -22,7 +22,7 @@ func main() {
 
 	var tool services.Tool
 	var console services.Terminal
-	var channel services.Channel
+	var channel services.NotificationChannel
 	var err error
 	scope := flag.String("s", "", "scope")
 	flag.Parse()
@@ -61,6 +61,7 @@ func main() {
 		AlertsSearcher:      alertsSearcher,
 		HostBlocker:         hostBlocker,
 		AlertsSender:        alertSender,
+		NotifChannel:        channel,
 		Engine:              gin.Default(),
 	}
 
@@ -73,6 +74,7 @@ func main() {
 	api.MapAlertsURL()
 	api.MapBlockHostURL()
 	api.MapNotificationsURL()
+	api.MapConfigureNotifChannelURL()
 
 	api.Run(":8080")
 }
@@ -127,12 +129,12 @@ func initializeHostBlocker(console services.Terminal, filter trafficDomains.Acti
 	return hostBlocker
 }
 
-func initializeAlertSender(notifier services.Channel, searcher alertsDomains.AlertUseCase) alertsDomains.AlertsSender {
+func initializeAlertSender(notifier services.NotificationChannel, searcher alertsDomains.AlertUseCase) alertsDomains.AlertsSender {
 	alertsSender := alertsUseCases.NewAlertNotifier(notifier, searcher)
 	return alertsSender
 }
 
-func initializedNotifChannel() services.Channel {
+func initializedNotifChannel() services.NotificationChannel {
 	telegram := services.NewTelegramInterface()
 	return telegram
 }

@@ -43,3 +43,7 @@ func (api *Api) MapBlockHostURL() {
 func (api *Api) MapNotificationsURL() {
 	api.GET("/alertnotification", api.SendAlertNotification)
 }
+
+func (api *Api) MapConfigureNotifChannelURL() {
+	api.POST("/configure", api.ConfigNotificationChannel)
+}
