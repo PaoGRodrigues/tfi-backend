@@ -27,7 +27,7 @@ func (searcher *AlertSearcher) GetAllAlerts() ([]domains.Alert, error) {
 
 	alerts, err := searcher.GetAllAlertsByTime(epoch_begin, epoch_end)
 	if err != nil {
-		return []domains.Alert{}, err
+		return nil, err
 	}
 	return alerts, nil
 }
@@ -35,28 +35,32 @@ func (searcher *AlertSearcher) GetAllAlerts() ([]domains.Alert, error) {
 func (searcher *AlertSearcher) GetAllAlertsByTime(epochBegin int, epochEnd int) ([]domains.Alert, error) {
 	clients, err := searcher.trafficFilter.GetClientsList()
 	if err != nil {
-		return []domains.Alert{}, err
+		return nil, err
 	}
 
 	alerts := []domains.Alert{}
 	for _, host := range clients {
 		res, err := searcher.alertService.GetAllAlerts(epochBegin, epochEnd, host.IP)
 		if err != nil {
-			return []domains.Alert{}, err
+			return nil, err
 		}
-		alerts = append(alerts, res...)
+		if res != nil {
+			alerts = append(alerts, res...)
+		}
 	}
 
 	servers, err := searcher.trafficFilter.GetServersList()
 	if err != nil {
-		return []domains.Alert{}, err
+		return nil, err
 	}
 	for _, host := range servers {
 		res, err := searcher.alertService.GetAllAlerts(epochBegin, epochEnd, host.IP)
 		if err != nil {
-			return []domains.Alert{}, err
+			return nil, err
 		}
-		alerts = append(alerts, res...)
+		if res != nil {
+			alerts = append(alerts, res...)
+		}
 	}
 	searcher.alerts = alerts
 	return alerts, nil

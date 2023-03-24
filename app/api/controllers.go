@@ -24,7 +24,7 @@ type Api struct {
 	ActiveFlowsStorage  traffic.ActiveFlowsStorage
 	AlertsSearcher      alerts.AlertUseCase
 	HostBlocker         hosts.HostBlocker
-	AlertNotifier       alerts.AlertsSender
+	AlertsSender        alerts.AlertsSender
 	*gin.Engine
 }
 
@@ -192,7 +192,7 @@ func (api *Api) BlockHost(c *gin.Context) {
 }
 
 func (api *Api) SendAlertNotification(c *gin.Context) {
-	err := api.AlertNotifier.SendLastAlertMessages()
+	err := api.AlertsSender.SendLastAlertMessages()
 	if err != nil {
 		c.JSON(500, gin.H{"data": "error getting last alerts"})
 		c.AbortWithStatus(http.StatusInternalServerError)

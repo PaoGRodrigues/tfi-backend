@@ -60,7 +60,7 @@ func main() {
 		ActiveFlowsStorage:  activeFlowsStorage,
 		AlertsSearcher:      alertsSearcher,
 		HostBlocker:         hostBlocker,
-		AlertNotifier:       alertSender,
+		AlertsSender:        alertSender,
 		Engine:              gin.Default(),
 	}
 

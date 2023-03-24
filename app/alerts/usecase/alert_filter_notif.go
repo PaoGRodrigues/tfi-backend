@@ -32,7 +32,8 @@ func (an *AlertNotifier) SendLastAlertMessages() error {
 	if err != nil {
 		return err
 	}
-	if len(lastAlerts) == 0 {
+	fmt.Print(lastAlerts)
+	if lastAlerts == nil {
 		return errors.New("No alerts available")
 	}
 	parsedAlerts := ParseAlerts(lastAlerts)

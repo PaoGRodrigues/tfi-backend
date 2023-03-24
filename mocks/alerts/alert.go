@@ -64,6 +64,43 @@ func (mr *MockAlertUseCaseMockRecorder) GetAllAlertsByTime(arg0, arg1 interface{
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllAlertsByTime", reflect.TypeOf((*MockAlertUseCase)(nil).GetAllAlertsByTime), arg0, arg1)
 }
 
+// MockAlertsSender is a mock of AlertsSender interface.
+type MockAlertsSender struct {
+	ctrl     *gomock.Controller
+	recorder *MockAlertsSenderMockRecorder
+}
+
+// MockAlertsSenderMockRecorder is the mock recorder for MockAlertsSender.
+type MockAlertsSenderMockRecorder struct {
+	mock *MockAlertsSender
+}
+
+// NewMockAlertsSender creates a new mock instance.
+func NewMockAlertsSender(ctrl *gomock.Controller) *MockAlertsSender {
+	mock := &MockAlertsSender{ctrl: ctrl}
+	mock.recorder = &MockAlertsSenderMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockAlertsSender) EXPECT() *MockAlertsSenderMockRecorder {
+	return m.recorder
+}
+
+// SendLastAlertMessages mocks base method.
+func (m *MockAlertsSender) SendLastAlertMessages() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendLastAlertMessages")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendLastAlertMessages indicates an expected call of SendLastAlertMessages.
+func (mr *MockAlertsSenderMockRecorder) SendLastAlertMessages() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendLastAlertMessages", reflect.TypeOf((*MockAlertsSender)(nil).SendLastAlertMessages))
+}
+
 // MockAlertService is a mock of AlertService interface.
 type MockAlertService struct {
 	ctrl     *gomock.Controller
