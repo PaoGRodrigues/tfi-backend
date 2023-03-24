@@ -45,5 +45,5 @@ func (api *Api) MapNotificationsURL() {
 }
 
 func (api *Api) MapConfigureNotifChannelURL() {
-	api.POST("/configure", api.ConfigNotificationChannel)
+	api.POST("/configurebot", api.ConfigNotificationChannel)
 }
