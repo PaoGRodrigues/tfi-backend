@@ -9,7 +9,7 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 )
 
-const minutes = 60
+const seconds = 60
 
 type AlertNotifier struct {
 	searcher     domains.AlertUseCase
@@ -26,7 +26,7 @@ func NewAlertNotifier(service domains.Notifier, searcher domains.AlertUseCase) *
 func (an *AlertNotifier) SendLastAlertMessages() error {
 	now := time.Now()
 	epoch_end := int(now.Unix())
-	epoch_begin := epoch_end - minutes
+	epoch_begin := epoch_end - seconds
 
 	lastAlerts, err := an.searcher.GetAllAlertsByTime(epoch_begin, epoch_end)
 	if err != nil {

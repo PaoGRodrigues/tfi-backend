@@ -7,6 +7,10 @@ import (
 
 func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int, host string) ([]domains.Alert, error) {
 
+	if host != "192.168.4.4" && host != "17.36.202.159" {
+		return nil, nil
+	}
+
 	alerts := []domains.Alert{
 		domains.Alert{
 
@@ -19,11 +23,11 @@ func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int, host string) ([]doma
 				Client: flow.Client{
 					Name: "test1",
 					Port: 33566,
-					IP:   "192.168.4.14",
+					IP:   "192.168.4.4",
 				},
 
 				Server: flow.Server{
-					IP:   "104.15.15.60",
+					IP:   "17.36.202.159",
 					Port: 443,
 					Name: "test2",
 				},
@@ -46,11 +50,11 @@ func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int, host string) ([]doma
 				Client: flow.Client{
 					Name: "test1",
 					Port: 33566,
-					IP:   "192.168.4.14",
+					IP:   "192.168.4.4",
 				},
 
 				Server: flow.Server{
-					IP:   "104.15.15.60",
+					IP:   "17.36.202.159",
 					Port: 443,
 					Name: "test2",
 				},

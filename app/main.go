@@ -30,14 +30,14 @@ func main() {
 	if *scope != "prod" {
 		tool = services.NewFakeTool()
 		console = services.NewFakeConsole()
-		channel = services.NewFakeBot()
+		//channel = services.NewFakeBot()
+		channel = initializedNotifChannel()
 	} else {
 		tool = services.NewTool("http://192.168.0.13:3000", 2, "XXX", "XXX")
 		console, err = initializeConsole()
 		if err != nil {
 			panic(err.Error())
 		}
-		channel = initializedNotifChannel()
 	}
 
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
