@@ -200,8 +200,8 @@ func (api *Api) SendAlertNotification(c *gin.Context) {
 		return
 	}
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
-	c.Header("Access-Control-Allow-Methods", "GET")
-	c.JSON(http.StatusOK, gin.H{"message": "Messages sent"})
+	c.Header("Access-Control-Allow-Methods", "POST")
+	c.JSON(http.StatusOK, gin.H{"message": "ok"})
 }
 
 type configRequest struct {
