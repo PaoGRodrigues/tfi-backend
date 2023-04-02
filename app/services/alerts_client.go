@@ -2,6 +2,7 @@ package services
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -10,14 +11,16 @@ import (
 )
 
 type HttpAlertResponse struct {
-	Rc      int
-	RcStrHr string
-	RcStr   string
-	Rsp     []domains.Alert
+	Rc              int     `json:"rc"`
+	RcStrHr         string  `json:"rc_str_hr"`
+	RcStr           string  `json:"rc_str"`
+	Rsp             Records `json:"rsp"`
+	RecordsTotal    int
+	RecordsFiltered int
 }
 
 type Records struct {
-	alerts []domains.Alert
+	Alerts []domains.Alert `json:"records"`
 }
 
 func (t *NtopNG) GetAllAlerts(epoch_begin, epoch_end int, host string) ([]domains.Alert, error) {
@@ -25,7 +28,7 @@ func (t *NtopNG) GetAllAlerts(epoch_begin, epoch_end int, host string) ([]domain
 	if err != nil {
 		return nil, err
 	}
-	return alertsListResponse.Rsp, nil
+	return alertsListResponse.Rsp.Alerts, nil
 }
 
 func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int, host string) (HttpAlertResponse, error) {
@@ -43,7 +46,6 @@ func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int, host string) (HttpAle
 	query.Add("ifid", strconv.Itoa(t.InterfaceId))
 	query.Add("epoch_begin", strconv.Itoa(epoch_begin))
 	query.Add("epoch_end", strconv.Itoa(epoch_end))
-	query.Add("host", host)
 
 	req.URL.RawQuery = query.Encode()
 
@@ -64,5 +66,6 @@ func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int, host string) (HttpAle
 		return HttpAlertResponse{}, err
 	}
 
+	fmt.Print(resp)
 	return resp, nil
 }

@@ -126,7 +126,6 @@ func (api *Api) parseAlertsData(alerts []domains.Alert) []AlertsResponse {
 			Name:        alert.Name,
 			Family:      alert.Family,
 			Time:        alert.Time.Label,
-			Score:       alert.Score,
 			Severity:    alert.Severity.Label,
 			Source:      source,
 			Destination: destination,
@@ -141,12 +140,12 @@ func createFlowString(flow alerts.AlertFlow) (string, string) {
 	var source strings.Builder
 	var destination strings.Builder
 
-	source.WriteString(flow.Client.Name)
+	source.WriteString(flow.Client.Value)
 	source.WriteString(":")
-	source.WriteString(strconv.Itoa(flow.Client.Port))
+	source.WriteString(strconv.Itoa(flow.Client.CliPort))
 	destination.WriteString(flow.Server.Name)
 	destination.WriteString(":")
-	destination.WriteString(strconv.Itoa(flow.Server.Port))
+	destination.WriteString(strconv.Itoa(flow.Server.SrvPort))
 
 	return source.String(), destination.String()
 }

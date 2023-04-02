@@ -8,14 +8,13 @@ import (
 // Alerts
 type Alert struct {
 	Row_id string `json:"-"`
-	Name   string
+	Name   string `json:"fullname"`
 	Family string
 	Time   struct {
 		Label string
 	} `json:"tstamp"`
-	Score         string
 	Severity      Severity
-	AlertFlow     AlertFlow
+	AlertFlow     AlertFlow `json:"flow"`
 	AlertProtocol AlertProtocol
 }
 
@@ -24,12 +23,25 @@ type Severity struct {
 }
 
 type AlertFlow struct {
-	Client flow.Client
-	Server flow.Server
+	Client AlertClient `json:"cli_ip"`
+	Server AlertServer `json:"srv_ip"`
+}
+
+type AlertClient struct {
+	Value   string
+	Contry  string
+	CliPort int `json:"cli_port"`
+}
+
+type AlertServer struct {
+	Name    string
+	Value   string
+	Country string
+	SrvPort int `json:"srv_port"`
 }
 
 type AlertProtocol struct {
-	Protocol flow.Protocol
+	Protocol flow.Protocol `json:"l7_proto"`
 }
 
 // *********** Use Cases

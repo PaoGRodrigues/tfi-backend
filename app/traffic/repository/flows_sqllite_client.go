@@ -85,7 +85,7 @@ func (client *SQLClient) insertProtocol(currentProto domains.Protocol, key uint6
 
 func (client *SQLClient) GetServerByAttr(attr string) (domains.Server, error) {
 	server := domains.Server{}
-	var id int
+	var id uint64
 
 	rows, err := client.db.Query("SELECT * FROM servers WHERE name LIKE ? LIMIT 1", attr)
 	if err != nil {
@@ -114,7 +114,7 @@ func (client *SQLClient) GetServerByAttr(attr string) (domains.Server, error) {
 
 func (client *SQLClient) GetClients() ([]domains.Client, error) {
 	clients := []domains.Client{}
-	var id int
+	var id uint64
 
 	rows, err := client.db.Query("SELECT * FROM clients GROUP BY ip")
 	if err != nil {
@@ -134,7 +134,7 @@ func (client *SQLClient) GetClients() ([]domains.Client, error) {
 
 func (client *SQLClient) GetServers() ([]domains.Server, error) {
 	servers := []domains.Server{}
-	var id int
+	var id uint64
 
 	rows, err := client.db.Query("SELECT * FROM servers GROUP BY ip")
 	if err != nil {
