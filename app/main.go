@@ -30,7 +30,7 @@ func main() {
 		tool = services.NewFakeTool()
 		console = services.NewFakeConsole()
 	} else {
-		tool = services.NewTool("http://192.168.0.13:3000", 2, "admin", "admin")
+		tool = services.NewTool("http://192.168.0.13:3000", 2, "XXX", "XXX")
 		/*console, err = initializeConsole()
 		if err != nil {
 			panic(err.Error())
