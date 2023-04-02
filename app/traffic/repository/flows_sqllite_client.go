@@ -28,8 +28,8 @@ func (client *SQLClient) AddActiveFlows(flows []domains.ActiveFlow) error {
 	return nil
 }
 
-func (client *SQLClient) addActiveFlow(currentFlow domains.ActiveFlow) (int, error) {
-	flowKey, err := strconv.Atoi(currentFlow.Key)
+func (client *SQLClient) addActiveFlow(currentFlow domains.ActiveFlow) (uint64, error) {
+	flowKey, err := strconv.ParseUint(currentFlow.Key, 10, 64)
 	if err != nil {
 		return 0, err
 	}
@@ -55,7 +55,7 @@ func (client *SQLClient) addActiveFlow(currentFlow domains.ActiveFlow) (int, err
 	return flowKey, nil
 }
 
-func (client *SQLClient) insertClient(currentClient domains.Client, key int) error {
+func (client *SQLClient) insertClient(currentClient domains.Client, key uint64) error {
 	_, err := client.db.Exec("INSERT INTO clients VALUES(?,?,?,?);",
 		key, currentClient.Name, currentClient.IP, currentClient.Port)
 	if err != nil {
@@ -64,7 +64,7 @@ func (client *SQLClient) insertClient(currentClient domains.Client, key int) err
 	return nil
 }
 
-func (client *SQLClient) insertServer(currentServer domains.Server, key int) error {
+func (client *SQLClient) insertServer(currentServer domains.Server, key uint64) error {
 	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?,?,?,?);",
 		key, currentServer.Name, currentServer.IP, currentServer.Port, currentServer.IsBroadcastDomain,
 		currentServer.IsDHCP)
@@ -74,7 +74,7 @@ func (client *SQLClient) insertServer(currentServer domains.Server, key int) err
 	return nil
 }
 
-func (client *SQLClient) insertProtocol(currentProto domains.Protocol, key int) error {
+func (client *SQLClient) insertProtocol(currentProto domains.Protocol, key uint64) error {
 	_, err := client.db.Exec("INSERT INTO protocols VALUES(?,?,?);",
 		key, currentProto.L4, currentProto.L7)
 	if err != nil {
