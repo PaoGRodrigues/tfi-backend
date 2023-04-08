@@ -5,11 +5,7 @@ import (
 	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
-func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int, host string) ([]domains.Alert, error) {
-
-	if host != "192.168.4.4" && host != "17.36.202.159" {
-		return nil, nil
-	}
+func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
 
 	alerts := []domains.Alert{
 		domains.Alert{

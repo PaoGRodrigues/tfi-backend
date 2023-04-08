@@ -45,7 +45,7 @@ type AlertsSender interface {
 
 // *********** Services
 type AlertService interface {
-	GetAllAlerts(int, int, string) ([]Alert, error)
+	GetAllAlerts(int, int) ([]Alert, error)
 }
 
 type Notifier interface {
