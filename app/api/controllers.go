@@ -128,10 +128,10 @@ func (api *Api) parseAlertsData(alerts []domains.Alert) []AlertsResponse {
 			Name:        alert.Name,
 			Family:      alert.Family,
 			Time:        alert.Time.Label,
-			Severity:    alert.Severity.Label,
+			Severity:    alert.Severity,
 			Source:      source,
 			Destination: destination,
-			Protocol:    createProtocolString(alert.AlertProtocol),
+			Protocol:    alert.AlertProtocol.Label,
 		}
 		response = append(response, ar)
 	}
@@ -142,24 +142,14 @@ func createFlowString(flow alerts.AlertFlow) (string, string) {
 	var source strings.Builder
 	var destination strings.Builder
 
-	source.WriteString(flow.Client.Value)
+	source.WriteString(flow.Client.IP)
 	source.WriteString(":")
-	source.WriteString(strconv.Itoa(flow.Client.CliPort))
+	source.WriteString(strconv.Itoa(flow.Client.Port))
 	destination.WriteString(flow.Server.Name)
 	destination.WriteString(":")
-	destination.WriteString(strconv.Itoa(flow.Server.SrvPort))
+	destination.WriteString(strconv.Itoa(flow.Server.Port))
 
 	return source.String(), destination.String()
-}
-
-func createProtocolString(proto alerts.AlertProtocol) string {
-	var str strings.Builder
-
-	str.WriteString(proto.Protocol.L4)
-	str.WriteString(":")
-	str.WriteString(proto.Protocol.L7)
-
-	return str.String()
 }
 
 type blockHostRequest struct {

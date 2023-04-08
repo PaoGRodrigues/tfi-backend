@@ -24,24 +24,24 @@ func TestCreateAlertsUsecaseGetAllAlertsReturnAlerts(t *testing.T) {
 			Name:     "test",
 			Family:   "flow",
 			Time:     struct{ Label string }{"10/10/10 11:11:11"},
-			Severity: domains.Severity{Label: "2"},
+			Severity: "2",
 			AlertFlow: domains.AlertFlow{
-				Client: domains.AlertClient{
-					CliPort: 33566,
-					Value:   "192.168.4.14",
+				Client: flow.Client{
+					Port: 33566,
+					IP:   "192.168.4.14",
+					Name: "192.168.4.14",
 				},
 
-				Server: domains.AlertServer{
-					Value:   "104.15.15.60",
-					SrvPort: 443,
-					Name:    "test2",
+				Server: flow.Server{
+					IP:   "104.15.15.60",
+					Port: 443,
+					Name: "test2",
 				},
 			},
-			AlertProtocol: domains.AlertProtocol{
-				Protocol: flow.Protocol{
-					L4: "TCP",
-					L7: "TLS.Google",
-				},
+			AlertProtocol: flow.Protocol{
+				L4:    "TCP",
+				L7:    "TLS.Google",
+				Label: "TCP:TLS.Google",
 			},
 		},
 	}
