@@ -34,10 +34,10 @@ func main() {
 		channel = initializedNotifChannel()
 	} else {
 		tool = services.NewTool("http://192.168.0.13:3000", 2, "XXX", "XXX")
-		console, err = initializeConsole()
+		/*console, err = initializeConsole()
 		if err != nil {
 			panic(err.Error())
-		}
+		}*/
 	}
 
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
