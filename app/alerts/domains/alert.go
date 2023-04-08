@@ -12,8 +12,8 @@ type Alert struct {
 	Time   struct {
 		Label string
 	} `json:"tstamp"`
-	Score         string `json:"score,omitempty"`
-	Severity      string
+	Score         string `json:"omitempty"`
+	Severity      string `json:"score,omitempty"`
 	AlertFlow     AlertFlow
 	AlertProtocol flow.Protocol
 }

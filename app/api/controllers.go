@@ -33,7 +33,6 @@ type AlertsResponse struct {
 	Name        string
 	Family      string
 	Time        string
-	Score       string
 	Severity    string
 	Source      string
 	Destination string
@@ -142,10 +141,15 @@ func createFlowString(flow alerts.AlertFlow) (string, string) {
 	var source strings.Builder
 	var destination strings.Builder
 
+	destName := flow.Server.Name
+
 	source.WriteString(flow.Client.IP)
 	source.WriteString(":")
 	source.WriteString(strconv.Itoa(flow.Client.Port))
-	destination.WriteString(flow.Server.Name)
+	if destName == "" {
+		destName = flow.Server.IP
+	}
+	destination.WriteString(destName)
 	destination.WriteString(":")
 	destination.WriteString(strconv.Itoa(flow.Server.Port))
 

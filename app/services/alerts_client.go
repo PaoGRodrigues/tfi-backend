@@ -28,8 +28,8 @@ type Alert struct {
 }
 
 type AlertFlow struct {
-	CliPort int         `json:"cli_port"`
-	SrvPort int         `json:"srv_port"`
+	CliPort string      `json:"cli_port"`
+	SrvPort string      `json:"srv_port"`
 	Client  AlertClient `json:"cli_ip"`
 	Server  AlertServer `json:"srv_ip"`
 }
@@ -74,8 +74,11 @@ func (t *NtopNG) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, erro
 
 	alerts := []domains.Alert{}
 	if alertsListResponse.Rsp.Alerts != nil {
-
-		return parseAlertsFromTool(alertsListResponse.Rsp.Alerts), nil
+		parsedAlerts, err := parseAlertsFromTool(alertsListResponse.Rsp.Alerts)
+		if err != nil {
+			return nil, err
+		}
+		return parsedAlerts, nil
 	}
 
 	return alerts, nil
@@ -119,10 +122,19 @@ func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int) (HttpAlertResponse, e
 	return resp, nil
 }
 
-func parseAlertsFromTool(rawAlerts []Alert) []domains.Alert {
+func parseAlertsFromTool(rawAlerts []Alert) ([]domains.Alert, error) {
 
 	formattedAlerts := []domains.Alert{}
 	for _, alert := range rawAlerts {
+		cliPort, err := strconv.Atoi(alert.AlertFlow.CliPort)
+		if err != nil {
+			return formattedAlerts, err
+		}
+		srvPort, err := strconv.Atoi(alert.AlertFlow.SrvPort)
+		if err != nil {
+			return formattedAlerts, err
+		}
+
 		newAlert := domains.Alert{
 			Name:     alert.Name.Name,
 			Family:   alert.Family,
@@ -132,12 +144,12 @@ func parseAlertsFromTool(rawAlerts []Alert) []domains.Alert {
 				Client: flow.Client{
 					Name: alert.AlertFlow.Client.Value,
 					IP:   alert.AlertFlow.Client.Value,
-					Port: alert.AlertFlow.CliPort,
+					Port: cliPort,
 				},
 				Server: flow.Server{
 					Name: alert.AlertFlow.Server.Name,
 					IP:   alert.AlertFlow.Server.Value,
-					Port: alert.AlertFlow.SrvPort,
+					Port: srvPort,
 				},
 			},
 			AlertProtocol: flow.Protocol{
@@ -150,5 +162,5 @@ func parseAlertsFromTool(rawAlerts []Alert) []domains.Alert {
 		formattedAlerts = append(formattedAlerts, newAlert)
 	}
 
-	return formattedAlerts
+	return formattedAlerts, nil
 }
