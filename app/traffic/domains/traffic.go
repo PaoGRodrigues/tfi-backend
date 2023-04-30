@@ -26,8 +26,9 @@ type Server struct {
 }
 
 type Protocol struct {
-	L4 string
-	L7 string
+	L4    string
+	L7    string
+	Label string
 }
 
 type BytesPerDestination struct {

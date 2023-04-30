@@ -11,7 +11,7 @@ var expected = []domains.Alert{
 		Family:   "flow",
 		Time:     struct{ Label string }{"10/10/10 11:11:11"},
 		Score:    "10",
-		Severity: domains.Severity{Label: "2"},
+		Severity: "2",
 		AlertFlow: domains.AlertFlow{
 			Client: flow.Client{
 				Name: "test1",
@@ -25,11 +25,9 @@ var expected = []domains.Alert{
 				Name: "test2",
 			},
 		},
-		AlertProtocol: domains.AlertProtocol{
-			Protocol: flow.Protocol{
-				L4: "TCP",
-				L7: "TLS.Google",
-			},
+		AlertProtocol: flow.Protocol{
+			L4: "TCP",
+			L7: "TLS.Google",
 		},
 	},
 	domains.Alert{
@@ -37,7 +35,7 @@ var expected = []domains.Alert{
 		Family:   "flow",
 		Time:     struct{ Label string }{"10/10/10 11:11:11"},
 		Score:    "10",
-		Severity: domains.Severity{Label: "2"},
+		Severity: "3",
 		AlertFlow: domains.AlertFlow{
 			Client: flow.Client{
 				Name: "test2",
@@ -51,11 +49,9 @@ var expected = []domains.Alert{
 				Name: "test3",
 			},
 		},
-		AlertProtocol: domains.AlertProtocol{
-			Protocol: flow.Protocol{
-				L4: "TCP",
-				L7: "TLS.YouTube",
-			},
+		AlertProtocol: flow.Protocol{
+			L4: "TCP",
+			L7: "TLS.YouTube",
 		},
 	},
 }

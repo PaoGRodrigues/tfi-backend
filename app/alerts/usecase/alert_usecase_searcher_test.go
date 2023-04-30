@@ -7,78 +7,23 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
-	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/alerts"
 	mocks_traffic "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"github.com/go-playground/assert/v2"
 	"github.com/golang/mock/gomock"
 )
 
-func TestGetAllAlertsReturnListOfAlertsWhenServersListIsEmpty(t *testing.T) {
-
+func TestGetAllAlertsReturnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	now := time.Now()
 	epoch_end := int(now.Unix())
 	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
-	ip1 := "192.168.4.14"
 
 	mockService := mocks.NewMockAlertService(ctrl)
 	mockTrafficFilter := mocks_traffic.NewMockActiveFlowsStorage(ctrl)
-	mockTrafficFilter.EXPECT().GetClientsList().Return([]flow.Client{flow.Client{IP: ip1}}, nil)
-	mockTrafficFilter.EXPECT().GetServersList().Return(nil, nil)
-	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end, ip1).Return(expected, nil)
-
-	alertSearcher := usecase.NewAlertSearcher(mockService, mockTrafficFilter)
-	got, err := alertSearcher.GetAllAlerts()
-
-	if err != nil {
-		t.Fail()
-	}
-
-	assert.Equal(t, expected, got)
-}
-
-func TestGetAllAlertsReturnListOfAlertsWhenClientsListIsEmpty(t *testing.T) {
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	now := time.Now()
-	epoch_end := int(now.Unix())
-	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
-	ip1 := "192.168.4.14"
-
-	mockService := mocks.NewMockAlertService(ctrl)
-	mockTrafficFilter := mocks_traffic.NewMockActiveFlowsStorage(ctrl)
-	mockTrafficFilter.EXPECT().GetClientsList().Return(nil, nil)
-	mockTrafficFilter.EXPECT().GetServersList().Return([]flow.Server{flow.Server{IP: ip1}}, nil)
-	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end, ip1).Return(expected, nil)
-
-	alertSearcher := usecase.NewAlertSearcher(mockService, mockTrafficFilter)
-	got, err := alertSearcher.GetAllAlerts()
-
-	if err != nil {
-		t.Fail()
-	}
-
-	assert.Equal(t, expected, got)
-}
-
-func TestGetAllAlertsReturnErrorWhenCallServiceForClients(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	now := time.Now()
-	epoch_end := int(now.Unix())
-	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
-	ip := "192.168.21.1"
-
-	mockService := mocks.NewMockAlertService(ctrl)
-	mockTrafficFilter := mocks_traffic.NewMockActiveFlowsStorage(ctrl)
-	mockTrafficFilter.EXPECT().GetClientsList().Return([]flow.Client{{IP: ip}}, nil)
-	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end, ip).Return([]domains.Alert{}, fmt.Errorf("test error"))
+	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return([]domains.Alert{}, fmt.Errorf("test error"))
 
 	alertSearcher := usecase.NewAlertSearcher(mockService, mockTrafficFilter)
 	_, err := alertSearcher.GetAllAlerts()
@@ -88,79 +33,17 @@ func TestGetAllAlertsReturnErrorWhenCallServiceForClients(t *testing.T) {
 	}
 }
 
-func TestGetAllAlertsReturnErrorWhenCallGetAllAlertsForClient(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockService := mocks.NewMockAlertService(ctrl)
-	mockTrafficFilter := mocks_traffic.NewMockActiveFlowsStorage(ctrl)
-	mockTrafficFilter.EXPECT().GetClientsList().Return(nil, fmt.Errorf("test error"))
-
-	alertSearcher := usecase.NewAlertSearcher(mockService, mockTrafficFilter)
-	_, err := alertSearcher.GetAllAlerts()
-
-	if err == nil {
-		t.Fail()
-	}
-}
-
-func TestGetAllAlertsReturnErrorWhenCallGetAllAlertsForServer(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockService := mocks.NewMockAlertService(ctrl)
-	mockTrafficFilter := mocks_traffic.NewMockActiveFlowsStorage(ctrl)
-	mockTrafficFilter.EXPECT().GetClientsList().Return(nil, nil)
-	mockTrafficFilter.EXPECT().GetServersList().Return(nil, fmt.Errorf("test error"))
-
-	alertSearcher := usecase.NewAlertSearcher(mockService, mockTrafficFilter)
-	_, err := alertSearcher.GetAllAlerts()
-
-	if err == nil {
-		t.Fail()
-	}
-}
-
-func TestGetAllAlertsReturnErrorWhenCallServiceForServers(t *testing.T) {
+func TestGetAllAlertsReturnAlerts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	now := time.Now()
 	epoch_end := int(now.Unix())
 	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
-	ip := "192.168.21.1"
 
 	mockService := mocks.NewMockAlertService(ctrl)
 	mockTrafficFilter := mocks_traffic.NewMockActiveFlowsStorage(ctrl)
-	mockTrafficFilter.EXPECT().GetClientsList().Return(nil, nil)
-	mockTrafficFilter.EXPECT().GetServersList().Return([]flow.Server{{IP: ip}}, nil)
-	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end, ip).Return([]domains.Alert{}, fmt.Errorf("test error"))
-
-	alertSearcher := usecase.NewAlertSearcher(mockService, mockTrafficFilter)
-	_, err := alertSearcher.GetAllAlerts()
-
-	if err == nil {
-		t.Fail()
-	}
-}
-
-func TestGetAllAlertsReturnClientAndServerAlerts(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	now := time.Now()
-	epoch_end := int(now.Unix())
-	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
-	ip1 := "192.168.21.1"
-	name2 := "test3"
-	ip2 := "104.15.15.70"
-
-	mockService := mocks.NewMockAlertService(ctrl)
-	mockTrafficFilter := mocks_traffic.NewMockActiveFlowsStorage(ctrl)
-	mockTrafficFilter.EXPECT().GetClientsList().Return([]flow.Client{{IP: ip1}}, nil)
-	mockTrafficFilter.EXPECT().GetServersList().Return([]flow.Server{{Name: name2, IP: ip2}}, nil)
-	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end, ip1).Return([]domains.Alert{expected[0]}, nil)
-	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end, ip2).Return([]domains.Alert{expected[1]}, nil)
+	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return([]domains.Alert{expected[0], expected[1]}, nil)
 
 	alertSearcher := usecase.NewAlertSearcher(mockService, mockTrafficFilter)
 	got, err := alertSearcher.GetAllAlerts()

@@ -7,28 +7,84 @@ import (
 	"strconv"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
+// Alerts
+type Alert struct {
+	Row_id string `json:"-"`
+	Name   struct {
+		Name string `json:"fullname"`
+	} `json:"Msg"`
+	Family string
+	Time   struct {
+		Label string
+	} `json:"tstamp"`
+	Severity struct {
+		Label string
+	} `json:"label"`
+	AlertFlow     AlertFlow `json:"flow"`
+	AlertProtocol AlertProtocol
+}
+
+type AlertFlow struct {
+	CliPort string      `json:"cli_port"`
+	SrvPort string      `json:"srv_port"`
+	Client  AlertClient `json:"cli_ip"`
+	Server  AlertServer `json:"srv_ip"`
+}
+
+type AlertClient struct {
+	Value  string `json:"value"`
+	Contry string `json:"country"`
+}
+
+type AlertServer struct {
+	Name    string `json:"name"`
+	Value   string `json:"value"`
+	Country string `json:"country"`
+}
+
+type AlertProtocol struct {
+	Protocol struct {
+		L4    string `json:"l4_label"`
+		Label string `json:"label"`
+		L7    string `json:"l7_label"`
+	} `json:"l7_proto"`
+}
+
 type HttpAlertResponse struct {
-	Rc      int
-	RcStrHr string
-	RcStr   string
-	Rsp     []domains.Alert
+	Rc              int     `json:"rc"`
+	RcStrHr         string  `json:"rc_str_hr"`
+	RcStr           string  `json:"rc_str"`
+	Rsp             Records `json:"rsp"`
+	RecordsTotal    int
+	RecordsFiltered int
 }
 
 type Records struct {
-	alerts []domains.Alert
+	Alerts []Alert `json:"records"`
 }
 
-func (t *NtopNG) GetAllAlerts(epoch_begin, epoch_end int, host string) ([]domains.Alert, error) {
-	alertsListResponse, err := t.getAlertsList(epoch_begin, epoch_end, host)
+func (t *NtopNG) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
+	alertsListResponse, err := t.getAlertsList(epoch_begin, epoch_end)
 	if err != nil {
 		return nil, err
 	}
-	return alertsListResponse.Rsp, nil
+
+	alerts := []domains.Alert{}
+	if alertsListResponse.Rsp.Alerts != nil {
+		parsedAlerts, err := parseAlertsFromTool(alertsListResponse.Rsp.Alerts)
+		if err != nil {
+			return nil, err
+		}
+		return parsedAlerts, nil
+	}
+
+	return alerts, nil
 }
 
-func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int, host string) (HttpAlertResponse, error) {
+func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int) (HttpAlertResponse, error) {
 	client := &http.Client{}
 	endpoint := "/lua/rest/v2/get/flow/alert/list.lua"
 
@@ -43,7 +99,6 @@ func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int, host string) (HttpAle
 	query.Add("ifid", strconv.Itoa(t.InterfaceId))
 	query.Add("epoch_begin", strconv.Itoa(epoch_begin))
 	query.Add("epoch_end", strconv.Itoa(epoch_end))
-	query.Add("host", host)
 
 	req.URL.RawQuery = query.Encode()
 
@@ -65,4 +120,47 @@ func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int, host string) (HttpAle
 	}
 
 	return resp, nil
+}
+
+func parseAlertsFromTool(rawAlerts []Alert) ([]domains.Alert, error) {
+
+	formattedAlerts := []domains.Alert{}
+	for _, alert := range rawAlerts {
+		cliPort, err := strconv.Atoi(alert.AlertFlow.CliPort)
+		if err != nil {
+			return formattedAlerts, err
+		}
+		srvPort, err := strconv.Atoi(alert.AlertFlow.SrvPort)
+		if err != nil {
+			return formattedAlerts, err
+		}
+
+		newAlert := domains.Alert{
+			Name:     alert.Name.Name,
+			Family:   alert.Family,
+			Time:     alert.Time,
+			Severity: alert.Severity.Label,
+			AlertFlow: domains.AlertFlow{
+				Client: flow.Client{
+					Name: alert.AlertFlow.Client.Value,
+					IP:   alert.AlertFlow.Client.Value,
+					Port: cliPort,
+				},
+				Server: flow.Server{
+					Name: alert.AlertFlow.Server.Name,
+					IP:   alert.AlertFlow.Server.Value,
+					Port: srvPort,
+				},
+			},
+			AlertProtocol: flow.Protocol{
+				L4:    alert.AlertProtocol.Protocol.L4,
+				L7:    alert.AlertProtocol.Protocol.L7,
+				Label: alert.AlertProtocol.Protocol.Label,
+			},
+		}
+
+		formattedAlerts = append(formattedAlerts, newAlert)
+	}
+
+	return formattedAlerts, nil
 }

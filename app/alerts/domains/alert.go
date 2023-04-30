@@ -7,29 +7,20 @@ import (
 // *********** Entities
 // Alerts
 type Alert struct {
-	Row_id string `json:"-"`
 	Name   string
 	Family string
 	Time   struct {
 		Label string
 	} `json:"tstamp"`
-	Score         string
-	Severity      Severity
+	Score         string `json:"omitempty"`
+	Severity      string `json:"score,omitempty"`
 	AlertFlow     AlertFlow
-	AlertProtocol AlertProtocol
-}
-
-type Severity struct {
-	Label string
+	AlertProtocol flow.Protocol
 }
 
 type AlertFlow struct {
 	Client flow.Client
 	Server flow.Server
-}
-
-type AlertProtocol struct {
-	Protocol flow.Protocol
 }
 
 // *********** Use Cases
@@ -45,7 +36,7 @@ type AlertsSender interface {
 
 // *********** Services
 type AlertService interface {
-	GetAllAlerts(int, int, string) ([]Alert, error)
+	GetAllAlerts(int, int) ([]Alert, error)
 }
 
 type Notifier interface {
