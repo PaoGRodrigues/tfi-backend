@@ -54,7 +54,7 @@ func TestStoreTrafficSuccessfullyReturn200(t *testing.T) {
 		Engine:             gin.Default(),
 	}
 
-	api.MapStoreActiveFlows()
+	api.MapStoreActiveFlowsURL()
 
 	response := httptest.NewRecorder()
 
@@ -80,7 +80,7 @@ func TestStoreTrafficFailedAndReturn500(t *testing.T) {
 		Engine:             gin.Default(),
 	}
 
-	api.MapStoreActiveFlows()
+	api.MapStoreActiveFlowsURL()
 
 	response := httptest.NewRecorder()
 

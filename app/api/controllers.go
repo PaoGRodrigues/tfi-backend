@@ -24,6 +24,8 @@ type Api struct {
 	ActiveFlowsStorage  traffic.ActiveFlowsStorage
 	AlertsSearcher      alerts.AlertUseCase
 	HostBlocker         hosts.HostBlocker
+	NotifChannel        services.NotificationChannel
+	AlertsSender        alerts.AlertsSender
 	*gin.Engine
 }
 
@@ -188,4 +190,41 @@ func (api *Api) BlockHost(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "POST")
 	c.JSON(http.StatusOK, gin.H{"message": "Host has been blocked"})
+}
+
+func (api *Api) SendAlertNotification(c *gin.Context) {
+	err := api.AlertsSender.SendLastAlertMessages()
+	if err != nil {
+		c.JSON(500, gin.H{"data": "error getting last alerts"})
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
+	c.Header("Access-Control-Allow-Methods", "POST")
+	c.JSON(http.StatusOK, gin.H{"message": "ok"})
+}
+
+type configRequest struct {
+	Token    string `json:"token" binding:"required"`
+	Username string `json:"username" binding:"required"`
+}
+
+func (api *Api) ConfigNotificationChannel(c *gin.Context) {
+	config := configRequest{}
+	if err := c.BindJSON(&config); err != nil {
+		c.JSON(400, gin.H{"data": "error"})
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	err := api.NotifChannel.Configure(config.Token, config.Username)
+	if err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
+	c.Header("Access-Control-Allow-Methods", "POST")
+	c.JSON(http.StatusOK, gin.H{"Message": "Channel configured"})
 }

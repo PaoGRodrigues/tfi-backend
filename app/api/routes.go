@@ -28,7 +28,7 @@ func (api *Api) MapGetActiveFlowsPerDestinationURL() {
 	api.GET("/activeflowsperdest", api.GetActiveFlowsPerDestination)
 }
 
-func (api *Api) MapStoreActiveFlows() {
+func (api *Api) MapStoreActiveFlowsURL() {
 	api.POST("/activeflows", api.StoreActiveTraffic)
 }
 
@@ -36,6 +36,14 @@ func (api *Api) MapAlertsURL() {
 	api.GET("/alerts", api.GetAlerts)
 }
 
-func (api *Api) MapBlockHost() {
+func (api *Api) MapBlockHostURL() {
 	api.POST("/blockhost", api.BlockHost)
+}
+
+func (api *Api) MapNotificationsURL() {
+	api.GET("/alertnotification", api.SendAlertNotification)
+}
+
+func (api *Api) MapConfigureNotifChannelURL() {
+	api.POST("/configurechannel", api.ConfigNotificationChannel)
 }
