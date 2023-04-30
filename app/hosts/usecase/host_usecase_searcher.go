@@ -10,7 +10,6 @@ type HostSearcher struct {
 }
 
 func NewHostSearcher(service domains.HostService) *HostSearcher {
-
 	return &HostSearcher{
 		hostService: service,
 	}

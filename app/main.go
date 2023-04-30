@@ -13,6 +13,7 @@ import (
 	trafficDomains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	trafficRepo "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	trafficUseCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
+	"github.com/coreos/go-iptables/iptables"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -20,13 +21,20 @@ import (
 func main() {
 
 	var tool services.Tool
+	var console services.Terminal
+	var err error
 	scope := flag.String("s", "", "scope")
 	flag.Parse()
 
 	if *scope != "prod" {
 		tool = services.NewFakeTool()
+		console = services.NewFakeConsole()
 	} else {
 		tool = services.NewTool("http://192.168.0.13:3000", 2, "XXX", "XXX")
+		console, err = initializeConsole()
+		if err != nil {
+			panic(err.Error())
+		}
 	}
 
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
@@ -35,7 +43,8 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
-	alertsSearcher := initializeAlertsDependencies(tool, hostsFilter)
+	alertsSearcher := initializeAlertsDependencies(tool, activeFlowsStorage)
+	hostBlocker := initializeHostBlocker(console, activeFlowsStorage)
 
 	api := &api.Api{
 		Tool:                tool,
@@ -45,6 +54,7 @@ func main() {
 		ActiveFlowsSearcher: trafficActiveFlowsSearcher,
 		ActiveFlowsStorage:  activeFlowsStorage,
 		AlertsSearcher:      alertsSearcher,
+		HostBlocker:         hostBlocker,
 		Engine:              gin.Default(),
 	}
 
@@ -55,6 +65,7 @@ func main() {
 	api.MapGetActiveFlowsPerDestinationURL()
 	api.MapStoreActiveFlows()
 	api.MapAlertsURL()
+	api.MapBlockHost()
 
 	api.Run(":8080")
 }
@@ -81,8 +92,8 @@ func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomains.Tr
 	return activeFlowsStorage, nil
 }
 
-func initializeAlertsDependencies(tool services.Tool, hostsFilter hostsDomains.HostsFilter) domains.AlertUseCase {
-	alertsSearcher := alertsUseCases.NewAlertSearcher(tool, hostsFilter)
+func initializeAlertsDependencies(tool services.Tool, trafficStorage trafficDomains.ActiveFlowsStorage) domains.AlertUseCase {
+	alertsSearcher := alertsUseCases.NewAlertSearcher(tool, trafficStorage)
 	return alertsSearcher
 }
 
@@ -93,4 +104,18 @@ func newDB(file string) (*trafficRepo.SQLClient, error) {
 	}
 	databaseConn := trafficRepo.NewSQLClient(db)
 	return databaseConn, nil
+}
+
+func initializeConsole() (*services.Console, error) {
+	iptables, err := iptables.New()
+	if err != nil {
+		return nil, err
+	}
+	console := services.NewConsole(iptables)
+	return console, nil
+}
+
+func initializeHostBlocker(console services.Terminal, filter trafficDomains.ActiveFlowsStorage) hostsDomains.HostBlocker {
+	hostBlocker := hostsUseCases.NewBlocker(console, filter)
+	return hostBlocker
 }

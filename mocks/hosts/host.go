@@ -86,6 +86,21 @@ func (m *MockHostsFilter) EXPECT() *MockHostsFilterMockRecorder {
 	return m.recorder
 }
 
+// GetHost mocks base method.
+func (m *MockHostsFilter) GetHost(arg0 string) (domains.Host, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHost", arg0)
+	ret0, _ := ret[0].(domains.Host)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetHost indicates an expected call of GetHost.
+func (mr *MockHostsFilterMockRecorder) GetHost(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHost", reflect.TypeOf((*MockHostsFilter)(nil).GetHost), arg0)
+}
+
 // GetLocalHosts mocks base method.
 func (m *MockHostsFilter) GetLocalHosts() ([]domains.Host, error) {
 	m.ctrl.T.Helper()
@@ -114,6 +129,44 @@ func (m *MockHostsFilter) GetRemoteHosts() ([]domains.Host, error) {
 func (mr *MockHostsFilterMockRecorder) GetRemoteHosts() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetRemoteHosts", reflect.TypeOf((*MockHostsFilter)(nil).GetRemoteHosts))
+}
+
+// MockHostBlocker is a mock of HostBlocker interface.
+type MockHostBlocker struct {
+	ctrl     *gomock.Controller
+	recorder *MockHostBlockerMockRecorder
+}
+
+// MockHostBlockerMockRecorder is the mock recorder for MockHostBlocker.
+type MockHostBlockerMockRecorder struct {
+	mock *MockHostBlocker
+}
+
+// NewMockHostBlocker creates a new mock instance.
+func NewMockHostBlocker(ctrl *gomock.Controller) *MockHostBlocker {
+	mock := &MockHostBlocker{ctrl: ctrl}
+	mock.recorder = &MockHostBlockerMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockHostBlocker) EXPECT() *MockHostBlockerMockRecorder {
+	return m.recorder
+}
+
+// Block mocks base method.
+func (m *MockHostBlocker) Block(arg0 string) (domains.Host, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Block", arg0)
+	ret0, _ := ret[0].(domains.Host)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Block indicates an expected call of Block.
+func (mr *MockHostBlockerMockRecorder) Block(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Block", reflect.TypeOf((*MockHostBlocker)(nil).Block), arg0)
 }
 
 // MockHostService is a mock of HostService interface.
@@ -152,4 +205,41 @@ func (m *MockHostService) GetAllHosts() ([]domains.Host, error) {
 func (mr *MockHostServiceMockRecorder) GetAllHosts() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllHosts", reflect.TypeOf((*MockHostService)(nil).GetAllHosts))
+}
+
+// MockHostBlockerService is a mock of HostBlockerService interface.
+type MockHostBlockerService struct {
+	ctrl     *gomock.Controller
+	recorder *MockHostBlockerServiceMockRecorder
+}
+
+// MockHostBlockerServiceMockRecorder is the mock recorder for MockHostBlockerService.
+type MockHostBlockerServiceMockRecorder struct {
+	mock *MockHostBlockerService
+}
+
+// NewMockHostBlockerService creates a new mock instance.
+func NewMockHostBlockerService(ctrl *gomock.Controller) *MockHostBlockerService {
+	mock := &MockHostBlockerService{ctrl: ctrl}
+	mock.recorder = &MockHostBlockerServiceMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockHostBlockerService) EXPECT() *MockHostBlockerServiceMockRecorder {
+	return m.recorder
+}
+
+// BlockHost mocks base method.
+func (m *MockHostBlockerService) BlockHost(arg0 domains.Host) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "BlockHost", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// BlockHost indicates an expected call of BlockHost.
+func (mr *MockHostBlockerServiceMockRecorder) BlockHost(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockHost", reflect.TypeOf((*MockHostBlockerService)(nil).BlockHost), arg0)
 }

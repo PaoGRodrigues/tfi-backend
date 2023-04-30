@@ -49,6 +49,9 @@ type TrafficActiveFlowsSearcher interface {
 
 type ActiveFlowsStorage interface {
 	StoreFlows() error
+	GetFlows(string) (Server, error)
+	GetClientsList() ([]Client, error)
+	GetServersList() ([]Server, error)
 }
 
 // *********** Services
@@ -59,4 +62,7 @@ type TrafficService interface {
 // *********** Repositories
 type TrafficRepository interface {
 	AddActiveFlows([]ActiveFlow) error
+	GetServerByAttr(string) (Server, error)
+	GetClients() ([]Client, error)
+	GetServers() ([]Server, error)
 }

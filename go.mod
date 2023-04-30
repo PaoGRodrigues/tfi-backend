@@ -3,7 +3,9 @@ module github.com/PaoGRodrigues/tfi-backend
 go 1.19
 
 require (
+	github.com/coreos/go-iptables v0.6.0
 	github.com/gin-gonic/gin v1.7.4
+	github.com/go-playground/assert/v2 v2.0.1
 	github.com/golang/mock v1.6.0
 	github.com/mattn/go-sqlite3 v1.14.14
 	github.com/stretchr/testify v1.4.0
@@ -24,6 +26,6 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/ugorji/go/codec v1.1.7 // indirect
 	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 // indirect
-	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect
+	golang.org/x/sys v0.2.0 // indirect
 	gopkg.in/yaml.v2 v2.2.8 // indirect
 )

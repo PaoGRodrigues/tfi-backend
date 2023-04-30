@@ -4,19 +4,19 @@ import (
 	"time"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
-	host_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
 type AlertSearcher struct {
-	alertService domains.AlertService
-	alerts       []domains.Alert
-	hostsFilter  host_domains.HostsFilter
+	alertService  domains.AlertService
+	alerts        []domains.Alert
+	trafficFilter traffic_domains.ActiveFlowsStorage
 }
 
-func NewAlertSearcher(service domains.AlertService, hostsFilter host_domains.HostsFilter) *AlertSearcher {
+func NewAlertSearcher(service domains.AlertService, filter traffic_domains.ActiveFlowsStorage) *AlertSearcher {
 	return &AlertSearcher{
-		alertService: service,
-		hostsFilter:  hostsFilter,
+		alertService:  service,
+		trafficFilter: filter,
 	}
 }
 
@@ -25,13 +25,25 @@ func (searcher *AlertSearcher) GetAllAlerts() ([]domains.Alert, error) {
 	epoch_end := int(now.Unix())
 	epoch_begin := int(now.AddDate(0, 0, -7).Unix()) //To get 7 days back
 
-	hosts, err := searcher.hostsFilter.GetLocalHosts()
+	clients, err := searcher.trafficFilter.GetClientsList()
 	if err != nil {
 		return []domains.Alert{}, err
 	}
 
 	alerts := []domains.Alert{}
-	for _, host := range hosts {
+	for _, host := range clients {
+		res, err := searcher.alertService.GetAllAlerts(epoch_begin, epoch_end, host.IP)
+		if err != nil {
+			return []domains.Alert{}, err
+		}
+		alerts = append(alerts, res...)
+	}
+
+	servers, err := searcher.trafficFilter.GetServersList()
+	if err != nil {
+		return []domains.Alert{}, err
+	}
+	for _, host := range servers {
 		res, err := searcher.alertService.GetAllAlerts(epoch_begin, epoch_end, host.IP)
 		if err != nil {
 			return []domains.Alert{}, err

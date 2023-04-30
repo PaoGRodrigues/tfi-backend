@@ -82,3 +82,72 @@ func (client *SQLClient) insertProtocol(currentProto domains.Protocol, key int) 
 	}
 	return nil
 }
+
+func (client *SQLClient) GetServerByAttr(attr string) (domains.Server, error) {
+	server := domains.Server{}
+	var id int
+
+	rows, err := client.db.Query("SELECT * FROM servers WHERE name LIKE ? LIMIT 1", attr)
+	if err != nil {
+		return domains.Server{}, err
+	}
+	if rows.Next() {
+		err = rows.Scan(&id, &server.IP, &server.Name, &server.Port, &server.IsBroadcastDomain, &server.IsDHCP)
+		if err != nil {
+			return domains.Server{}, err
+		}
+	} else {
+		rows, err = client.db.Query("SELECT * FROM servers WHERE ip LIKE ? LIMIT 1", attr)
+		if err != nil {
+			return domains.Server{}, err
+		}
+		for rows.Next() {
+			err = rows.Scan(&id, &server.IP, &server.Name, &server.Port, &server.IsBroadcastDomain, &server.IsDHCP)
+			if err != nil {
+				return domains.Server{}, err
+			}
+		}
+	}
+
+	return server, nil
+}
+
+func (client *SQLClient) GetClients() ([]domains.Client, error) {
+	clients := []domains.Client{}
+	var id int
+
+	rows, err := client.db.Query("SELECT * FROM clients GROUP BY ip")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		cli := domains.Client{}
+		err = rows.Scan(&id, &cli.Name, &cli.IP, &cli.Port)
+		if err != nil {
+			return nil, err
+		}
+		clients = append(clients, cli)
+	}
+
+	return clients, nil
+}
+
+func (client *SQLClient) GetServers() ([]domains.Server, error) {
+	servers := []domains.Server{}
+	var id int
+
+	rows, err := client.db.Query("SELECT * FROM servers GROUP BY ip")
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		srv := domains.Server{}
+		err = rows.Scan(&id, &srv.Name, &srv.IP, &srv.Port, &srv.IsBroadcastDomain, &srv.IsDHCP)
+		if err != nil {
+			return nil, err
+		}
+		servers = append(servers, srv)
+	}
+
+	return servers, nil
+}
