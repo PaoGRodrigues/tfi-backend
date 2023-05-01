@@ -42,7 +42,7 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 
 	hosts := []hosts.Host{
 		hosts.Host{
-			Name:        "sarasa",
+			Name:        "google.com.ar",
 			PrivateHost: false,
 			IP:          "8.8.8.8",
 			Country:     "USA",
@@ -117,7 +117,7 @@ func TestGetBytesPerDestSearcherActiveFlowsIsEmptyReturnsBytesSuccessfully(t *te
 
 	hosts := []hosts.Host{
 		hosts.Host{
-			Name:        "sarasa",
+			Name:        "google.com.ar",
 			PrivateHost: false,
 			IP:          "8.8.8.8",
 		},

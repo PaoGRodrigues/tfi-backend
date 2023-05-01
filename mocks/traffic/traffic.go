@@ -86,6 +86,21 @@ func (m *MockTrafficActiveFlowsSearcher) EXPECT() *MockTrafficActiveFlowsSearche
 	return m.recorder
 }
 
+// GetBytesPerCountry mocks base method.
+func (m *MockTrafficActiveFlowsSearcher) GetBytesPerCountry() ([]domains.BytesPerCountry, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetBytesPerCountry")
+	ret0, _ := ret[0].([]domains.BytesPerCountry)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetBytesPerCountry indicates an expected call of GetBytesPerCountry.
+func (mr *MockTrafficActiveFlowsSearcherMockRecorder) GetBytesPerCountry() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBytesPerCountry", reflect.TypeOf((*MockTrafficActiveFlowsSearcher)(nil).GetBytesPerCountry))
+}
+
 // GetBytesPerDestination mocks base method.
 func (m *MockTrafficActiveFlowsSearcher) GetBytesPerDestination() ([]domains.BytesPerDestination, error) {
 	m.ctrl.T.Helper()

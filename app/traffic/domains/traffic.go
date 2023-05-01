@@ -37,6 +37,10 @@ type BytesPerDestination struct {
 	City        string
 	Country     string
 }
+type BytesPerCountry struct {
+	Bytes   int
+	Country string
+}
 
 // *********** Use Cases
 type TrafficUseCase interface {
@@ -46,6 +50,7 @@ type TrafficUseCase interface {
 
 type TrafficActiveFlowsSearcher interface {
 	GetBytesPerDestination() ([]BytesPerDestination, error)
+	GetBytesPerCountry() ([]BytesPerCountry, error)
 }
 
 type ActiveFlowsStorage interface {
