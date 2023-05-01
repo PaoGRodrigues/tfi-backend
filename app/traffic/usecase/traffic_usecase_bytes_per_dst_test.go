@@ -204,3 +204,71 @@ func TestGetBytesPerDestSearcherHostFilterGetRemoteReturnsErrorAndThenReturnsByt
 		t.Fail()
 	}
 }
+
+func TestGetBytesPerDestReturnsBytesSuccessfullyWhenCompareByIP(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	expectedFlowFromSearcher := []domains.ActiveFlow{
+		domains.ActiveFlow{
+			Client: domains.Client{
+				Name: "Local",
+				Port: 12345,
+				IP:   "192.168.4.1",
+			},
+			Server: domains.Server{
+				IP:                "8.8.8.8",
+				IsBroadcastDomain: false,
+				IsDHCP:            false,
+				Port:              443,
+				Name:              "",
+			},
+			Protocol: domains.Protocol{
+				L4: "TCP",
+				L7: "TLS.Google",
+			},
+			Bytes: 5566778,
+		},
+	}
+
+	hosts := []hosts.Host{
+		hosts.Host{
+			Name:        "google.com.ar",
+			PrivateHost: false,
+			IP:          "8.8.8.8",
+			Country:     "USA",
+			City:        "California",
+		},
+		hosts.Host{
+			Name:        "sarasa2",
+			PrivateHost: false,
+			IP:          "198.8.8.8",
+		},
+	}
+
+	expected := []domains.BytesPerDestination{
+		domains.BytesPerDestination{
+			Bytes:       expectedFlowFromSearcher[0].Bytes,
+			Destination: expectedFlowFromSearcher[0].Server.IP,
+			City:        hosts[0].City,
+			Country:     hosts[0].Country,
+		},
+	}
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockSearcher.EXPECT().GetActiveFlows().Return(expectedFlowFromSearcher)
+	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
+	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(hosts, nil)
+
+	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	got, err := parser.GetBytesPerDestination()
+
+	if err != nil {
+		t.Fail()
+	}
+
+	if !reflect.DeepEqual(expected, got) {
+		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
+	}
+}
