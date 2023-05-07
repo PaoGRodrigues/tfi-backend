@@ -247,3 +247,21 @@ func TestGetBytesPerCountryReturnBytesSuccessfullyWhenGetActiveFlowsReturn0(t *t
 		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
 	}
 }
+
+func TestGetBytesPerCountryReturnErrorWhenGetRemoteHostsReturnError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockSearcher.EXPECT().GetActiveFlows().Return(nil)
+	mockSearcher.EXPECT().GetAllActiveTraffic().Return(expectedPerCountrySearcher, nil)
+	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
+	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(nil, fmt.Errorf("Test Error"))
+
+	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	_, err := parser.GetBytesPerCountry()
+
+	if err == nil {
+		t.Fail()
+	}
+}
