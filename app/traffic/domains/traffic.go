@@ -38,8 +38,8 @@ type BytesPerDestination struct {
 	Country     string
 }
 type BytesPerCountry struct {
-	Bytes   int
-	Country string
+	Bytes   int    `json:"bytes"`
+	Country string `json:"country"`
 }
 
 // *********** Use Cases

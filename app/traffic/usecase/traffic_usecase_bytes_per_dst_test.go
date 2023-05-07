@@ -173,3 +173,77 @@ func TestGetBytesPerDestReturnsTheSumOfBytesSuccessfully(t *testing.T) {
 		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
 	}
 }
+
+func TestGetBytesPerCountryReturnBytesSuccessfully(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	expected := []domains.BytesPerCountry{
+		{
+			Bytes:   expectedPerCountrySearcher[0].Bytes + expectedPerCountrySearcher[1].Bytes,
+			Country: "US",
+		},
+	}
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockSearcher.EXPECT().GetActiveFlows().Return(expectedPerCountrySearcher)
+	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
+	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(expectedHostsPerCountry, nil)
+
+	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	got, err := parser.GetBytesPerCountry()
+
+	if err != nil {
+		t.Fail()
+	}
+
+	if !reflect.DeepEqual(expected, got) {
+		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
+	}
+}
+
+func TestGetBytesPerCountryReturnErrorWhenGetActiveTrafficReturnError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockSearcher.EXPECT().GetActiveFlows().Return(nil)
+	mockSearcher.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Test Error"))
+	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
+
+	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	_, err := parser.GetBytesPerCountry()
+
+	if err == nil {
+		t.Fail()
+	}
+}
+
+func TestGetBytesPerCountryReturnBytesSuccessfullyWhenGetActiveFlowsReturn0(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	expected := []domains.BytesPerCountry{
+		{
+			Bytes:   expectedPerCountrySearcher[0].Bytes + expectedPerCountrySearcher[1].Bytes,
+			Country: "US",
+		},
+	}
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockSearcher.EXPECT().GetActiveFlows().Return(nil)
+	mockSearcher.EXPECT().GetAllActiveTraffic().Return(expectedPerCountrySearcher, nil)
+	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
+	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(expectedHostsPerCountry, nil)
+
+	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	got, err := parser.GetBytesPerCountry()
+
+	if err != nil {
+		t.Fail()
+	}
+
+	if !reflect.DeepEqual(expected, got) {
+		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
+	}
+}
