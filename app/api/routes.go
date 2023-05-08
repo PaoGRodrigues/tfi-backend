@@ -47,3 +47,7 @@ func (api *Api) MapNotificationsURL() {
 func (api *Api) MapConfigureNotifChannelURL() {
 	api.POST("/configurechannel", api.ConfigNotificationChannel)
 }
+
+func (api *Api) MapGetActiveFlowsPerCountryURL() {
+	api.GET("/activeflowspercountry", api.GetActiveFlowsPerCountry)
+}

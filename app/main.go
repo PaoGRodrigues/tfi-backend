@@ -33,7 +33,7 @@ func main() {
 		//channel = services.NewFakeBot()
 		channel = initializedNotifChannel()
 	} else {
-		tool = services.NewTool("http://192.168.0.13:3000", 2, "XX", "XX")
+		tool = services.NewTool("http://XX:3000", 2, "XX", "XX")
 		/*console, err = initializeConsole()
 		if err != nil {
 			panic(err.Error())
@@ -75,6 +75,7 @@ func main() {
 	api.MapBlockHostURL()
 	api.MapNotificationsURL()
 	api.MapConfigureNotifChannelURL()
+	api.MapGetActiveFlowsPerCountryURL()
 
 	api.Run(":8080")
 }

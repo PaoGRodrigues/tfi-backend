@@ -153,3 +153,60 @@ func TestCreateTrafficActiveFlowsPerDestAndGetAnError(t *testing.T) {
 
 	assert.Equal(t, http.StatusInternalServerError, response.Code)
 }
+
+func TestGetBytesPerCountryAndReturn200(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	expected := []domains.BytesPerCountry{
+		domains.BytesPerCountry{
+			Bytes:   3454567,
+			Country: "US",
+		},
+	}
+
+	mockActiveFlowsSearcher := mocks.NewMockTrafficActiveFlowsSearcher(ctrl)
+	mockActiveFlowsSearcher.EXPECT().GetBytesPerCountry().Return(expected, nil)
+
+	api := &api.Api{
+		ActiveFlowsSearcher: mockActiveFlowsSearcher,
+		Engine:              gin.Default(),
+	}
+
+	api.MapGetActiveFlowsPerCountryURL()
+
+	response := httptest.NewRecorder()
+
+	requestUrl := "/activeflowspercountry"
+	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusOK, response.Code)
+}
+
+func TestGetBytesPerCountryReturnError(t *testing.T) {
+
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockActiveFlowsSearcher := mocks.NewMockTrafficActiveFlowsSearcher(ctrl)
+	mockActiveFlowsSearcher.EXPECT().GetBytesPerCountry().Return(nil, fmt.Errorf("Testing error case"))
+
+	api := &api.Api{
+		ActiveFlowsSearcher: mockActiveFlowsSearcher,
+		Engine:              gin.Default(),
+	}
+
+	api.MapGetActiveFlowsPerCountryURL()
+
+	response := httptest.NewRecorder()
+
+	requestUrl := "/activeflowspercountry"
+	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
+}
