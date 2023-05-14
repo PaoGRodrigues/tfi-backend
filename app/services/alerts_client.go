@@ -23,8 +23,8 @@ type Alert struct {
 	Severity struct {
 		Label string
 	} `json:"label"`
-	AlertFlow     AlertFlow `json:"flow"`
-	AlertProtocol AlertProtocol
+	AlertFlow     AlertFlow     `json:"flow"`
+	AlertProtocol AlertProtocol `json:"l7_proto"`
 }
 
 type AlertFlow struct {
@@ -50,7 +50,7 @@ type AlertProtocol struct {
 		L4    string `json:"l4_label"`
 		Label string `json:"label"`
 		L7    string `json:"l7_label"`
-	} `json:"l7_proto"`
+	}
 }
 
 type HttpAlertResponse struct {
