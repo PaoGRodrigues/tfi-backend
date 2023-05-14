@@ -13,7 +13,7 @@ func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, er
 			Name:     "test",
 			Family:   "flow",
 			Time:     struct{ Label string }{"10/10/10 11:11:11"},
-			Severity: "2",
+			Severity: struct{ Value string }{"2"},
 			AlertFlow: domains.AlertFlow{
 				Client: flow.Client{
 					Name: "192.168.4.14",
@@ -39,7 +39,7 @@ func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, er
 			Name:     "test",
 			Family:   "flow",
 			Time:     struct{ Label string }{"10/10/10 11:11:11"},
-			Severity: "2",
+			Severity: struct{ Value string }{"2"},
 			AlertFlow: domains.AlertFlow{
 				Client: flow.Client{
 					IP:   "192.168.4.14",

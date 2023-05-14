@@ -24,7 +24,7 @@ func TestCreateAlertsUsecaseGetAllAlertsReturnAlerts(t *testing.T) {
 			Name:     "test",
 			Family:   "flow",
 			Time:     struct{ Label string }{"10/10/10 11:11:11"},
-			Severity: "2",
+			Severity: struct{ Value string }{"2"},
 			AlertFlow: domains.AlertFlow{
 				Client: flow.Client{
 					Port: 33566,

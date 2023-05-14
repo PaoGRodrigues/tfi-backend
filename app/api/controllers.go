@@ -30,13 +30,18 @@ type Api struct {
 }
 
 type AlertsResponse struct {
-	Name        string
-	Family      string
-	Time        string
-	Severity    string
-	Source      string
-	Destination string
-	Protocol    string
+	Name        string `json:"Nombre"`
+	Time        string `json:"Fecha/hora"`
+	Severity    string `json:"Severidad"`
+	Source      string `json:"Origen"`
+	Destination string `json:"Destino"`
+}
+
+type HostsResponse struct {
+	Name        string `json:"Nombre"`
+	PrivateHost bool   `json:"Privado"`
+	IP          string `json:"IP"`
+	Mac         string `json:"MAC"`
 }
 
 func (api *Api) GetHosts(c *gin.Context) {
@@ -76,7 +81,7 @@ func (api *Api) GetLocalHosts(c *gin.Context) {
 	}
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "GET")
-	c.JSON(http.StatusOK, gin.H{"data": hosts})
+	c.JSON(http.StatusOK, gin.H{"data": parseHostResponse(hosts)})
 }
 
 func (api *Api) GetActiveFlowsPerDestination(c *gin.Context) {
@@ -125,12 +130,10 @@ func (api *Api) parseAlertsData(alerts []domains.Alert) []AlertsResponse {
 		source, destination := createFlowString(alert.AlertFlow)
 		ar := AlertsResponse{
 			Name:        alert.Name,
-			Family:      alert.Family,
 			Time:        alert.Time.Label,
-			Severity:    alert.Severity,
+			Severity:    alert.Severity.Value,
 			Source:      source,
 			Destination: destination,
-			Protocol:    alert.AlertProtocol.Label,
 		}
 		response = append(response, ar)
 	}
@@ -233,4 +236,19 @@ func (api *Api) GetActiveFlowsPerCountry(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "GET")
 	c.JSON(http.StatusOK, gin.H{"data": activeFlows})
+}
+
+func parseHostResponse(hosts []hosts.Host) []HostsResponse {
+	response := []HostsResponse{}
+
+	for _, host := range hosts {
+		h := HostsResponse{
+			Name:        host.Name,
+			PrivateHost: host.PrivateHost,
+			IP:          host.IP,
+			Mac:         host.Mac,
+		}
+		response = append(response, h)
+	}
+	return response
 }

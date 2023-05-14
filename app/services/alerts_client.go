@@ -21,8 +21,8 @@ type Alert struct {
 		Label string
 	} `json:"tstamp"`
 	Severity struct {
-		Label string
-	} `json:"label"`
+		Value int
+	} `json:"severity"`
 	AlertFlow     AlertFlow     `json:"flow"`
 	AlertProtocol AlertProtocol `json:"l7_proto"`
 }
@@ -64,6 +64,17 @@ type HttpAlertResponse struct {
 
 type Records struct {
 	Alerts []Alert `json:"records"`
+}
+
+var severityScore = map[int]string{
+	1: "Depuración",
+	2: "Informativo",
+	3: "Notificación",
+	4: "Advertencia",
+	5: "Error",
+	6: " Crítico",
+	7: "Alerta",
+	8: "Emergencia",
 }
 
 func (t *NtopNG) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
@@ -139,7 +150,7 @@ func parseAlertsFromTool(rawAlerts []Alert) ([]domains.Alert, error) {
 			Name:     alert.Name.Name,
 			Family:   alert.Family,
 			Time:     alert.Time,
-			Severity: alert.Severity.Label,
+			Severity: struct{ Value string }{severityScore[alert.Severity.Value]},
 			AlertFlow: domains.AlertFlow{
 				Client: flow.Client{
 					Name: alert.AlertFlow.Client.Value,
