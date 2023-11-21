@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS servers (
     port UNSIGNED SMALLINT(5),
     is_broadcast_domain BOOLEAN,
     is_dhcp BOOLEAN,
+    country VARCHAR(48),
 
     FOREIGN KEY (key)
         REFERENCES traffic (key)

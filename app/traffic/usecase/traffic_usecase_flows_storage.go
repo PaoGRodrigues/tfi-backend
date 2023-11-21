@@ -1,16 +1,21 @@
 package usecase
 
-import "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+import (
+	host_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+)
 
 type FlowsRepository struct {
 	trafficSearcher domains.TrafficUseCase
 	trafficRepo     domains.TrafficRepository
+	hostFilter      host_domains.HostsFilter
 }
 
-func NewFlowsStorage(trafSearcher domains.TrafficUseCase, trafRepo domains.TrafficRepository) *FlowsRepository {
+func NewFlowsStorage(trafSearcher domains.TrafficUseCase, trafRepo domains.TrafficRepository, hostFilter host_domains.HostsFilter) *FlowsRepository {
 	return &FlowsRepository{
 		trafficSearcher: trafSearcher,
 		trafficRepo:     trafRepo,
+		hostFilter:      hostFilter,
 	}
 }
 
@@ -23,8 +28,21 @@ func (fs *FlowsRepository) StoreFlows() error {
 		}
 		activeFlows = current
 	}
+
+	fs.enrichData(activeFlows)
 	err := fs.trafficRepo.AddActiveFlows(activeFlows)
 	return err
+}
+
+func (fs *FlowsRepository) enrichData(activeFlows []domains.ActiveFlow) error {
+	for _, flow := range activeFlows {
+		serv, err := fs.hostFilter.GetHost(flow.Server.IP)
+		if err != nil {
+			return err
+		}
+		flow.Server.Country = serv.Country
+	}
+	return nil
 }
 
 func (fs *FlowsRepository) GetFlows(attr string) (domains.Server, error) {

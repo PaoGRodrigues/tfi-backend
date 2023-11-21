@@ -65,9 +65,9 @@ func (client *SQLClient) insertClient(currentClient domains.Client, key uint64) 
 }
 
 func (client *SQLClient) insertServer(currentServer domains.Server, key uint64) error {
-	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?,?,?,?);",
+	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?,?,?,?,?);",
 		key, currentServer.Name, currentServer.IP, currentServer.Port, currentServer.IsBroadcastDomain,
-		currentServer.IsDHCP)
+		currentServer.IsDHCP, currentServer.Country)
 	if err != nil {
 		return err
 	}
@@ -92,7 +92,7 @@ func (client *SQLClient) GetServerByAttr(attr string) (domains.Server, error) {
 		return domains.Server{}, err
 	}
 	if rows.Next() {
-		err = rows.Scan(&id, &server.IP, &server.Name, &server.Port, &server.IsBroadcastDomain, &server.IsDHCP)
+		err = rows.Scan(&id, &server.IP, &server.Name, &server.Port, &server.IsBroadcastDomain, &server.IsDHCP, &server.Country)
 		if err != nil {
 			return domains.Server{}, err
 		}
@@ -102,7 +102,7 @@ func (client *SQLClient) GetServerByAttr(attr string) (domains.Server, error) {
 			return domains.Server{}, err
 		}
 		for rows.Next() {
-			err = rows.Scan(&id, &server.IP, &server.Name, &server.Port, &server.IsBroadcastDomain, &server.IsDHCP)
+			err = rows.Scan(&id, &server.IP, &server.Name, &server.Port, &server.IsBroadcastDomain, &server.IsDHCP, &server.Country)
 			if err != nil {
 				return domains.Server{}, err
 			}
@@ -142,7 +142,7 @@ func (client *SQLClient) GetServers() ([]domains.Server, error) {
 	}
 	for rows.Next() {
 		srv := domains.Server{}
-		err = rows.Scan(&id, &srv.Name, &srv.IP, &srv.Port, &srv.IsBroadcastDomain, &srv.IsDHCP)
+		err = rows.Scan(&id, &srv.Name, &srv.IP, &srv.Port, &srv.IsBroadcastDomain, &srv.IsDHCP, &srv.Country)
 		if err != nil {
 			return nil, err
 		}

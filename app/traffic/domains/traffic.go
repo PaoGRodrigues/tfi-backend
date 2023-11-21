@@ -25,6 +25,7 @@ type Server struct {
 	IsDHCP            bool
 	Port              int
 	Name              string
+	Country           string
 }
 
 type Protocol struct {
