@@ -1,43 +1,57 @@
 package usecase
 
 import (
+	"net"
+
 	host_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
 type BytesAggregatorParser struct {
-	trafficSearcher domains.TrafficUseCase
-	hostsFilter     host_domains.HostsFilter
+	flowsStorage domains.ActiveFlowsStorage
 }
 
-func NewBytesDestinationParser(trafSearcher domains.TrafficUseCase, hostsFilter host_domains.HostsFilter) *BytesAggregatorParser {
+func NewBytesDestinationParser(flowsStorage domains.ActiveFlowsStorage) *BytesAggregatorParser {
 	return &BytesAggregatorParser{
-		trafficSearcher: trafSearcher,
-		hostsFilter:     hostsFilter,
+		flowsStorage: flowsStorage,
 	}
 }
 
 func (parser *BytesAggregatorParser) GetBytesPerDestination() ([]domains.BytesPerDestination, error) {
-	activeFlows := parser.trafficSearcher.GetActiveFlows()
-	if len(activeFlows) == 0 {
-		current, err := parser.trafficSearcher.GetAllActiveTraffic()
-		if err != nil {
-			return []domains.BytesPerDestination{}, err
-		}
-		activeFlows = current
-	}
+	serversFlow, err := parser.flowsStorage.GetServersList()
 
-	remoteHosts, err := parser.hostsFilter.GetRemoteHosts()
 	if err != nil {
 		return []domains.BytesPerDestination{}, err
 	}
 
-	parsedBytesDst := parsePerDest(activeFlows, remoteHosts)
+	servers := filterPublicServers(serversFlow)
+
+	for _, server := range servers {
+		flow, err := parser.flowsStorage.GetFlowByKey(server.Key)
+		if err != nil {
+			return []domains.BytesPerDestination{}, err
+		}
+	}
+
+	parsedBytesDst := parsePerDest(flows)
 	bytesDst := sumBytes(parsedBytesDst)
 	return bytesDst, nil
 }
 
-func parsePerDest(actFlows []domains.ActiveFlow, remoteHosts []host_domains.Host) []domains.BytesPerDestination {
+func filterPublicServers(serversFlows []domains.Server) []domains.Server {
+	servers := []domains.Server{}
+
+	for _, srv := range serversFlows {
+		ip := net.ParseIP(srv.IP)
+		if !ip.IsPrivate() {
+			servers = append(servers, srv)
+		}
+	}
+	return servers
+}
+
+func parsePerDest(serversFlows []domains.Server) []domains.BytesPerDestination {
+
 	bytesDst := []domains.BytesPerDestination{}
 
 	for _, flow := range actFlows {

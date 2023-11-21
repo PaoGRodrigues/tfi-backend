@@ -151,3 +151,24 @@ func (client *SQLClient) GetServers() ([]domains.Server, error) {
 
 	return servers, nil
 }
+
+func (client *SQLClient) GetFlowByKey(key string) (domains.ActiveFlow, error) {
+	flow := domains.ActiveFlow{}
+	flowKey, err := strconv.ParseUint(key, 10, 64)
+	if err != nil {
+		return domains.ActiveFlow{}, err
+	}
+
+	rows, err := client.db.Query("SELECT * FROM traffic WHERE key LIKE ? LIMIT 1", flowKey)
+	if err != nil {
+		return domains.ActiveFlow{}, err
+	}
+	for rows.Next() {
+		err = rows.Scan(&flow.Key, &flow.FirstSeen, &flow.LastSeen, &flow.Bytes)
+		if err != nil {
+			return domains.ActiveFlow{}, err
+		}
+	}
+
+	return flow, nil
+}

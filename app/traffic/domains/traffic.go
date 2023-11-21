@@ -2,9 +2,9 @@ package domains
 
 // *********** Entities
 type ActiveFlow struct {
-	Key       string
-	FirstSeen uint64 //Unix timestamp
-	LastSeen  uint64 //Unix timestamp
+	Key       string `json:"-"`
+	FirstSeen uint64 `json:"first_seen"` //Unix timestamp
+	LastSeen  uint64 `json:"last_seen"`  //Unix timestamp
 	Client    Client
 	Server    Server
 	Bytes     int
@@ -12,12 +12,14 @@ type ActiveFlow struct {
 }
 
 type Client struct {
+	Key  string `json:"-"`
 	Name string
 	Port int
 	IP   string
 }
 
 type Server struct {
+	Key               string `json:"-"`
 	IP                string
 	IsBroadcastDomain bool
 	IsDHCP            bool
@@ -26,6 +28,7 @@ type Server struct {
 }
 
 type Protocol struct {
+	Key   string `json:"-"`
 	L4    string
 	L7    string
 	Label string
@@ -58,6 +61,7 @@ type ActiveFlowsStorage interface {
 	GetFlows(string) (Server, error)
 	GetClientsList() ([]Client, error)
 	GetServersList() ([]Server, error)
+	GetFlowByKey(string) ([]ActiveFlow, error)
 }
 
 // *********** Services
@@ -71,4 +75,5 @@ type TrafficRepository interface {
 	GetServerByAttr(string) (Server, error)
 	GetClients() ([]Client, error)
 	GetServers() ([]Server, error)
+	GetFlowByKey(key string) (ActiveFlow, error)
 }

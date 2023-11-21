@@ -50,3 +50,11 @@ func (fs *FlowsRepository) GetServersList() ([]domains.Server, error) {
 	}
 	return servers, nil
 }
+
+func (fs *FlowsRepository) GetFlowByKey(key string) (domains.ActiveFlow, error) {
+	flow, err := fs.trafficRepo.GetFlowByKey(key)
+	if err != nil {
+		return domains.ActiveFlow{}, err
+	}
+	return flow, nil
+}
