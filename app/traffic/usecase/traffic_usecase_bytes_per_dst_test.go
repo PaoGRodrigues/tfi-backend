@@ -82,9 +82,9 @@ func TestGetBytesPerDestReturnsTheSumOfBytesSuccessfully(t *testing.T) {
 	}
 
 	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
-	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server}, nil)
-	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(secondExpectedFlowFromSearcher[0], nil)
-	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(secondExpectedFlowFromSearcher[1], nil)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1, server2}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
 
 	parser := usecase.NewBytesDestinationParser(mockFlowStorage)
 	got, err := parser.GetBytesPerDestination()
@@ -110,9 +110,9 @@ func TestGetBytesPerCountryReturnBytesSuccessfully(t *testing.T) {
 	}
 
 	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
-	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server}, nil)
-	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(expectedPerCountrySearcher[0], nil)
-	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(expectedPerCountrySearcher[1], nil)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1, server3}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(expectedPerCountrySearcher[0], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
 
 	parser := usecase.NewBytesDestinationParser(mockFlowStorage)
 	got, err := parser.GetBytesPerCountry()

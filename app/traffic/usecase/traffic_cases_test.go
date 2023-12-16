@@ -5,6 +5,36 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
+var server1 = domains.Server{
+	IP:                "8.8.8.8",
+	IsBroadcastDomain: false,
+	IsDHCP:            false,
+	Port:              443,
+	Name:              "google.com.ar",
+	Country:           "US",
+	Key:               "12344567",
+}
+
+var server2 = domains.Server{
+	IP:                "8.8.8.8",
+	IsBroadcastDomain: false,
+	IsDHCP:            false,
+	Port:              443,
+	Name:              "google.com.ar",
+	Country:           "US",
+	Key:               "12344568",
+}
+
+var server3 = domains.Server{
+	IP:                "8.8.10.8",
+	IsBroadcastDomain: false,
+	IsDHCP:            false,
+	Port:              443,
+	Name:              "telegram.com",
+	Country:           "US",
+	Key:               "12344569",
+}
+
 var expectedFlowFromSearcher = []domains.ActiveFlow{
 	domains.ActiveFlow{
 		Client: domains.Client{
@@ -75,14 +105,7 @@ var secondExpectedFlowFromSearcher = []domains.ActiveFlow{
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
-		Server: domains.Server{
-			IP:                "8.8.8.8",
-			IsBroadcastDomain: false,
-			IsDHCP:            false,
-			Port:              443,
-			Name:              "google.com.ar",
-			Country:           "US",
-		},
+		Server: server1,
 		Protocol: domains.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
@@ -95,14 +118,7 @@ var secondExpectedFlowFromSearcher = []domains.ActiveFlow{
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
-		Server: domains.Server{
-			IP:                "8.8.8.8",
-			IsBroadcastDomain: false,
-			IsDHCP:            false,
-			Port:              443,
-			Name:              "google.com.ar",
-			Country:           "US",
-		},
+		Server: server2,
 		Protocol: domains.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
@@ -118,14 +134,7 @@ var expectedPerCountrySearcher = []domains.ActiveFlow{
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
-		Server: domains.Server{
-			IP:                "8.8.8.8",
-			IsBroadcastDomain: false,
-			IsDHCP:            false,
-			Port:              443,
-			Name:              "google.com.ar",
-			Country:           "US",
-		},
+		Server: server1,
 		Protocol: domains.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
@@ -138,14 +147,7 @@ var expectedPerCountrySearcher = []domains.ActiveFlow{
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
-		Server: domains.Server{
-			IP:                "8.8.10.8",
-			IsBroadcastDomain: false,
-			IsDHCP:            false,
-			Port:              443,
-			Name:              "telegram.com",
-			Country:           "US",
-		},
+		Server: server3,
 		Protocol: domains.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
