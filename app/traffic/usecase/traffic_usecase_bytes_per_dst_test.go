@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -65,6 +66,39 @@ func TestGetBytesPerDestReturnsBytesSuccessfullyWhenCompareByIP(t *testing.T) {
 
 	if !reflect.DeepEqual(expected, got) {
 		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
+	}
+}
+
+func TestGetBytesPerDestReturnsErrorWhenThereIsAnErrorInGetServersList(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{}, fmt.Errorf("Test error"))
+
+	parser := usecase.NewBytesDestinationParser(mockFlowStorage)
+	_, err := parser.GetBytesPerDestination()
+
+	if err == nil {
+		t.Fail()
+	}
+}
+
+func TestGetBytesPerDestReturnsErrorWhenThereIsAnErrorInGetFlowByKey(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(domains.ActiveFlow{}, fmt.Errorf("Test error"))
+
+	parser := usecase.NewBytesDestinationParser(mockFlowStorage)
+	_, err := parser.GetBytesPerDestination()
+
+	if err == nil {
+		t.Fail()
 	}
 }
 
