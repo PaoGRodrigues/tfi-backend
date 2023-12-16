@@ -3,7 +3,6 @@ package usecase
 import (
 	"net"
 
-	host_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
@@ -18,19 +17,21 @@ func NewBytesDestinationParser(flowsStorage domains.ActiveFlowsStorage) *BytesAg
 }
 
 func (parser *BytesAggregatorParser) GetBytesPerDestination() ([]domains.BytesPerDestination, error) {
-	serversFlow, err := parser.flowsStorage.GetServersList()
+	serversList, err := parser.flowsStorage.GetServersList()
 
 	if err != nil {
 		return []domains.BytesPerDestination{}, err
 	}
 
-	servers := filterPublicServers(serversFlow)
+	servers := filterPublicServers(serversList)
 
+	flows := []domains.ActiveFlow{}
 	for _, server := range servers {
 		flow, err := parser.flowsStorage.GetFlowByKey(server.Key)
 		if err != nil {
 			return []domains.BytesPerDestination{}, err
 		}
+		flows = append(flows, flow)
 	}
 
 	parsedBytesDst := parsePerDest(flows)
@@ -38,10 +39,10 @@ func (parser *BytesAggregatorParser) GetBytesPerDestination() ([]domains.BytesPe
 	return bytesDst, nil
 }
 
-func filterPublicServers(serversFlows []domains.Server) []domains.Server {
+func filterPublicServers(flows []domains.Server) []domains.Server {
 	servers := []domains.Server{}
 
-	for _, srv := range serversFlows {
+	for _, srv := range flows {
 		ip := net.ParseIP(srv.IP)
 		if !ip.IsPrivate() {
 			servers = append(servers, srv)
@@ -50,28 +51,23 @@ func filterPublicServers(serversFlows []domains.Server) []domains.Server {
 	return servers
 }
 
-func parsePerDest(serversFlows []domains.Server) []domains.BytesPerDestination {
+func parsePerDest(flows []domains.ActiveFlow) []domains.BytesPerDestination {
 
 	bytesDst := []domains.BytesPerDestination{}
 
-	for _, flow := range actFlows {
+	for _, flow := range flows {
 		var serverName string
 		if flow.Server.Name != "" {
 			serverName = flow.Server.Name
 		} else {
 			serverName = flow.Server.IP
 		}
-		for _, remh := range remoteHosts {
-			if serverName == remh.Name || serverName == remh.IP {
-				bpd := domains.BytesPerDestination{
-					Bytes:       flow.Bytes,
-					Destination: serverName,
-					City:        remh.City,
-					Country:     remh.Country,
-				}
-				bytesDst = append(bytesDst, bpd)
-			}
+		bpd := domains.BytesPerDestination{
+			Bytes:       flow.Bytes,
+			Destination: serverName,
+			Country:     flow.Server.Country,
 		}
+		bytesDst = append(bytesDst, bpd)
 	}
 	return bytesDst
 }
@@ -82,6 +78,10 @@ func sumBytes(bpd []domains.BytesPerDestination) []domains.BytesPerDestination {
 		m[v.Destination] += v.Bytes
 	}
 
+	for i := range m {
+		print(i)
+	}
+
 	newBpd := []domains.BytesPerDestination{}
 	for dest, bytes := range m {
 		new := domains.BytesPerDestination{}
@@ -89,7 +89,6 @@ func sumBytes(bpd []domains.BytesPerDestination) []domains.BytesPerDestination {
 		new.Bytes = bytes
 		for _, b := range bpd {
 			if b.Destination == dest {
-				new.City = b.City
 				new.Country = b.Country
 				break
 			}
@@ -101,54 +100,31 @@ func sumBytes(bpd []domains.BytesPerDestination) []domains.BytesPerDestination {
 }
 
 func (parser *BytesAggregatorParser) GetBytesPerCountry() ([]domains.BytesPerCountry, error) {
-	activeFlows := parser.trafficSearcher.GetActiveFlows()
-	if len(activeFlows) == 0 {
-		current, err := parser.trafficSearcher.GetAllActiveTraffic()
-		if err != nil {
-			return []domains.BytesPerCountry{}, err
-		}
-		activeFlows = current
-	}
+	serversList, err := parser.flowsStorage.GetServersList()
 
-	remoteHosts, err := parser.hostsFilter.GetRemoteHosts()
 	if err != nil {
 		return []domains.BytesPerCountry{}, err
 	}
 
-	bytesDst := parsePerCountry(activeFlows, remoteHosts)
-	return bytesDst, nil
-}
+	servers := filterPublicServers(serversList)
 
-type tempFlow struct {
-	ip      string
-	country string
-	bytes   int
-}
-
-func parsePerCountry(actFlows []domains.ActiveFlow, remoteHosts []host_domains.Host) []domains.BytesPerCountry {
-
-	det := []tempFlow{}
-	for _, flow := range actFlows {
-		for _, remh := range remoteHosts {
-			if flow.Server.IP == remh.IP {
-				temp := tempFlow{
-					ip:      flow.Server.IP,
-					country: remh.Country,
-					bytes:   flow.Bytes,
-				}
-				det = append(det, temp)
-			}
+	flows := []domains.ActiveFlow{}
+	for _, server := range servers {
+		flow, err := parser.flowsStorage.GetFlowByKey(server.Key)
+		if err != nil {
+			return []domains.BytesPerCountry{}, err
 		}
+		flows = append(flows, flow)
 	}
 
-	bytesDst := sumCountries(det)
-	return bytesDst
+	bytesCountry := sumCountries(flows)
+	return bytesCountry, nil
 }
 
-func sumCountries(temp []tempFlow) []domains.BytesPerCountry {
+func sumCountries(flow []domains.ActiveFlow) []domains.BytesPerCountry {
 	m := map[string]int{}
-	for _, v := range temp {
-		m[v.country] += v.bytes
+	for _, v := range flow {
+		m[v.Server.Country] += v.Bytes
 	}
 
 	bsCountry := []domains.BytesPerCountry{}

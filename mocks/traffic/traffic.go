@@ -155,10 +155,10 @@ func (mr *MockActiveFlowsStorageMockRecorder) GetClientsList() *gomock.Call {
 }
 
 // GetFlowByKey mocks base method.
-func (m *MockActiveFlowsStorage) GetFlowByKey(arg0 string) ([]domains.ActiveFlow, error) {
+func (m *MockActiveFlowsStorage) GetFlowByKey(arg0 string) (domains.ActiveFlow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetFlowByKey", arg0)
-	ret0, _ := ret[0].([]domains.ActiveFlow)
+	ret0, _ := ret[0].(domains.ActiveFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

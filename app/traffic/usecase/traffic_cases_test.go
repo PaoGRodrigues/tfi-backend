@@ -18,6 +18,8 @@ var expectedFlowFromSearcher = []domains.ActiveFlow{
 			IsDHCP:            false,
 			Port:              443,
 			Name:              "google.com.ar",
+			Key:               "12344567",
+			Country:           "US",
 		},
 		Protocol: domains.Protocol{
 			L4: "TCP",
@@ -40,6 +42,7 @@ var expectedFlowFromSearcherWithoutName = []domains.ActiveFlow{
 			IsDHCP:            false,
 			Port:              443,
 			Name:              "",
+			Country:           "US",
 		},
 		Protocol: domains.Protocol{
 			L4: "TCP",
@@ -78,6 +81,7 @@ var secondExpectedFlowFromSearcher = []domains.ActiveFlow{
 			IsDHCP:            false,
 			Port:              443,
 			Name:              "google.com.ar",
+			Country:           "US",
 		},
 		Protocol: domains.Protocol{
 			L4: "TCP",
@@ -97,6 +101,7 @@ var secondExpectedFlowFromSearcher = []domains.ActiveFlow{
 			IsDHCP:            false,
 			Port:              443,
 			Name:              "google.com.ar",
+			Country:           "US",
 		},
 		Protocol: domains.Protocol{
 			L4: "TCP",
@@ -119,6 +124,7 @@ var expectedPerCountrySearcher = []domains.ActiveFlow{
 			IsDHCP:            false,
 			Port:              443,
 			Name:              "google.com.ar",
+			Country:           "US",
 		},
 		Protocol: domains.Protocol{
 			L4: "TCP",
@@ -138,33 +144,12 @@ var expectedPerCountrySearcher = []domains.ActiveFlow{
 			IsDHCP:            false,
 			Port:              443,
 			Name:              "telegram.com",
+			Country:           "US",
 		},
 		Protocol: domains.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
 		},
 		Bytes: 5566778,
-	},
-}
-
-var expectedHostsPerCountry = []hosts.Host{
-	hosts.Host{
-		Name:        "google.com.ar",
-		PrivateHost: false,
-		IP:          "8.8.8.8",
-		Country:     "US",
-		City:        "California",
-	},
-	hosts.Host{
-		Name:        "sarasa2",
-		PrivateHost: false,
-		IP:          "198.8.8.8",
-		City:        "AR",
-	},
-	hosts.Host{
-		Name:        "telegram.com",
-		PrivateHost: false,
-		IP:          "8.8.10.8",
-		Country:     "US",
 	},
 }

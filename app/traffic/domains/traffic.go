@@ -38,7 +38,6 @@ type Protocol struct {
 type BytesPerDestination struct {
 	Bytes       int
 	Destination string
-	City        string
 	Country     string
 }
 type BytesPerCountry struct {
@@ -62,7 +61,7 @@ type ActiveFlowsStorage interface {
 	GetFlows(string) (Server, error)
 	GetClientsList() ([]Client, error)
 	GetServersList() ([]Server, error)
-	GetFlowByKey(string) ([]ActiveFlow, error)
+	GetFlowByKey(string) (ActiveFlow, error)
 }
 
 // *********** Services
