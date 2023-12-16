@@ -266,3 +266,43 @@ func TestGetServersListReturnError(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestGetFlowByKeyReturnFlow(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	activeFlowExpected := domains.ActiveFlow{
+		Key:      "12345",
+		Client:   client,
+		Server:   server,
+		Bytes:    1000,
+		Protocol: protocols,
+	}
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
+	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockTrafficRepoStorage.EXPECT().GetFlowByKey(activeFlowExpected.Key).Return(activeFlowExpected, nil)
+
+	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
+	got, _ := trafficStorage.GetFlowByKey(activeFlowExpected.Key)
+
+	assert.Equal(t, activeFlowExpected, got)
+}
+
+func TestGetFlowByKeyReturnError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
+	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockTrafficRepoStorage.EXPECT().GetFlowByKey("1234").Return(domains.ActiveFlow{}, fmt.Errorf("Test error"))
+
+	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
+	_, err := trafficStorage.GetFlowByKey("1234")
+
+	if err == nil {
+		t.Fail()
+	}
+}

@@ -32,7 +32,6 @@ func (an *AlertNotifier) SendLastAlertMessages() error {
 	if err != nil {
 		return err
 	}
-	fmt.Print(lastAlerts)
 	if lastAlerts == nil {
 		return errors.New("No alerts available")
 	}

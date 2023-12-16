@@ -78,10 +78,6 @@ func sumBytes(bpd []domains.BytesPerDestination) []domains.BytesPerDestination {
 		m[v.Destination] += v.Bytes
 	}
 
-	for i := range m {
-		print(i)
-	}
-
 	newBpd := []domains.BytesPerDestination{}
 	for dest, bytes := range m {
 		new := domains.BytesPerDestination{}
