@@ -10,7 +10,7 @@ type BytesAggregatorParser struct {
 	flowsStorage domains.ActiveFlowsStorage
 }
 
-func NewBytesDestinationParser(flowsStorage domains.ActiveFlowsStorage) *BytesAggregatorParser {
+func NewBytesParser(flowsStorage domains.ActiveFlowsStorage) *BytesAggregatorParser {
 	return &BytesAggregatorParser{
 		flowsStorage: flowsStorage,
 	}

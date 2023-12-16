@@ -93,7 +93,7 @@ func initializeTrafficSearcher(tool services.Tool) trafficDomains.TrafficUseCase
 }
 
 func initializeTrafficDependencies(flowStorage trafficDomains.ActiveFlowsStorage) trafficDomains.TrafficActiveFlowsSearcher {
-	trafficActiveFlowsSearcher := trafficUseCases.NewBytesDestinationParser(flowStorage)
+	trafficActiveFlowsSearcher := trafficUseCases.NewBytesParser(flowStorage)
 	return trafficActiveFlowsSearcher
 }
 
