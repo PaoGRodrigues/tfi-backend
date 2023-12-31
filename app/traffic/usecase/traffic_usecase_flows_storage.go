@@ -29,20 +29,23 @@ func (fs *FlowsRepository) StoreFlows() error {
 		activeFlows = current
 	}
 
-	fs.enrichData(activeFlows)
-	err := fs.trafficRepo.AddActiveFlows(activeFlows)
+	flows, err := fs.enrichData(activeFlows)
+	if err != nil {
+		return err
+	}
+	err = fs.trafficRepo.AddActiveFlows(flows)
 	return err
 }
 
-func (fs *FlowsRepository) enrichData(activeFlows []domains.ActiveFlow) error {
+func (fs *FlowsRepository) enrichData(activeFlows []domains.ActiveFlow) ([]domains.ActiveFlow, error) {
 	for _, flow := range activeFlows {
 		serv, err := fs.hostFilter.GetHost(flow.Server.IP)
 		if err != nil {
-			return err
+			return []domains.ActiveFlow{}, err
 		}
 		flow.Server.Country = serv.Country
 	}
-	return nil
+	return activeFlows, nil
 }
 
 func (fs *FlowsRepository) GetFlows(attr string) (domains.Server, error) {
