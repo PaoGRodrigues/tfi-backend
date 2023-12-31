@@ -2,7 +2,7 @@ package domains
 
 // *********** Entities
 type ActiveFlow struct {
-	Key       string `json:"-"`
+	Key       string `json:"key"`
 	FirstSeen uint64 `json:"first_seen"` //Unix timestamp
 	LastSeen  uint64 `json:"last_seen"`  //Unix timestamp
 	Client    Client
@@ -12,14 +12,14 @@ type ActiveFlow struct {
 }
 
 type Client struct {
-	Key  string `json:"-"`
+	Key  string
 	Name string
 	Port int
 	IP   string
 }
 
 type Server struct {
-	Key               string `json:"-"`
+	Key               string
 	IP                string
 	IsBroadcastDomain bool
 	IsDHCP            bool
@@ -29,7 +29,7 @@ type Server struct {
 }
 
 type Protocol struct {
-	Key   string `json:"-"`
+	Key   string
 	L4    string
 	L7    string
 	Label string
