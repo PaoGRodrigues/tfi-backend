@@ -31,6 +31,7 @@ func (parser *BytesAggregatorParser) GetBytesPerDestination() ([]domains.BytesPe
 		if err != nil {
 			return []domains.BytesPerDestination{}, err
 		}
+		flow.Server = server
 		flows = append(flows, flow)
 	}
 
@@ -110,6 +111,7 @@ func (parser *BytesAggregatorParser) GetBytesPerCountry() ([]domains.BytesPerCou
 		if err != nil {
 			return []domains.BytesPerCountry{}, err
 		}
+		flow.Server = server
 		flows = append(flows, flow)
 	}
 

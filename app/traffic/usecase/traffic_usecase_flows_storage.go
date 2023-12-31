@@ -38,14 +38,16 @@ func (fs *FlowsRepository) StoreFlows() error {
 }
 
 func (fs *FlowsRepository) enrichData(activeFlows []domains.ActiveFlow) ([]domains.ActiveFlow, error) {
+	newFlows := []domains.ActiveFlow{}
 	for _, flow := range activeFlows {
 		serv, err := fs.hostFilter.GetHost(flow.Server.IP)
 		if err != nil {
 			return []domains.ActiveFlow{}, err
 		}
 		flow.Server.Country = serv.Country
+		newFlows = append(newFlows, flow)
 	}
-	return activeFlows, nil
+	return newFlows, nil
 }
 
 func (fs *FlowsRepository) GetFlows(attr string) (domains.Server, error) {
