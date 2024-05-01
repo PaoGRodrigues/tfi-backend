@@ -75,7 +75,7 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromEmptySearcherFirstly(t *testi
 	defer ctrl.Finish()
 
 	activeFlowToStore := []domains.ActiveFlow{
-		domains.ActiveFlow{
+		{
 			Client:   client,
 			Server:   server,
 			Bytes:    1000,
@@ -104,7 +104,7 @@ func TestStoreTrafficWithError(t *testing.T) {
 	defer ctrl.Finish()
 
 	activeFlowToStore := []domains.ActiveFlow{
-		domains.ActiveFlow{
+		{
 			Client:   client,
 			Server:   server,
 			Bytes:    1000,
@@ -301,6 +301,24 @@ func TestGetFlowByKeyReturnError(t *testing.T) {
 
 	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
 	_, err := trafficStorage.GetFlowByKey("1234")
+
+	if err == nil {
+		t.Fail()
+	}
+}
+
+func TestStoreTrafficWithGetTrafficReturningError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.ActiveFlow{})
+	mockSearcher.EXPECT().GetAllActiveTraffic().Return([]domains.ActiveFlow{}, fmt.Errorf("Test error"))
+	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
+	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
+
+	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
+	err := trafficStorage.StoreFlows()
 
 	if err == nil {
 		t.Fail()
