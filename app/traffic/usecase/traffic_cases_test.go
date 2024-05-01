@@ -31,12 +31,12 @@ var server3 = domains.Server{
 	IsDHCP:            false,
 	Port:              443,
 	Name:              "telegram.com",
-	Country:           "US",
+	Country:           "RU",
 	Key:               "12344569",
 }
 
 var expectedFlowFromSearcher = []domains.ActiveFlow{
-	domains.ActiveFlow{
+	{
 		Client: domains.Client{
 			Name: "Local",
 			Port: 12345,
@@ -60,7 +60,7 @@ var expectedFlowFromSearcher = []domains.ActiveFlow{
 }
 
 var expectedFlowFromSearcherWithoutName = []domains.ActiveFlow{
-	domains.ActiveFlow{
+	{
 		Client: domains.Client{
 			Name: "Local",
 			Port: 12345,
@@ -83,18 +83,24 @@ var expectedFlowFromSearcherWithoutName = []domains.ActiveFlow{
 }
 
 var expectedHosts = []hosts.Host{
-	hosts.Host{
+	{
 		Name:        "google.com.ar",
 		PrivateHost: false,
 		IP:          "8.8.8.8",
 		Country:     "US",
 		City:        "California",
 	},
-	hosts.Host{
+	{
 		Name:        "sarasa2",
 		PrivateHost: false,
 		IP:          "198.8.8.8",
-		City:        "AR",
+		Country:     "AR",
+	},
+	{
+		Name:        "telegram.com",
+		PrivateHost: false,
+		IP:          "8.8.10.8",
+		Country:     "RU",
 	},
 }
 
@@ -128,7 +134,7 @@ var secondExpectedFlowFromSearcher = []domains.ActiveFlow{
 }
 
 var expectedPerCountrySearcher = []domains.ActiveFlow{
-	domains.ActiveFlow{
+	{
 		Client: domains.Client{
 			Name: "Local",
 			Port: 12345,
@@ -141,7 +147,7 @@ var expectedPerCountrySearcher = []domains.ActiveFlow{
 		},
 		Bytes: 5566778,
 	},
-	domains.ActiveFlow{
+	{
 		Client: domains.Client{
 			Name: "Local",
 			Port: 12345,
@@ -150,7 +156,7 @@ var expectedPerCountrySearcher = []domains.ActiveFlow{
 		Server: server3,
 		Protocol: domains.Protocol{
 			L4: "TCP",
-			L7: "TLS.Google",
+			L7: "TLS.Telegram",
 		},
 		Bytes: 5566778,
 	},
