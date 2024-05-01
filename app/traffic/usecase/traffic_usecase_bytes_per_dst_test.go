@@ -242,6 +242,42 @@ func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndASer
 		t.Fail()
 	}
 
+	if expected[0].Bytes != got[0].Bytes {
+		t.Fail()
+	}
+}
+
+func TestGetBytesPerCountryReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndAServerWithoutName(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	expected := []domains.BytesPerCountry{
+		{
+			Bytes: secondExpectedFlowFromSearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes +
+				expectedFlowFromSearcherWithoutName[0].Bytes,
+			Country: "US",
+		},
+		{
+			Bytes:   expectedPerCountrySearcher[1].Bytes,
+			Country: "RU",
+		},
+	}
+
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1, server2, server3, noNameServer}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(noNameServer.Key).Return(expectedFlowFromSearcherWithoutName[0], nil)
+
+	parser := usecase.NewBytesParser(mockFlowStorage)
+	got, err := parser.GetBytesPerCountry()
+
+	if err != nil {
+		t.Fail()
+	}
+
 	if !reflect.DeepEqual(expected, got) {
 		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
 	}
