@@ -2,13 +2,13 @@ package usecase_test
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
@@ -35,9 +35,7 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(expected, got) {
-		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
-	}
+	assert.ElementsMatch(t, expected, got)
 }
 
 func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServer(t *testing.T) {
@@ -71,9 +69,7 @@ func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServer(t *tes
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(expected, got) {
-		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
-	}
+	assert.ElementsMatch(t, expected, got)
 }
 
 func TestGetBytesPerDestReturnsErrorWhenThereIsAnErrorInGetServersList(t *testing.T) {
@@ -130,12 +126,10 @@ func TestGetBytesPerDestReturnsTheSumOfBytesSuccessfully(t *testing.T) {
 	parser := usecase.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerDestination()
 
+	assert.ElementsMatch(t, expected, got)
+
 	if err != nil {
 		t.Fail()
-	}
-
-	if !reflect.DeepEqual(expected, got) {
-		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
 	}
 }
 
@@ -167,9 +161,7 @@ func TestGetBytesPerCountryReturnBytesSuccessfully(t *testing.T) {
 		t.Fail()
 	}
 
-	if got[0].Bytes != expected[0].Bytes {
-		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
-	}
+	assert.ElementsMatch(t, expected, got)
 }
 
 func TestGetBytesPerCountryReturnsErrorWhenThereIsAnErrorInGetServersList(t *testing.T) {
@@ -242,9 +234,7 @@ func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndASer
 		t.Fail()
 	}
 
-	if expected[0].Bytes != got[0].Bytes {
-		t.Fail()
-	}
+	assert.ElementsMatch(t, expected, got)
 }
 
 func TestGetBytesPerCountryReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndAServerWithoutName(t *testing.T) {
@@ -278,7 +268,5 @@ func TestGetBytesPerCountryReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndA
 		t.Fail()
 	}
 
-	if expected[0].Bytes != got[0].Bytes {
-		t.Fail()
-	}
+	assert.ElementsMatch(t, expected, got)
 }

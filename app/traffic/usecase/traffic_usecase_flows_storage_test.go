@@ -47,7 +47,7 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromSearcher(t *testing.T) {
 	defer ctrl.Finish()
 
 	activeFlowToStore := []domains.ActiveFlow{
-		domains.ActiveFlow{
+		{
 			Client:   client,
 			Server:   server,
 			Bytes:    1000,
