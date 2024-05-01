@@ -25,8 +25,8 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 	}
 
 	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
-	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server}, nil)
-	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(expectedFlowFromSearcher[0], nil)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(expectedFlowFromSearcher[0], nil)
 
 	parser := usecase.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerDestination()
