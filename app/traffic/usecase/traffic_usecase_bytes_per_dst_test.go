@@ -145,14 +145,19 @@ func TestGetBytesPerCountryReturnBytesSuccessfully(t *testing.T) {
 
 	expected := []domains.BytesPerCountry{
 		{
-			Bytes:   expectedPerCountrySearcher[0].Bytes + expectedPerCountrySearcher[1].Bytes,
+			Bytes:   expectedPerCountrySearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes,
 			Country: "US",
+		},
+		{
+			Bytes:   expectedPerCountrySearcher[1].Bytes,
+			Country: "RU",
 		},
 	}
 
 	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
-	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1, server3}, nil)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1, server2, server3}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(expectedPerCountrySearcher[0], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
 
 	parser := usecase.NewBytesParser(mockFlowStorage)
