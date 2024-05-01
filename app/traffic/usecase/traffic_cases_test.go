@@ -35,6 +35,16 @@ var server3 = domains.Server{
 	Key:               "12344569",
 }
 
+var noNameServer = domains.Server{
+	IP:                "8.8.10.10",
+	IsBroadcastDomain: false,
+	IsDHCP:            false,
+	Port:              443,
+	Name:              "",
+	Country:           "US",
+	Key:               "12344570",
+}
+
 var expectedFlowFromSearcher = []domains.ActiveFlow{
 	{
 		Client: domains.Client{
@@ -66,14 +76,7 @@ var expectedFlowFromSearcherWithoutName = []domains.ActiveFlow{
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
-		Server: domains.Server{
-			IP:                "8.8.8.8",
-			IsBroadcastDomain: false,
-			IsDHCP:            false,
-			Port:              443,
-			Name:              "",
-			Country:           "US",
-		},
+		Server: noNameServer,
 		Protocol: domains.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
@@ -101,6 +104,12 @@ var expectedHosts = []hosts.Host{
 		PrivateHost: false,
 		IP:          "8.8.10.8",
 		Country:     "RU",
+	},
+	{
+		Name:        "",
+		PrivateHost: false,
+		IP:          "8.8.10.10",
+		Country:     "US",
 	},
 }
 

@@ -17,7 +17,7 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 	defer ctrl.Finish()
 
 	expected := []domains.BytesPerDestination{
-		domains.BytesPerDestination{
+		{
 			Bytes:       expectedFlowFromSearcher[0].Bytes,
 			Destination: expectedFlowFromSearcher[0].Server.Name,
 			Country:     expectedHosts[0].Country,
@@ -202,5 +202,47 @@ func TestGetBytesPerCountryReturnsErrorWhenThereIsAnErrorInGetFlowByKey(t *testi
 
 	if err == nil {
 		t.Fail()
+	}
+}
+
+func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndAServerWithoutName(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	expected := []domains.BytesPerDestination{
+		{
+			Bytes:       secondExpectedFlowFromSearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes,
+			Destination: secondExpectedFlowFromSearcher[0].Server.Name,
+			Country:     expectedHosts[0].Country,
+		},
+		{
+			Bytes:       expectedPerCountrySearcher[1].Bytes,
+			Destination: expectedPerCountrySearcher[1].Server.Name,
+			Country:     expectedHosts[2].Country,
+		},
+		{
+			Bytes:       expectedFlowFromSearcherWithoutName[0].Bytes,
+			Destination: expectedFlowFromSearcherWithoutName[0].Server.IP,
+			Country:     expectedHosts[3].Country,
+		},
+	}
+
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1, server2, server3, noNameServer}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(noNameServer.Key).Return(expectedFlowFromSearcherWithoutName[0], nil)
+
+	parser := usecase.NewBytesParser(mockFlowStorage)
+	got, err := parser.GetBytesPerDestination()
+
+	if err != nil {
+		t.Fail()
+	}
+
+	if !reflect.DeepEqual(expected, got) {
+		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
 	}
 }
