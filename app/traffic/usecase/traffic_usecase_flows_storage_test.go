@@ -324,3 +324,30 @@ func TestStoreTrafficWithGetTrafficReturningError(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestStoreTrafficWithErrorInEnrichData(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	activeFlowToStore := []domains.ActiveFlow{
+		{
+			Client:   client,
+			Server:   server,
+			Bytes:    1000,
+			Protocol: protocols,
+		},
+	}
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockSearcher.EXPECT().GetActiveFlows().Return(activeFlowToStore)
+	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
+	mockHostFilter.EXPECT().GetHost(server.IP).Return(host_domains.Host{}, fmt.Errorf("Test error"))
+	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
+
+	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
+	err := trafficStorage.StoreFlows()
+
+	if err == nil {
+		t.Fail()
+	}
+}
