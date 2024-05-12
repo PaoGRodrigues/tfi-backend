@@ -8,7 +8,7 @@ import (
 func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
 
 	alerts := []domains.Alert{
-		domains.Alert{
+		{
 
 			Name:     "test",
 			Family:   "flow",
@@ -34,7 +34,7 @@ func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, er
 				Label: "TCP:TLS.Google",
 			},
 		},
-		domains.Alert{
+		{
 
 			Name:     "test",
 			Family:   "flow",

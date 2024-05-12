@@ -169,7 +169,7 @@ var expectedPerCountrySearcher = []domains.ActiveFlow{
 		},
 		Bytes: 5566778,
 	},
-	domains.ActiveFlow{
+	{
 		Client: domains.Client{
 			Name: "Local",
 			Port: 12345,

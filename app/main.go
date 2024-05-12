@@ -20,9 +20,17 @@ import (
 
 func main() {
 
+	//Services
 	var tool services.Tool
 	var console services.Terminal
 	var channel services.NotificationChannel
+
+	//UseCases
+	var hostUseCase hostsDomains.HostUseCase
+	var hostsFilter hostsDomains.HostsFilter
+	var activeFlowsStorage trafficDomains.ActiveFlowsStorage
+	var trafficSearcher trafficDomains.TrafficUseCase
+
 	var err error
 	scope := flag.String("s", "", "scope")
 	flag.Parse()
@@ -30,22 +38,31 @@ func main() {
 	if *scope != "prod" {
 		tool = services.NewFakeTool()
 		console = services.NewFakeConsole()
-		//channel = services.NewFakeBot()
+		channel = services.NewFakeBot()
 		channel = initializedNotifChannel()
-	} else {
-		tool = services.NewTool("http://XX:3000", 2, "XX", "XX")
-		/*console, err = initializeConsole()
+
+		hostUseCase, hostsFilter = initializeHostDependencies(tool)
+		trafficSearcher = initializeTrafficSearcher(tool)
+		activeFlowsStorage, err = initializeActiveFlowsStorage("./file.sqlite", trafficSearcher, hostsFilter)
 		if err != nil {
 			panic(err.Error())
-		}*/
+		}
+
+	} else {
+		tool = services.NewTool("http://XX:3000", 2, "XX", "XX")
+		console, err = initializeConsole()
+		if err != nil {
+			panic(err.Error())
+		}
+
+		hostUseCase, hostsFilter = initializeHostDependencies(tool)
+		trafficSearcher = initializeTrafficSearcher(tool)
+		activeFlowsStorage, err = initializeActiveFlowsStorage("./file.sqlite", trafficSearcher, hostsFilter)
+		if err != nil {
+			panic(err.Error())
+		}
 	}
 
-	hostUseCase, hostsFilter := initializeHostDependencies(tool)
-	trafficSearcher := initializeTrafficSearcher(tool)
-	activeFlowsStorage, err := initializeActiveFlowsStorage("./file.sqlite", trafficSearcher, hostsFilter)
-	if err != nil {
-		panic(err.Error())
-	}
 	trafficActiveFlowsSearcher := initializeTrafficDependencies(activeFlowsStorage)
 	alertsSearcher := initializeAlertsDependencies(tool, activeFlowsStorage)
 	hostBlocker := initializeHostBlocker(console, activeFlowsStorage)
