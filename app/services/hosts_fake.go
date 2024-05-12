@@ -26,6 +26,21 @@ func (d *FakeTool) GetAllHosts() ([]domains.Host, error) {
 			IP:          "16.16.16.16",
 			PrivateHost: false,
 		},
+		domains.Host{
+			Name:        "lib.gen.rus",
+			IP:          "172.98.98.109",
+			PrivateHost: false,
+		},
+		domains.Host{
+			IP:          "123.123.123.123",
+			Name:        "lib.gen.rus",
+			PrivateHost: false,
+		},
+		domains.Host{
+			IP:          "172.98.98.109",
+			Name:        "lib.gen.rus",
+			PrivateHost: false,
+		},
 	}
 
 	return Hosts, nil

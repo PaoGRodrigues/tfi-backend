@@ -2,14 +2,13 @@ package usecase_test
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
-	mock_host "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"github.com/golang/mock/gomock"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
@@ -18,74 +17,70 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 	defer ctrl.Finish()
 
 	expected := []domains.BytesPerDestination{
-		domains.BytesPerDestination{
+		{
 			Bytes:       expectedFlowFromSearcher[0].Bytes,
 			Destination: expectedFlowFromSearcher[0].Server.Name,
-			City:        expectedHosts[0].City,
 			Country:     expectedHosts[0].Country,
 		},
 	}
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(expectedFlowFromSearcher)
-	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
-	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(expectedHosts, nil)
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(expectedFlowFromSearcher[0], nil)
 
-	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	parser := usecase.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerDestination()
 
 	if err != nil {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(expected, got) {
-		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
-	}
+	assert.ElementsMatch(t, expected, got)
 }
 
-func TestGetBytesPerDestSearcherActiveFlowsIsEmptyReturnsBytesSuccessfully(t *testing.T) {
+func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServer(t *testing.T) {
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	expected := []domains.BytesPerDestination{
-		domains.BytesPerDestination{
-			Bytes:       expectedFlowFromSearcher[0].Bytes,
-			Destination: expectedFlowFromSearcher[0].Server.Name,
-			City:        expectedHosts[0].City,
+		{
+			Bytes:       secondExpectedFlowFromSearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes,
+			Destination: secondExpectedFlowFromSearcher[0].Server.Name,
 			Country:     expectedHosts[0].Country,
+		},
+		{
+			Bytes:       expectedPerCountrySearcher[1].Bytes,
+			Destination: expectedPerCountrySearcher[1].Server.Name,
+			Country:     expectedHosts[2].Country,
 		},
 	}
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.ActiveFlow{})
-	mockSearcher.EXPECT().GetAllActiveTraffic().Return(expectedFlowFromSearcher, nil)
-	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
-	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(expectedHosts, nil)
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1, server2, server3}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
 
-	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	parser := usecase.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerDestination()
 
 	if err != nil {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(expected, got) {
-		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
-	}
+	assert.ElementsMatch(t, expected, got)
 }
 
-func TestGetBytesPerDestSearcherActiveFlowsIsEmptyReturnsBytesFailedAndFailedTheEntireFunction(t *testing.T) {
+func TestGetBytesPerDestReturnsErrorWhenThereIsAnErrorInGetServersList(t *testing.T) {
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(nil)
-	mockSearcher.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Test Error"))
-	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{}, fmt.Errorf("Test error"))
 
-	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	parser := usecase.NewBytesParser(mockFlowStorage)
 	_, err := parser.GetBytesPerDestination()
 
 	if err == nil {
@@ -93,53 +88,20 @@ func TestGetBytesPerDestSearcherActiveFlowsIsEmptyReturnsBytesFailedAndFailedThe
 	}
 }
 
-func TestGetBytesPerDestSearcherHostFilterGetRemoteReturnsErrorAndThenReturnsBytesSuccessfully(t *testing.T) {
+func TestGetBytesPerDestReturnsErrorWhenThereIsAnErrorInGetFlowByKey(t *testing.T) {
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.ActiveFlow{})
-	mockSearcher.EXPECT().GetAllActiveTraffic().Return(expectedFlowFromSearcher, nil)
-	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
-	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(nil, fmt.Errorf("Test error"))
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(domains.ActiveFlow{}, fmt.Errorf("Test error"))
 
-	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	parser := usecase.NewBytesParser(mockFlowStorage)
 	_, err := parser.GetBytesPerDestination()
 
 	if err == nil {
 		t.Fail()
-	}
-}
-
-func TestGetBytesPerDestReturnsBytesSuccessfullyWhenCompareByIP(t *testing.T) {
-
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	expected := []domains.BytesPerDestination{
-		domains.BytesPerDestination{
-			Bytes:       expectedFlowFromSearcherWithoutName[0].Bytes,
-			Destination: expectedFlowFromSearcherWithoutName[0].Server.IP,
-			City:        expectedHosts[0].City,
-			Country:     expectedHosts[0].Country,
-		},
-	}
-
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(expectedFlowFromSearcherWithoutName)
-	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
-	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(expectedHosts, nil)
-
-	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
-	got, err := parser.GetBytesPerDestination()
-
-	if err != nil {
-		t.Fail()
-	}
-
-	if !reflect.DeepEqual(expected, got) {
-		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
 	}
 }
 
@@ -152,25 +114,22 @@ func TestGetBytesPerDestReturnsTheSumOfBytesSuccessfully(t *testing.T) {
 		{
 			Bytes:       secondExpectedFlowFromSearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes,
 			Destination: secondExpectedFlowFromSearcher[0].Server.Name,
-			City:        expectedHosts[0].City,
-			Country:     expectedHosts[0].Country,
+			Country:     secondExpectedFlowFromSearcher[0].Server.Country,
 		},
 	}
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(secondExpectedFlowFromSearcher)
-	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
-	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(expectedHosts, nil)
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1, server2}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
 
-	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	parser := usecase.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerDestination()
+
+	assert.ElementsMatch(t, expected, got)
 
 	if err != nil {
 		t.Fail()
-	}
-
-	if !reflect.DeepEqual(expected, got) {
-		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
 	}
 }
 
@@ -180,38 +139,40 @@ func TestGetBytesPerCountryReturnBytesSuccessfully(t *testing.T) {
 
 	expected := []domains.BytesPerCountry{
 		{
-			Bytes:   expectedPerCountrySearcher[0].Bytes + expectedPerCountrySearcher[1].Bytes,
+			Bytes:   expectedPerCountrySearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes,
 			Country: "US",
+		},
+		{
+			Bytes:   expectedPerCountrySearcher[1].Bytes,
+			Country: "RU",
 		},
 	}
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(expectedPerCountrySearcher)
-	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
-	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(expectedHostsPerCountry, nil)
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1, server2, server3}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(expectedPerCountrySearcher[0], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
 
-	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	parser := usecase.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerCountry()
 
 	if err != nil {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(expected, got) {
-		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
-	}
+	assert.ElementsMatch(t, expected, got)
 }
 
-func TestGetBytesPerCountryReturnErrorWhenGetActiveTrafficReturnError(t *testing.T) {
+func TestGetBytesPerCountryReturnsErrorWhenThereIsAnErrorInGetServersList(t *testing.T) {
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(nil)
-	mockSearcher.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Test Error"))
-	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{}, fmt.Errorf("Test error"))
 
-	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	parser := usecase.NewBytesParser(mockFlowStorage)
 	_, err := parser.GetBytesPerCountry()
 
 	if err == nil {
@@ -219,49 +180,93 @@ func TestGetBytesPerCountryReturnErrorWhenGetActiveTrafficReturnError(t *testing
 	}
 }
 
-func TestGetBytesPerCountryReturnBytesSuccessfullyWhenGetActiveFlowsReturn0(t *testing.T) {
+func TestGetBytesPerCountryReturnsErrorWhenThereIsAnErrorInGetFlowByKey(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(domains.ActiveFlow{}, fmt.Errorf("Test error"))
+
+	parser := usecase.NewBytesParser(mockFlowStorage)
+	_, err := parser.GetBytesPerCountry()
+
+	if err == nil {
+		t.Fail()
+	}
+}
+
+func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndAServerWithoutName(t *testing.T) {
+
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	expected := []domains.BytesPerDestination{
+		{
+			Bytes:       secondExpectedFlowFromSearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes,
+			Destination: secondExpectedFlowFromSearcher[0].Server.Name,
+			Country:     expectedHosts[0].Country,
+		},
+		{
+			Bytes:       expectedPerCountrySearcher[1].Bytes,
+			Destination: expectedPerCountrySearcher[1].Server.Name,
+			Country:     expectedHosts[2].Country,
+		},
+		{
+			Bytes:       expectedFlowFromSearcherWithoutName[0].Bytes,
+			Destination: expectedFlowFromSearcherWithoutName[0].Server.IP,
+			Country:     expectedHosts[3].Country,
+		},
+	}
+
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1, server2, server3, noNameServer}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(noNameServer.Key).Return(expectedFlowFromSearcherWithoutName[0], nil)
+
+	parser := usecase.NewBytesParser(mockFlowStorage)
+	got, err := parser.GetBytesPerDestination()
+
+	if err != nil {
+		t.Fail()
+	}
+
+	assert.ElementsMatch(t, expected, got)
+}
+
+func TestGetBytesPerCountryReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndAServerWithoutName(t *testing.T) {
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	expected := []domains.BytesPerCountry{
 		{
-			Bytes:   expectedPerCountrySearcher[0].Bytes + expectedPerCountrySearcher[1].Bytes,
+			Bytes: secondExpectedFlowFromSearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes +
+				expectedFlowFromSearcherWithoutName[0].Bytes,
 			Country: "US",
+		},
+		{
+			Bytes:   expectedPerCountrySearcher[1].Bytes,
+			Country: "RU",
 		},
 	}
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(nil)
-	mockSearcher.EXPECT().GetAllActiveTraffic().Return(expectedPerCountrySearcher, nil)
-	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
-	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(expectedHostsPerCountry, nil)
+	mockFlowStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockFlowStorage.EXPECT().GetServersList().Return([]domains.Server{server1, server2, server3, noNameServer}, nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
+	mockFlowStorage.EXPECT().GetFlowByKey(noNameServer.Key).Return(expectedFlowFromSearcherWithoutName[0], nil)
 
-	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
+	parser := usecase.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerCountry()
 
 	if err != nil {
 		t.Fail()
 	}
 
-	if !reflect.DeepEqual(expected, got) {
-		t.Errorf("expected:\n%+v\ngot:\n%+v", expected, got)
-	}
-}
-
-func TestGetBytesPerCountryReturnErrorWhenGetRemoteHostsReturnError(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(nil)
-	mockSearcher.EXPECT().GetAllActiveTraffic().Return(expectedPerCountrySearcher, nil)
-	mockHostsSearcher := mock_host.NewMockHostsFilter(ctrl)
-	mockHostsSearcher.EXPECT().GetRemoteHosts().Return(nil, fmt.Errorf("Test Error"))
-
-	parser := usecase.NewBytesDestinationParser(mockSearcher, mockHostsSearcher)
-	_, err := parser.GetBytesPerCountry()
-
-	if err == nil {
-		t.Fail()
-	}
+	assert.ElementsMatch(t, expected, got)
 }

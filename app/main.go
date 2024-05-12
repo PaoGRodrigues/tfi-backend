@@ -41,11 +41,12 @@ func main() {
 	}
 
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
-	trafficSearcher, trafficActiveFlowsSearcher := initializeTrafficDependencies(tool, hostsFilter)
-	activeFlowsStorage, err := initializeActiveFlowsStorage("./file.sqlite", trafficSearcher)
+	trafficSearcher := initializeTrafficSearcher(tool)
+	activeFlowsStorage, err := initializeActiveFlowsStorage("./file.sqlite", trafficSearcher, hostsFilter)
 	if err != nil {
 		panic(err.Error())
 	}
+	trafficActiveFlowsSearcher := initializeTrafficDependencies(activeFlowsStorage)
 	alertsSearcher := initializeAlertsDependencies(tool, activeFlowsStorage)
 	hostBlocker := initializeHostBlocker(console, activeFlowsStorage)
 	channel = initializedNotifChannel()
@@ -86,19 +87,23 @@ func initializeHostDependencies(tool services.Tool) (hostsDomains.HostUseCase, h
 	return hostSearcher, hostsFilter
 }
 
-func initializeTrafficDependencies(tool services.Tool, hostsFilter hostsDomains.HostsFilter) (trafficDomains.TrafficUseCase, trafficDomains.TrafficActiveFlowsSearcher) {
+func initializeTrafficSearcher(tool services.Tool) trafficDomains.TrafficUseCase {
 	trafficSearcher := trafficUseCases.NewTrafficSearcher(tool)
-	trafficActiveFlowsSearcher := trafficUseCases.NewBytesDestinationParser(trafficSearcher, hostsFilter)
-	return trafficSearcher, trafficActiveFlowsSearcher
+	return trafficSearcher
 }
 
-func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomains.TrafficUseCase) (trafficDomains.ActiveFlowsStorage, error) {
+func initializeTrafficDependencies(flowStorage trafficDomains.ActiveFlowsStorage) trafficDomains.TrafficActiveFlowsSearcher {
+	trafficActiveFlowsSearcher := trafficUseCases.NewBytesParser(flowStorage)
+	return trafficActiveFlowsSearcher
+}
+
+func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomains.TrafficUseCase, hostFilter hostsDomains.HostsFilter) (trafficDomains.ActiveFlowsStorage, error) {
 	db, err := newDB(file)
 	if err != nil {
 		return nil, err
 	}
 
-	activeFlowsStorage := trafficUseCases.NewFlowsStorage(trafficSearcher, db)
+	activeFlowsStorage := trafficUseCases.NewFlowsStorage(trafficSearcher, db, hostFilter)
 	return activeFlowsStorage, nil
 }
 
