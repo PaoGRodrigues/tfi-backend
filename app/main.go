@@ -27,25 +27,32 @@ func main() {
 	scope := flag.String("s", "", "scope")
 	flag.Parse()
 
+	var activeFlowsStorage trafficDomains.ActiveFlowsStorage
+
+	hostUseCase, hostsFilter := initializeHostDependencies(tool)
+	trafficSearcher := initializeTrafficSearcher(tool)
+
 	if *scope != "prod" {
 		tool = services.NewFakeTool()
 		console = services.NewFakeConsole()
 		//channel = services.NewFakeBot()
 		channel = initializedNotifChannel()
+
+		activeFlowsStorage = initializeFakeActiveFlowStorage()
+
 	} else {
 		tool = services.NewTool("http://XX:3000", 2, "XX", "XX")
-		/*console, err = initializeConsole()
+		console, err = initializeConsole()
 		if err != nil {
 			panic(err.Error())
-		}*/
+		}
+
+		activeFlowsStorage, err = initializeActiveFlowsStorage("./file.sqlite", trafficSearcher, hostsFilter)
+		if err != nil {
+			panic(err.Error())
+		}
 	}
 
-	hostUseCase, hostsFilter := initializeHostDependencies(tool)
-	trafficSearcher := initializeTrafficSearcher(tool)
-	activeFlowsStorage, err := initializeActiveFlowsStorage("./file.sqlite", trafficSearcher, hostsFilter)
-	if err != nil {
-		panic(err.Error())
-	}
 	trafficActiveFlowsSearcher := initializeTrafficDependencies(activeFlowsStorage)
 	alertsSearcher := initializeAlertsDependencies(tool, activeFlowsStorage)
 	hostBlocker := initializeHostBlocker(console, activeFlowsStorage)
@@ -143,4 +150,12 @@ func initializeAlertSender(notifier services.NotificationChannel, searcher alert
 func initializedNotifChannel() services.NotificationChannel {
 	telegram := services.NewTelegramInterface()
 	return telegram
+}
+
+// --------------------
+// Fake Initialization
+func initializeFakeActiveFlowStorage() *trafficUseCases.FlowsRepository {
+	fakeRepo := trafficRepo.NewFakeSQLClient()
+	activeFlowsStorage := trafficUseCases.NewFlowsStorage(nil, fakeRepo, nil)
+	return activeFlowsStorage
 }
