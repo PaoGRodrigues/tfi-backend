@@ -72,7 +72,7 @@ var severityScore = map[int]string{
 	3: "Notificación",
 	4: "Advertencia",
 	5: "Error",
-	6: " Crítico",
+	6: "Crítico",
 	7: "Alerta",
 	8: "Emergencia",
 }
