@@ -11,7 +11,6 @@ import (
 	hostsUseCases "github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	trafficDomains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
-	trafficRepo "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	trafficUseCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	"github.com/coreos/go-iptables/iptables"
 	"github.com/gin-gonic/gin"
@@ -27,7 +26,7 @@ func main() {
 	scope := flag.String("s", "", "scope")
 	flag.Parse()
 
-	var activeFlowsStorage trafficDomains.ActiveFlowsStorage
+	var activeFlowsStorage trafficDomains.TrafficStorage
 
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
 	trafficSearcher := initializeTrafficSearcher(tool)
@@ -99,7 +98,7 @@ func initializeTrafficSearcher(tool services.Tool) trafficDomains.TrafficUseCase
 	return trafficSearcher
 }
 
-func initializeTrafficDependencies(flowStorage trafficDomains.ActiveFlowsStorage) trafficDomains.TrafficActiveFlowsSearcher {
+func initializeTrafficDependencies(flowStorage trafficDomains.TrafficRepository) trafficDomains.TrafficActiveFlowsSearcher {
 	trafficActiveFlowsSearcher := trafficUseCases.NewBytesParser(flowStorage)
 	return trafficActiveFlowsSearcher
 }
@@ -114,17 +113,17 @@ func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomains.Tr
 	return activeFlowsStorage, nil
 }
 
-func initializeAlertsDependencies(tool services.Tool, trafficStorage trafficDomains.ActiveFlowsStorage) alertsDomains.AlertUseCase {
-	alertsSearcher := alertsUseCases.NewAlertSearcher(tool, trafficStorage)
+func initializeAlertsDependencies(tool services.Tool, alertService alertsDomains.AlertService) alertsDomains.AlertUseCase {
+	alertsSearcher := alertsUseCases.NewAlertSearcher(alertService)
 	return alertsSearcher
 }
 
-func newDB(file string) (*trafficRepo.SQLClient, error) {
+func newDB(file string) (*services.SQLClient, error) {
 	db, err := sql.Open("sqlite3", file)
 	if err != nil {
 		return nil, err
 	}
-	databaseConn := trafficRepo.NewSQLClient(db)
+	databaseConn := services.NewSQLClient(db)
 	return databaseConn, nil
 }
 
@@ -137,7 +136,7 @@ func initializeConsole() (*services.Console, error) {
 	return console, nil
 }
 
-func initializeHostBlocker(console services.Terminal, filter trafficDomains.ActiveFlowsStorage) hostsDomains.HostBlocker {
+func initializeHostBlocker(console services.Terminal, filter trafficDomains.TrafficRepository) hostsDomains.HostBlocker {
 	hostBlocker := hostsUseCases.NewBlocker(console, filter)
 	return hostBlocker
 }
@@ -154,8 +153,8 @@ func initializedNotifChannel() services.NotificationChannel {
 
 // --------------------
 // Fake Initialization
-func initializeFakeActiveFlowStorage() *trafficUseCases.FlowsRepository {
-	fakeRepo := trafficRepo.NewFakeSQLClient()
+func initializeFakeDatabase() *trafficDomains.TrafficRepository {
+	fakeRepo := services.NewFakeSQLClient()
 	activeFlowsStorage := trafficUseCases.NewFlowsStorage(nil, fakeRepo, nil)
 	return activeFlowsStorage
 }

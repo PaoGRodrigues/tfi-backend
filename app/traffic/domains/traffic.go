@@ -56,12 +56,8 @@ type TrafficActiveFlowsSearcher interface {
 	GetBytesPerCountry() ([]BytesPerCountry, error)
 }
 
-type ActiveFlowsStorage interface {
+type TrafficStorage interface {
 	StoreFlows() error
-	GetFlows(string) (Server, error)
-	GetClientsList() ([]Client, error)
-	GetServersList() ([]Server, error)
-	GetFlowByKey(string) (ActiveFlow, error)
 }
 
 // *********** Services
@@ -71,9 +67,9 @@ type TrafficService interface {
 
 // *********** Repositories
 type TrafficRepository interface {
-	AddActiveFlows([]ActiveFlow) error
+	StoreFlows([]ActiveFlow) error
 	GetServerByAttr(string) (Server, error)
 	GetClients() ([]Client, error)
 	GetServers() ([]Server, error)
-	GetFlowByKey(key string) (ActiveFlow, error)
+	GetFlowByKey(string) (ActiveFlow, error)
 }

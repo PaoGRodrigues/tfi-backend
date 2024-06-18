@@ -21,3 +21,11 @@ type NotificationChannel interface {
 	Configure(string, string) error
 	SendMessage(string) error
 }
+
+type Database interface {
+	AddActiveFlows([]domains_traffic.ActiveFlow) error
+	GetServerByAttr(attr string) (domains_traffic.Server, error)
+	GetClients() ([]domains_traffic.Client, error)
+	GetServers() ([]domains_traffic.Server, error)
+	GetFlowByKey(key string) (domains_traffic.ActiveFlow, error)
+}

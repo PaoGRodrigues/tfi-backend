@@ -28,8 +28,8 @@ func TestBlockSourceIPReturnCorrectHost(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockFilter := traffic_mocks.NewMockActiveFlowsStorage(ctrl)
-	mockFilter.EXPECT().GetFlows(servers[0].IP).Return(servers[0], nil)
+	mockFilter := traffic_mocks.NewMockTrafficRepository(ctrl)
+	mockFilter.EXPECT().GetServerByAttr(servers[0].IP).Return(servers[0], nil)
 
 	host := host_domains.Host{IP: servers[0].IP, Name: servers[0].Name}
 
@@ -50,8 +50,8 @@ func TestBlockSourceIPGetHostReturnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockFilter := traffic_mocks.NewMockActiveFlowsStorage(ctrl)
-	mockFilter.EXPECT().GetFlows(servers[0].IP).Return(traffic_domains.Server{}, fmt.Errorf("Error Test"))
+	mockFilter := traffic_mocks.NewMockTrafficRepository(ctrl)
+	mockFilter.EXPECT().GetServerByAttr(servers[0].IP).Return(traffic_domains.Server{}, fmt.Errorf("Error Test"))
 
 	mockBlockerService := hosts_mocks.NewMockHostBlockerService(ctrl)
 
@@ -67,8 +67,8 @@ func TestBlockSourceIPBlockHostReturnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockFilter := traffic_mocks.NewMockActiveFlowsStorage(ctrl)
-	mockFilter.EXPECT().GetFlows(servers[0].IP).Return(servers[0], nil)
+	mockFilter := traffic_mocks.NewMockTrafficRepository(ctrl)
+	mockFilter.EXPECT().GetServerByAttr(servers[0].IP).Return(servers[0], nil)
 
 	host := host_domains.Host{IP: servers[0].IP, Name: servers[0].Name}
 

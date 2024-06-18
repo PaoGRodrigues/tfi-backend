@@ -116,91 +116,31 @@ func (mr *MockTrafficActiveFlowsSearcherMockRecorder) GetBytesPerDestination() *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBytesPerDestination", reflect.TypeOf((*MockTrafficActiveFlowsSearcher)(nil).GetBytesPerDestination))
 }
 
-// MockActiveFlowsStorage is a mock of ActiveFlowsStorage interface.
-type MockActiveFlowsStorage struct {
+// MockTrafficStorage is a mock of TrafficStorage interface.
+type MockTrafficStorage struct {
 	ctrl     *gomock.Controller
-	recorder *MockActiveFlowsStorageMockRecorder
+	recorder *MockTrafficStorageMockRecorder
 }
 
-// MockActiveFlowsStorageMockRecorder is the mock recorder for MockActiveFlowsStorage.
-type MockActiveFlowsStorageMockRecorder struct {
-	mock *MockActiveFlowsStorage
+// MockTrafficStorageMockRecorder is the mock recorder for MockTrafficStorage.
+type MockTrafficStorageMockRecorder struct {
+	mock *MockTrafficStorage
 }
 
-// NewMockActiveFlowsStorage creates a new mock instance.
-func NewMockActiveFlowsStorage(ctrl *gomock.Controller) *MockActiveFlowsStorage {
-	mock := &MockActiveFlowsStorage{ctrl: ctrl}
-	mock.recorder = &MockActiveFlowsStorageMockRecorder{mock}
+// NewMockTrafficStorage creates a new mock instance.
+func NewMockTrafficStorage(ctrl *gomock.Controller) *MockTrafficStorage {
+	mock := &MockTrafficStorage{ctrl: ctrl}
+	mock.recorder = &MockTrafficStorageMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockActiveFlowsStorage) EXPECT() *MockActiveFlowsStorageMockRecorder {
+func (m *MockTrafficStorage) EXPECT() *MockTrafficStorageMockRecorder {
 	return m.recorder
 }
 
-// GetClientsList mocks base method.
-func (m *MockActiveFlowsStorage) GetClientsList() ([]domains.Client, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetClientsList")
-	ret0, _ := ret[0].([]domains.Client)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetClientsList indicates an expected call of GetClientsList.
-func (mr *MockActiveFlowsStorageMockRecorder) GetClientsList() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClientsList", reflect.TypeOf((*MockActiveFlowsStorage)(nil).GetClientsList))
-}
-
-// GetFlowByKey mocks base method.
-func (m *MockActiveFlowsStorage) GetFlowByKey(arg0 string) (domains.ActiveFlow, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetFlowByKey", arg0)
-	ret0, _ := ret[0].(domains.ActiveFlow)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetFlowByKey indicates an expected call of GetFlowByKey.
-func (mr *MockActiveFlowsStorageMockRecorder) GetFlowByKey(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlowByKey", reflect.TypeOf((*MockActiveFlowsStorage)(nil).GetFlowByKey), arg0)
-}
-
-// GetFlows mocks base method.
-func (m *MockActiveFlowsStorage) GetFlows(arg0 string) (domains.Server, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetFlows", arg0)
-	ret0, _ := ret[0].(domains.Server)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetFlows indicates an expected call of GetFlows.
-func (mr *MockActiveFlowsStorageMockRecorder) GetFlows(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlows", reflect.TypeOf((*MockActiveFlowsStorage)(nil).GetFlows), arg0)
-}
-
-// GetServersList mocks base method.
-func (m *MockActiveFlowsStorage) GetServersList() ([]domains.Server, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetServersList")
-	ret0, _ := ret[0].([]domains.Server)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetServersList indicates an expected call of GetServersList.
-func (mr *MockActiveFlowsStorageMockRecorder) GetServersList() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServersList", reflect.TypeOf((*MockActiveFlowsStorage)(nil).GetServersList))
-}
-
 // StoreFlows mocks base method.
-func (m *MockActiveFlowsStorage) StoreFlows() error {
+func (m *MockTrafficStorage) StoreFlows() error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StoreFlows")
 	ret0, _ := ret[0].(error)
@@ -208,9 +148,9 @@ func (m *MockActiveFlowsStorage) StoreFlows() error {
 }
 
 // StoreFlows indicates an expected call of StoreFlows.
-func (mr *MockActiveFlowsStorageMockRecorder) StoreFlows() *gomock.Call {
+func (mr *MockTrafficStorageMockRecorder) StoreFlows() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreFlows", reflect.TypeOf((*MockActiveFlowsStorage)(nil).StoreFlows))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreFlows", reflect.TypeOf((*MockTrafficStorage)(nil).StoreFlows))
 }
 
 // MockTrafficService is a mock of TrafficService interface.
@@ -274,20 +214,6 @@ func (m *MockTrafficRepository) EXPECT() *MockTrafficRepositoryMockRecorder {
 	return m.recorder
 }
 
-// AddActiveFlows mocks base method.
-func (m *MockTrafficRepository) AddActiveFlows(arg0 []domains.ActiveFlow) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddActiveFlows", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// AddActiveFlows indicates an expected call of AddActiveFlows.
-func (mr *MockTrafficRepositoryMockRecorder) AddActiveFlows(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddActiveFlows", reflect.TypeOf((*MockTrafficRepository)(nil).AddActiveFlows), arg0)
-}
-
 // GetClients mocks base method.
 func (m *MockTrafficRepository) GetClients() ([]domains.Client, error) {
 	m.ctrl.T.Helper()
@@ -304,18 +230,18 @@ func (mr *MockTrafficRepositoryMockRecorder) GetClients() *gomock.Call {
 }
 
 // GetFlowByKey mocks base method.
-func (m *MockTrafficRepository) GetFlowByKey(key string) (domains.ActiveFlow, error) {
+func (m *MockTrafficRepository) GetFlowByKey(arg0 string) (domains.ActiveFlow, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetFlowByKey", key)
+	ret := m.ctrl.Call(m, "GetFlowByKey", arg0)
 	ret0, _ := ret[0].(domains.ActiveFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // GetFlowByKey indicates an expected call of GetFlowByKey.
-func (mr *MockTrafficRepositoryMockRecorder) GetFlowByKey(key interface{}) *gomock.Call {
+func (mr *MockTrafficRepositoryMockRecorder) GetFlowByKey(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlowByKey", reflect.TypeOf((*MockTrafficRepository)(nil).GetFlowByKey), key)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlowByKey", reflect.TypeOf((*MockTrafficRepository)(nil).GetFlowByKey), arg0)
 }
 
 // GetServerByAttr mocks base method.
@@ -346,4 +272,18 @@ func (m *MockTrafficRepository) GetServers() ([]domains.Server, error) {
 func (mr *MockTrafficRepositoryMockRecorder) GetServers() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServers", reflect.TypeOf((*MockTrafficRepository)(nil).GetServers))
+}
+
+// StoreFlows mocks base method.
+func (m *MockTrafficRepository) StoreFlows(arg0 []domains.ActiveFlow) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StoreFlows", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// StoreFlows indicates an expected call of StoreFlows.
+func (mr *MockTrafficRepositoryMockRecorder) StoreFlows(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreFlows", reflect.TypeOf((*MockTrafficRepository)(nil).StoreFlows), arg0)
 }

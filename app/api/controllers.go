@@ -21,7 +21,7 @@ type Api struct {
 	TrafficSearcher     traffic.TrafficUseCase
 	HostsFilter         hosts.HostsFilter
 	ActiveFlowsSearcher traffic.TrafficActiveFlowsSearcher
-	ActiveFlowsStorage  traffic.ActiveFlowsStorage
+	ActiveFlowsStorage  traffic.TrafficStorage
 	AlertsSearcher      alerts.AlertUseCase
 	HostBlocker         hosts.HostBlocker
 	NotifChannel        services.NotificationChannel

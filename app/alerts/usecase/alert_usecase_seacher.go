@@ -4,19 +4,16 @@ import (
 	"time"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
-	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
 type AlertSearcher struct {
-	alertService  domains.AlertService
-	alerts        []domains.Alert
-	trafficFilter traffic_domains.ActiveFlowsStorage
+	alertService domains.AlertService
+	alerts       []domains.Alert
 }
 
-func NewAlertSearcher(service domains.AlertService, filter traffic_domains.ActiveFlowsStorage) *AlertSearcher {
+func NewAlertSearcher(service domains.AlertService) *AlertSearcher {
 	return &AlertSearcher{
-		alertService:  service,
-		trafficFilter: filter,
+		alertService: service,
 	}
 }
 
