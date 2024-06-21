@@ -202,3 +202,42 @@ func TestGetFlowByKeyReturnError(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestStoreFlowsSuccessfully(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	activeFlows := []domains.ActiveFlow{
+		{
+			Key:      "12345",
+			Client:   client,
+			Server:   server,
+			Bytes:    1000,
+			Protocol: protocols,
+		},
+		{
+			Key:      "12346",
+			Client:   client,
+			Server:   server,
+			Bytes:    1000,
+			Protocol: protocols,
+		},
+		{
+			Key:      "123457",
+			Client:   client,
+			Server:   server,
+			Bytes:    1000,
+			Protocol: protocols,
+		},
+	}
+
+	mockDatabase := services_mocks.NewMockDatabase(ctrl)
+	mockDatabase.EXPECT().AddActiveFlows(activeFlows).Return(nil)
+
+	trafficStorage := repository.NewFlowsRepo(mockDatabase)
+	err := trafficStorage.StoreFlows(activeFlows)
+
+	if err != nil {
+		t.Fail()
+	}
+}

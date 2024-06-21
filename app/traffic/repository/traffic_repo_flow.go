@@ -49,7 +49,6 @@ func (fs *FlowsRepo) GetFlowByKey(key string) (domains.ActiveFlow, error) {
 
 func (fs *FlowsRepo) StoreFlows(flows []domains.ActiveFlow) error {
 	err := fs.Database.AddActiveFlows(flows)
-
 	if err != nil {
 		return err
 	}
