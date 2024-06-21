@@ -49,7 +49,7 @@ func TestGetServersByAttrReturnServerSuccessfullyByIP(t *testing.T) {
 	mockDatabase.EXPECT().GetServerByAttr("123.123.123.123").Return(server, nil)
 
 	trafficStorage := repository.NewFlowsRepo(mockDatabase)
-	got, err := trafficStorage.GetFlows("123.123.123.123")
+	got, err := trafficStorage.GetServerByAttr("123.123.123.123")
 
 	if err != nil {
 		t.Fail()
@@ -66,7 +66,7 @@ func TestGetServersByAttrReturnServerSuccessfullyByFQDN(t *testing.T) {
 	mockDatabase.EXPECT().GetServerByAttr("lib.gen.rus").Return(server, nil)
 
 	trafficStorage := repository.NewFlowsRepo(mockDatabase)
-	got, err := trafficStorage.GetFlows("lib.gen.rus")
+	got, err := trafficStorage.GetServerByAttr("lib.gen.rus")
 
 	if err != nil {
 		t.Fail()
@@ -83,7 +83,7 @@ func TestGetServersByAttrReturnError(t *testing.T) {
 	mockDatabase.EXPECT().GetServerByAttr("lib.gen.rus").Return(domains.Server{}, fmt.Errorf("Test Error"))
 
 	trafficStorage := repository.NewFlowsRepo(mockDatabase)
-	_, err := trafficStorage.GetFlows("lib.gen.rus")
+	_, err := trafficStorage.GetServerByAttr("lib.gen.rus")
 
 	if err == nil {
 		t.Fail()
@@ -104,7 +104,7 @@ func TestGetClientsListReturnClientsSuccessfully(t *testing.T) {
 	mockDatabase.EXPECT().GetClients().Return([]domains.Client{expected}, nil)
 
 	trafficStorage := repository.NewFlowsRepo(mockDatabase)
-	got, err := trafficStorage.GetClientsList()
+	got, err := trafficStorage.GetClients()
 
 	if err != nil {
 		t.Fail()
@@ -113,7 +113,7 @@ func TestGetClientsListReturnClientsSuccessfully(t *testing.T) {
 	assert.Equal(t, []domains.Client{expected}, got)
 }
 
-func TestGetClientsListReturnError(t *testing.T) {
+func TestGetClientsReturnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -121,7 +121,7 @@ func TestGetClientsListReturnError(t *testing.T) {
 	mockDatabase.EXPECT().GetClients().Return(nil, fmt.Errorf("Error test"))
 
 	trafficStorage := repository.NewFlowsRepo(mockDatabase)
-	_, err := trafficStorage.GetClientsList()
+	_, err := trafficStorage.GetClients()
 
 	if err == nil {
 		t.Fail()
@@ -143,7 +143,7 @@ func TestGetServersListReturnServersSuccessfully(t *testing.T) {
 	mockDatabase.EXPECT().GetServers().Return([]domains.Server{expected}, nil)
 
 	trafficStorage := repository.NewFlowsRepo(mockDatabase)
-	got, err := trafficStorage.GetServersList()
+	got, err := trafficStorage.GetServers()
 
 	if err != nil {
 		t.Fail()
@@ -152,7 +152,7 @@ func TestGetServersListReturnServersSuccessfully(t *testing.T) {
 	assert.Equal(t, []domains.Server{expected}, got)
 }
 
-func TestGetServersListReturnError(t *testing.T) {
+func TestGetServersReturnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -160,7 +160,7 @@ func TestGetServersListReturnError(t *testing.T) {
 	mockDatabase.EXPECT().GetServers().Return(nil, fmt.Errorf("Error test"))
 
 	trafficStorage := repository.NewFlowsRepo(mockDatabase)
-	_, err := trafficStorage.GetServersList()
+	_, err := trafficStorage.GetServers()
 
 	if err == nil {
 		t.Fail()

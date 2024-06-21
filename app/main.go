@@ -11,6 +11,7 @@ import (
 	hostsUseCases "github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	trafficDomains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	trafficRepository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	trafficUseCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	"github.com/coreos/go-iptables/iptables"
 	"github.com/gin-gonic/gin"
@@ -22,22 +23,17 @@ func main() {
 	var tool services.Tool
 	var console services.Terminal
 	var channel services.NotificationChannel
+	var database services.Database
 	var err error
 	scope := flag.String("s", "", "scope")
 	flag.Parse()
 
-	var activeFlowsStorage trafficDomains.TrafficStorage
-
 	hostUseCase, hostsFilter := initializeHostDependencies(tool)
-	trafficSearcher := initializeTrafficSearcher(tool)
 
 	if *scope != "prod" {
 		tool = services.NewFakeTool()
 		console = services.NewFakeConsole()
-		//channel = services.NewFakeBot()
 		channel = initializedNotifChannel()
-
-		activeFlowsStorage = initializeFakeActiveFlowStorage()
 
 	} else {
 		tool = services.NewTool("http://XX:3000", 2, "XX", "XX")
@@ -46,30 +42,27 @@ func main() {
 			panic(err.Error())
 		}
 
-		activeFlowsStorage, err = initializeActiveFlowsStorage("./file.sqlite", trafficSearcher, hostsFilter)
-		if err != nil {
-			panic(err.Error())
-		}
 	}
 
-	trafficActiveFlowsSearcher := initializeTrafficDependencies(activeFlowsStorage)
-	alertsSearcher := initializeAlertsDependencies(tool, activeFlowsStorage)
-	hostBlocker := initializeHostBlocker(console, activeFlowsStorage)
+	trafficRepo := initializeTrafficRepository(database)
+	trafficSearcher, trafficBytesParser, trafficStorage := initializeTrafficUseCases(tool, trafficRepo, hostsFilter)
+	alertsSearcher := initializeAlertsDependencies(tool, tool)
+	hostBlocker := initializeHostBlocker(console, trafficRepo)
 	channel = initializedNotifChannel()
 	alertSender := initializeAlertSender(channel, alertsSearcher)
 
 	api := &api.Api{
-		Tool:                tool,
-		HostUseCase:         hostUseCase,
-		HostsFilter:         hostsFilter,
-		TrafficSearcher:     trafficSearcher,
-		ActiveFlowsSearcher: trafficActiveFlowsSearcher,
-		ActiveFlowsStorage:  activeFlowsStorage,
-		AlertsSearcher:      alertsSearcher,
-		HostBlocker:         hostBlocker,
-		AlertsSender:        alertSender,
-		NotifChannel:        channel,
-		Engine:              gin.Default(),
+		Tool:               tool,
+		HostUseCase:        hostUseCase,
+		HostsFilter:        hostsFilter,
+		TrafficSearcher:    trafficSearcher,
+		TrafficBytesParser: trafficBytesParser,
+		ActiveFlowsStorage: trafficStorage,
+		AlertsSearcher:     alertsSearcher,
+		HostBlocker:        hostBlocker,
+		AlertsSender:       alertSender,
+		NotifChannel:       channel,
+		Engine:             gin.Default(),
 	}
 
 	api.MapURLToPing()
@@ -93,24 +86,20 @@ func initializeHostDependencies(tool services.Tool) (hostsDomains.HostUseCase, h
 	return hostSearcher, hostsFilter
 }
 
-func initializeTrafficSearcher(tool services.Tool) trafficDomains.TrafficUseCase {
+// *********** Traffic ***********
+func initializeTrafficRepository(db services.Database) trafficDomains.TrafficRepository {
+	trafficRepo := trafficRepository.NewFlowsRepo(db)
+	return trafficRepo
+}
+
+func initializeTrafficUseCases(tool services.Tool, repo trafficDomains.TrafficRepository, hostFilter hostsDomains.HostsFilter) (trafficDomains.TrafficUseCase,
+	trafficDomains.TrafficBytesParser, trafficDomains.TrafficStorage) {
+
 	trafficSearcher := trafficUseCases.NewTrafficSearcher(tool)
-	return trafficSearcher
-}
+	trafficBytesParser := trafficUseCases.NewBytesParser(repo)
+	trafficStorage := trafficUseCases.NewFlowsStorage(trafficSearcher, repo, hostFilter)
 
-func initializeTrafficDependencies(flowStorage trafficDomains.TrafficRepository) trafficDomains.TrafficActiveFlowsSearcher {
-	trafficActiveFlowsSearcher := trafficUseCases.NewBytesParser(flowStorage)
-	return trafficActiveFlowsSearcher
-}
-
-func initializeActiveFlowsStorage(file string, trafficSearcher trafficDomains.TrafficUseCase, hostFilter hostsDomains.HostsFilter) (trafficDomains.ActiveFlowsStorage, error) {
-	db, err := newDB(file)
-	if err != nil {
-		return nil, err
-	}
-
-	activeFlowsStorage := trafficUseCases.NewFlowsStorage(trafficSearcher, db, hostFilter)
-	return activeFlowsStorage, nil
+	return trafficSearcher, trafficBytesParser, trafficStorage
 }
 
 func initializeAlertsDependencies(tool services.Tool, alertService alertsDomains.AlertService) alertsDomains.AlertUseCase {
@@ -149,12 +138,4 @@ func initializeAlertSender(notifier services.NotificationChannel, searcher alert
 func initializedNotifChannel() services.NotificationChannel {
 	telegram := services.NewTelegramInterface()
 	return telegram
-}
-
-// --------------------
-// Fake Initialization
-func initializeFakeDatabase() *trafficDomains.TrafficRepository {
-	fakeRepo := services.NewFakeSQLClient()
-	activeFlowsStorage := trafficUseCases.NewFlowsStorage(nil, fakeRepo, nil)
-	return activeFlowsStorage
 }

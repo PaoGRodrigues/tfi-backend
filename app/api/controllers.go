@@ -16,16 +16,16 @@ import (
 )
 
 type Api struct {
-	Tool                services.Tool
-	HostUseCase         hosts.HostUseCase
-	TrafficSearcher     traffic.TrafficUseCase
-	HostsFilter         hosts.HostsFilter
-	ActiveFlowsSearcher traffic.TrafficActiveFlowsSearcher
-	ActiveFlowsStorage  traffic.TrafficStorage
-	AlertsSearcher      alerts.AlertUseCase
-	HostBlocker         hosts.HostBlocker
-	NotifChannel        services.NotificationChannel
-	AlertsSender        alerts.AlertsSender
+	Tool               services.Tool
+	HostUseCase        hosts.HostUseCase
+	TrafficSearcher    traffic.TrafficUseCase
+	HostsFilter        hosts.HostsFilter
+	TrafficBytesParser traffic.TrafficBytesParser
+	ActiveFlowsStorage traffic.TrafficStorage
+	AlertsSearcher     alerts.AlertUseCase
+	HostBlocker        hosts.HostBlocker
+	NotifChannel       services.NotificationChannel
+	AlertsSender       alerts.AlertsSender
 	*gin.Engine
 }
 
@@ -85,7 +85,7 @@ func (api *Api) GetLocalHosts(c *gin.Context) {
 }
 
 func (api *Api) GetActiveFlowsPerDestination(c *gin.Context) {
-	activeFlows, err := api.ActiveFlowsSearcher.GetBytesPerDestination()
+	activeFlows, err := api.TrafficBytesParser.GetBytesPerDestination()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})
@@ -226,7 +226,7 @@ func (api *Api) ConfigNotificationChannel(c *gin.Context) {
 }
 
 func (api *Api) GetActiveFlowsPerCountry(c *gin.Context) {
-	activeFlows, err := api.ActiveFlowsSearcher.GetBytesPerCountry()
+	activeFlows, err := api.TrafficBytesParser.GetBytesPerCountry()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})

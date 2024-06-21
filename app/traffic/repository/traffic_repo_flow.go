@@ -15,7 +15,7 @@ func NewFlowsRepo(database services.Database) *FlowsRepo {
 	}
 }
 
-func (fs *FlowsRepo) GetFlows(attr string) (domains.Server, error) {
+func (fs *FlowsRepo) GetServerByAttr(attr string) (domains.Server, error) {
 	flow, err := fs.Database.GetServerByAttr(attr)
 	if err != nil {
 		return domains.Server{}, err
@@ -23,7 +23,7 @@ func (fs *FlowsRepo) GetFlows(attr string) (domains.Server, error) {
 	return flow, nil
 }
 
-func (fs *FlowsRepo) GetClientsList() ([]domains.Client, error) {
+func (fs *FlowsRepo) GetClients() ([]domains.Client, error) {
 	clients, err := fs.Database.GetClients()
 	if err != nil {
 		return nil, err
@@ -31,7 +31,7 @@ func (fs *FlowsRepo) GetClientsList() ([]domains.Client, error) {
 	return clients, nil
 }
 
-func (fs *FlowsRepo) GetServersList() ([]domains.Server, error) {
+func (fs *FlowsRepo) GetServers() ([]domains.Server, error) {
 	servers, err := fs.Database.GetServers()
 	if err != nil {
 		return nil, err
