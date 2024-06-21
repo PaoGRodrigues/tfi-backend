@@ -20,20 +20,22 @@ import (
 
 func main() {
 
+	// *********** Services ***********
 	var tool services.Tool
 	var console services.Terminal
 	var channel services.NotificationChannel
 	var database services.Database
+	// ********************************
+
 	var err error
 	scope := flag.String("s", "", "scope")
 	flag.Parse()
 
-	hostUseCase, hostsFilter := initializeHostDependencies(tool)
-
 	if *scope != "prod" {
 		tool = services.NewFakeTool()
 		console = services.NewFakeConsole()
-		channel = initializedNotifChannel()
+		channel = services.NewFakeBot()
+		database = services.NewFakeSQLClient()
 
 	} else {
 		tool = services.NewTool("http://XX:3000", 2, "XX", "XX")
@@ -41,15 +43,24 @@ func main() {
 		if err != nil {
 			panic(err.Error())
 		}
-
+		channel = initializedNotifChannel()
+		database, err = newDB("./file.sqlite")
+		if err != nil {
+			panic(err.Error())
+		}
 	}
+
+	// *********** Repo & Usecases ***********
+	hostUseCase, hostsFilter := initializeHostDependencies(tool)
 
 	trafficRepo := initializeTrafficRepository(database)
 	trafficSearcher, trafficBytesParser, trafficStorage := initializeTrafficUseCases(tool, trafficRepo, hostsFilter)
-	alertsSearcher := initializeAlertsDependencies(tool, tool)
-	hostBlocker := initializeHostBlocker(console, trafficRepo)
-	channel = initializedNotifChannel()
+
+	hostBlocker := initializeHostBlockerUseCase(console, trafficRepo)
+
+	alertsSearcher := initializeAlertsDependencies(tool)
 	alertSender := initializeAlertSender(channel, alertsSearcher)
+	// ****************************************
 
 	api := &api.Api{
 		Tool:               tool,
@@ -80,11 +91,19 @@ func main() {
 	api.Run(":8080")
 }
 
+// *********** Hosts ***********
 func initializeHostDependencies(tool services.Tool) (hostsDomains.HostUseCase, hostsDomains.HostsFilter) {
 	hostSearcher := hostsUseCases.NewHostSearcher(tool)
 	hostsFilter := hostsUseCases.NewHostsFilter(hostSearcher)
 	return hostSearcher, hostsFilter
 }
+
+func initializeHostBlockerUseCase(console services.Terminal, filter trafficDomains.TrafficRepository) hostsDomains.HostBlocker {
+	hostBlocker := hostsUseCases.NewBlocker(console, filter)
+	return hostBlocker
+}
+
+// *****************************
 
 // *********** Traffic ***********
 func initializeTrafficRepository(db services.Database) trafficDomains.TrafficRepository {
@@ -102,13 +121,29 @@ func initializeTrafficUseCases(tool services.Tool, repo trafficDomains.TrafficRe
 	return trafficSearcher, trafficBytesParser, trafficStorage
 }
 
-func initializeAlertsDependencies(tool services.Tool, alertService alertsDomains.AlertService) alertsDomains.AlertUseCase {
-	alertsSearcher := alertsUseCases.NewAlertSearcher(alertService)
+// *******************************
+
+// *********** Alerts ***********
+func initializeAlertsDependencies(tool services.Tool) alertsDomains.AlertUseCase {
+	alertsSearcher := alertsUseCases.NewAlertSearcher(tool)
 	return alertsSearcher
 }
 
-func newDB(file string) (*services.SQLClient, error) {
-	db, err := sql.Open("sqlite3", file)
+func initializeAlertSender(notifier services.NotificationChannel, searcher alertsDomains.AlertUseCase) alertsDomains.AlertsSender {
+	alertsSender := alertsUseCases.NewAlertNotifier(notifier, searcher)
+	return alertsSender
+}
+
+// ******************************
+
+// *********** Services ***********
+func initializedNotifChannel() services.NotificationChannel {
+	telegram := services.NewTelegramInterface()
+	return telegram
+}
+
+func newDB(nameFile string) (*services.SQLClient, error) {
+	db, err := sql.Open("sqlite3", nameFile)
 	if err != nil {
 		return nil, err
 	}
@@ -125,17 +160,4 @@ func initializeConsole() (*services.Console, error) {
 	return console, nil
 }
 
-func initializeHostBlocker(console services.Terminal, filter trafficDomains.TrafficRepository) hostsDomains.HostBlocker {
-	hostBlocker := hostsUseCases.NewBlocker(console, filter)
-	return hostBlocker
-}
-
-func initializeAlertSender(notifier services.NotificationChannel, searcher alertsDomains.AlertUseCase) alertsDomains.AlertsSender {
-	alertsSender := alertsUseCases.NewAlertNotifier(notifier, searcher)
-	return alertsSender
-}
-
-func initializedNotifChannel() services.NotificationChannel {
-	telegram := services.NewTelegramInterface()
-	return telegram
-}
+// ********************************
