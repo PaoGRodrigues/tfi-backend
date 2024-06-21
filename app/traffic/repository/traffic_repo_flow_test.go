@@ -241,3 +241,18 @@ func TestStoreFlowsSuccessfully(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestStoreFlowsReturnError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockDatabase := services_mocks.NewMockDatabase(ctrl)
+	mockDatabase.EXPECT().AddActiveFlows([]domains.ActiveFlow{}).Return(fmt.Errorf("Error Test"))
+
+	trafficStorage := repository.NewFlowsRepo(mockDatabase)
+	err := trafficStorage.StoreFlows([]domains.ActiveFlow{})
+
+	if err == nil {
+		t.Fail()
+	}
+}
