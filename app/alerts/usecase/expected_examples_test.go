@@ -10,8 +10,7 @@ var expected = []domains.Alert{
 		Name:     "test",
 		Family:   "flow",
 		Time:     struct{ Label string }{"10/10/10 11:11:11"},
-		Score:    "10",
-		Severity: "2",
+		Severity: struct{ Value string }{"2"},
 		AlertFlow: domains.AlertFlow{
 			Client: flow.Client{
 				Name: "test1",
@@ -34,8 +33,7 @@ var expected = []domains.Alert{
 		Name:     "test",
 		Family:   "flow",
 		Time:     struct{ Label string }{"10/10/10 11:11:11"},
-		Score:    "10",
-		Severity: "3",
+		Severity: struct{ Value string }{"3"},
 		AlertFlow: domains.AlertFlow{
 			Client: flow.Client{
 				Name: "test2",

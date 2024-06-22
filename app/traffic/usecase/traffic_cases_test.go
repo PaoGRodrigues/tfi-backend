@@ -169,4 +169,23 @@ var expectedPerCountrySearcher = []domains.ActiveFlow{
 		},
 		Bytes: 5566778,
 	},
+	{
+		Client: domains.Client{
+			Name: "Local",
+			Port: 12345,
+			IP:   "192.168.4.1",
+		},
+		Server: domains.Server{
+			IP:                "8.8.10.82",
+			IsBroadcastDomain: false,
+			IsDHCP:            false,
+			Port:              443,
+			Name:              "telegram.com",
+		},
+		Protocol: domains.Protocol{
+			L4: "TCP",
+			L7: "TLS.Google",
+		},
+		Bytes: 5566778,
+	},
 }

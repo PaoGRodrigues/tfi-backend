@@ -6,37 +6,37 @@ import (
 
 func (d *FakeTool) GetAllHosts() ([]domains.Host, error) {
 	Hosts := []domains.Host{
-		domains.Host{
+		{
 			Name:        "Test1",
 			IP:          "13.13.13.13",
 			PrivateHost: true,
 		},
-		domains.Host{
+		{
 			Name:        "Test2",
 			IP:          "14.14.14.14",
 			PrivateHost: false,
 		},
-		domains.Host{
+		{
 			Name:        "Test3",
 			IP:          "15.15.15.15",
 			PrivateHost: true,
 		},
-		domains.Host{
+		{
 			Name:        "Test4",
 			IP:          "16.16.16.16",
 			PrivateHost: false,
 		},
-		domains.Host{
+		{
 			Name:        "lib.gen.rus",
 			IP:          "172.98.98.109",
 			PrivateHost: false,
 		},
-		domains.Host{
+		{
 			IP:          "123.123.123.123",
 			Name:        "lib.gen.rus",
 			PrivateHost: false,
 		},
-		domains.Host{
+		{
 			IP:          "172.98.98.109",
 			Name:        "lib.gen.rus",
 			PrivateHost: false,
