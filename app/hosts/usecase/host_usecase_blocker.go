@@ -6,11 +6,11 @@ import (
 )
 
 type Blocker struct {
-	filter       trafficDomains.ActiveFlowsStorage
+	filter       trafficDomains.TrafficRepository
 	blockService domains.HostBlockerService
 }
 
-func NewBlocker(srv domains.HostBlockerService, filter trafficDomains.ActiveFlowsStorage) *Blocker {
+func NewBlocker(srv domains.HostBlockerService, filter trafficDomains.TrafficRepository) *Blocker {
 	return &Blocker{
 		filter:       filter,
 		blockService: srv,
@@ -18,7 +18,7 @@ func NewBlocker(srv domains.HostBlockerService, filter trafficDomains.ActiveFlow
 }
 
 func (blocker *Blocker) Block(attr string) (domains.Host, error) {
-	server, err := blocker.filter.GetFlows(attr)
+	server, err := blocker.filter.GetServerByAttr(attr)
 	if err != nil {
 		return domains.Host{}, err
 	}

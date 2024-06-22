@@ -112,8 +112,8 @@ func TestCreateTrafficActiveFlowsAndGetBytesPerDest(t *testing.T) {
 	mockActiveFlowsSearcher.EXPECT().GetBytesPerDestination().Return(expected, nil)
 
 	api := &api.Api{
-		ActiveFlowsSearcher: mockActiveFlowsSearcher,
-		Engine:              gin.Default(),
+		TrafficBytesParser: mockActiveFlowsSearcher,
+		Engine:             gin.Default(),
 	}
 
 	api.MapGetActiveFlowsPerDestinationURL()
@@ -138,8 +138,8 @@ func TestCreateTrafficActiveFlowsPerDestAndGetAnError(t *testing.T) {
 	mockActiveFlowsSearcher.EXPECT().GetBytesPerDestination().Return(nil, fmt.Errorf("Testing error case"))
 
 	api := &api.Api{
-		ActiveFlowsSearcher: mockActiveFlowsSearcher,
-		Engine:              gin.Default(),
+		TrafficBytesParser: mockActiveFlowsSearcher,
+		Engine:             gin.Default(),
 	}
 
 	api.MapGetActiveFlowsPerDestinationURL()
@@ -171,8 +171,8 @@ func TestGetBytesPerCountryAndReturn200(t *testing.T) {
 	mockActiveFlowsSearcher.EXPECT().GetBytesPerCountry().Return(expected, nil)
 
 	api := &api.Api{
-		ActiveFlowsSearcher: mockActiveFlowsSearcher,
-		Engine:              gin.Default(),
+		TrafficBytesParser: mockActiveFlowsSearcher,
+		Engine:             gin.Default(),
 	}
 
 	api.MapGetActiveFlowsPerCountryURL()
@@ -196,8 +196,8 @@ func TestGetBytesPerCountryReturnError(t *testing.T) {
 	mockActiveFlowsSearcher.EXPECT().GetBytesPerCountry().Return(nil, fmt.Errorf("Testing error case"))
 
 	api := &api.Api{
-		ActiveFlowsSearcher: mockActiveFlowsSearcher,
-		Engine:              gin.Default(),
+		TrafficBytesParser: mockActiveFlowsSearcher,
+		Engine:             gin.Default(),
 	}
 
 	api.MapGetActiveFlowsPerCountryURL()

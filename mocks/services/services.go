@@ -168,3 +168,100 @@ func (mr *MockNotificationChannelMockRecorder) SendMessage(arg0 interface{}) *go
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendMessage", reflect.TypeOf((*MockNotificationChannel)(nil).SendMessage), arg0)
 }
+
+// MockDatabase is a mock of Database interface.
+type MockDatabase struct {
+	ctrl     *gomock.Controller
+	recorder *MockDatabaseMockRecorder
+}
+
+// MockDatabaseMockRecorder is the mock recorder for MockDatabase.
+type MockDatabaseMockRecorder struct {
+	mock *MockDatabase
+}
+
+// NewMockDatabase creates a new mock instance.
+func NewMockDatabase(ctrl *gomock.Controller) *MockDatabase {
+	mock := &MockDatabase{ctrl: ctrl}
+	mock.recorder = &MockDatabaseMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockDatabase) EXPECT() *MockDatabaseMockRecorder {
+	return m.recorder
+}
+
+// AddActiveFlows mocks base method.
+func (m *MockDatabase) AddActiveFlows(arg0 []domains1.ActiveFlow) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddActiveFlows", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AddActiveFlows indicates an expected call of AddActiveFlows.
+func (mr *MockDatabaseMockRecorder) AddActiveFlows(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddActiveFlows", reflect.TypeOf((*MockDatabase)(nil).AddActiveFlows), arg0)
+}
+
+// GetClients mocks base method.
+func (m *MockDatabase) GetClients() ([]domains1.Client, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetClients")
+	ret0, _ := ret[0].([]domains1.Client)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetClients indicates an expected call of GetClients.
+func (mr *MockDatabaseMockRecorder) GetClients() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetClients", reflect.TypeOf((*MockDatabase)(nil).GetClients))
+}
+
+// GetFlowByKey mocks base method.
+func (m *MockDatabase) GetFlowByKey(key string) (domains1.ActiveFlow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetFlowByKey", key)
+	ret0, _ := ret[0].(domains1.ActiveFlow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetFlowByKey indicates an expected call of GetFlowByKey.
+func (mr *MockDatabaseMockRecorder) GetFlowByKey(key interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlowByKey", reflect.TypeOf((*MockDatabase)(nil).GetFlowByKey), key)
+}
+
+// GetServerByAttr mocks base method.
+func (m *MockDatabase) GetServerByAttr(attr string) (domains1.Server, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetServerByAttr", attr)
+	ret0, _ := ret[0].(domains1.Server)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetServerByAttr indicates an expected call of GetServerByAttr.
+func (mr *MockDatabaseMockRecorder) GetServerByAttr(attr interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServerByAttr", reflect.TypeOf((*MockDatabase)(nil).GetServerByAttr), attr)
+}
+
+// GetServers mocks base method.
+func (m *MockDatabase) GetServers() ([]domains1.Server, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetServers")
+	ret0, _ := ret[0].([]domains1.Server)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetServers indicates an expected call of GetServers.
+func (mr *MockDatabaseMockRecorder) GetServers() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServers", reflect.TypeOf((*MockDatabase)(nil).GetServers))
+}

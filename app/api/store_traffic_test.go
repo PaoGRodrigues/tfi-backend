@@ -46,7 +46,7 @@ func TestStoreTrafficSuccessfullyReturn200(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockActiveFlowsStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockActiveFlowsStorage := mocks.NewMockTrafficStorage(ctrl)
 	mockActiveFlowsStorage.EXPECT().StoreFlows().Return(nil)
 
 	api := &api.Api{
@@ -72,7 +72,7 @@ func TestStoreTrafficFailedAndReturn500(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockActiveFlowsStorage := mocks.NewMockActiveFlowsStorage(ctrl)
+	mockActiveFlowsStorage := mocks.NewMockTrafficStorage(ctrl)
 	mockActiveFlowsStorage.EXPECT().StoreFlows().Return(fmt.Errorf("Testing error case"))
 
 	api := &api.Api{

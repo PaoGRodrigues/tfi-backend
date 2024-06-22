@@ -7,17 +7,17 @@ import (
 )
 
 type BytesAggregatorParser struct {
-	flowsStorage domains.ActiveFlowsStorage
+	flowsStorage domains.TrafficRepository
 }
 
-func NewBytesParser(flowsStorage domains.ActiveFlowsStorage) *BytesAggregatorParser {
+func NewBytesParser(flowsStorage domains.TrafficRepository) *BytesAggregatorParser {
 	return &BytesAggregatorParser{
 		flowsStorage: flowsStorage,
 	}
 }
 
 func (parser *BytesAggregatorParser) GetBytesPerDestination() ([]domains.BytesPerDestination, error) {
-	serversList, err := parser.flowsStorage.GetServersList()
+	serversList, err := parser.flowsStorage.GetServers()
 
 	if err != nil {
 		return []domains.BytesPerDestination{}, err
@@ -97,7 +97,7 @@ func sumBytes(bpd []domains.BytesPerDestination) []domains.BytesPerDestination {
 }
 
 func (parser *BytesAggregatorParser) GetBytesPerCountry() ([]domains.BytesPerCountry, error) {
-	serversList, err := parser.flowsStorage.GetServersList()
+	serversList, err := parser.flowsStorage.GetServers()
 
 	if err != nil {
 		return []domains.BytesPerCountry{}, err

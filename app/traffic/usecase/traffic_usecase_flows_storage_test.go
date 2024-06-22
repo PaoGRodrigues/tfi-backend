@@ -9,7 +9,6 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	host_mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
-	"github.com/go-playground/assert/v2"
 	"github.com/golang/mock/gomock"
 )
 
@@ -60,7 +59,7 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromSearcher(t *testing.T) {
 	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
 	mockHostFilter.EXPECT().GetHost(server.IP).Return(host, nil)
 	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().AddActiveFlows(activeFlowToStore).Return(nil)
+	mockTrafficRepoStorage.EXPECT().StoreFlows(activeFlowToStore).Return(nil)
 
 	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
 	err := trafficStorage.StoreFlows()
@@ -89,7 +88,7 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromEmptySearcherFirstly(t *testi
 	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
 	mockHostFilter.EXPECT().GetHost(server.IP).Return(host, nil)
 	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().AddActiveFlows(activeFlowToStore).Return(nil)
+	mockTrafficRepoStorage.EXPECT().StoreFlows(activeFlowToStore).Return(nil)
 
 	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
 	err := trafficStorage.StoreFlows()
@@ -117,190 +116,10 @@ func TestStoreTrafficWithError(t *testing.T) {
 	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
 	mockHostFilter.EXPECT().GetHost(server.IP).Return(host, nil)
 	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().AddActiveFlows(activeFlowToStore).Return(fmt.Errorf("Testing Error"))
+	mockTrafficRepoStorage.EXPECT().StoreFlows(activeFlowToStore).Return(fmt.Errorf("Testing Error"))
 
 	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
 	err := trafficStorage.StoreFlows()
-
-	if err == nil {
-		t.Fail()
-	}
-}
-
-func TestGetServersByAttrReturnServerSuccessfullyByIP(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().GetServerByAttr("123.123.123.123").Return(server, nil)
-
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
-	got, err := trafficStorage.GetFlows("123.123.123.123")
-
-	if err != nil {
-		t.Fail()
-	}
-
-	assert.Equal(t, server, got)
-}
-
-func TestGetServersByAttrReturnServerSuccessfullyByFQDN(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().GetServerByAttr("lib.gen.rus").Return(server, nil)
-
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
-	got, err := trafficStorage.GetFlows("lib.gen.rus")
-
-	if err != nil {
-		t.Fail()
-	}
-
-	assert.Equal(t, server, got)
-}
-
-func TestGetServersByAttrReturnError(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().GetServerByAttr("lib.gen.rus").Return(domains.Server{}, fmt.Errorf("Test Error"))
-
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
-	_, err := trafficStorage.GetFlows("lib.gen.rus")
-
-	if err == nil {
-		t.Fail()
-	}
-}
-
-func TestGetClientsListReturnClientsSuccessfully(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	expected := domains.Client{
-		IP:   "10.10.10.10",
-		Name: "host1",
-		Port: 34667,
-	}
-
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().GetClients().Return([]domains.Client{expected}, nil)
-
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
-	got, err := trafficStorage.GetClientsList()
-
-	if err != nil {
-		t.Fail()
-	}
-
-	assert.Equal(t, []domains.Client{expected}, got)
-}
-
-func TestGetClientsListReturnError(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().GetClients().Return(nil, fmt.Errorf("Error test"))
-
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
-	_, err := trafficStorage.GetClientsList()
-
-	if err == nil {
-		t.Fail()
-	}
-}
-
-func TestGetServersListReturnServersSuccessfully(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	expected := domains.Server{
-		IP:      "190.190.190.10",
-		Name:    "Google.com",
-		Port:    443,
-		Country: "US",
-	}
-
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().GetServers().Return([]domains.Server{expected}, nil)
-
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
-	got, err := trafficStorage.GetServersList()
-
-	if err != nil {
-		t.Fail()
-	}
-
-	assert.Equal(t, []domains.Server{expected}, got)
-}
-
-func TestGetServersListReturnError(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().GetServers().Return(nil, fmt.Errorf("Error test"))
-
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
-	_, err := trafficStorage.GetServersList()
-
-	if err == nil {
-		t.Fail()
-	}
-}
-
-func TestGetFlowByKeyReturnFlow(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	activeFlowExpected := domains.ActiveFlow{
-		Key:      "12345",
-		Client:   client,
-		Server:   server,
-		Bytes:    1000,
-		Protocol: protocols,
-	}
-
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().GetFlowByKey(activeFlowExpected.Key).Return(activeFlowExpected, nil)
-
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
-	got, _ := trafficStorage.GetFlowByKey(activeFlowExpected.Key)
-
-	assert.Equal(t, activeFlowExpected, got)
-}
-
-func TestGetFlowByKeyReturnError(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
-	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
-	mockTrafficRepoStorage.EXPECT().GetFlowByKey("1234").Return(domains.ActiveFlow{}, fmt.Errorf("Test error"))
-
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
-	_, err := trafficStorage.GetFlowByKey("1234")
 
 	if err == nil {
 		t.Fail()
