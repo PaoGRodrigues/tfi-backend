@@ -1,16 +1,16 @@
 package services
 
 import (
-	domains_alert "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	alerts_domains "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
-	domains_host "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
-	domains_traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
 type Tool interface {
-	GetAllHosts() ([]domains_host.Host, error)
-	GetAllActiveTraffic() ([]domains_traffic.ActiveFlow, error)
-	GetAllAlerts(epoch_begin, epoch_end int) ([]domains_alert.Alert, error)
+	GetAllHosts() ([]hosts_domains.Host, error)
+	GetAllActiveTraffic() ([]traffic_domains.ActiveFlow, error)
+	GetAllAlerts(epoch_begin, epoch_end int) ([]alerts_domains.Alert, error)
 }
 
 type Terminal interface {
@@ -23,9 +23,9 @@ type NotificationChannel interface {
 }
 
 type Database interface {
-	AddActiveFlows([]domains_traffic.ActiveFlow) error
-	GetServerByAttr(attr string) (domains_traffic.Server, error)
-	GetClients() ([]domains_traffic.Client, error)
-	GetServers() ([]domains_traffic.Server, error)
-	GetFlowByKey(key string) (domains_traffic.ActiveFlow, error)
+	AddActiveFlows([]traffic_domains.ActiveFlow) error
+	GetServerByAttr(attr string) (traffic_domains.Server, error)
+	GetClients() ([]traffic_domains.Client, error)
+	GetServers() ([]traffic_domains.Server, error)
+	GetFlowByKey(key string) (traffic_domains.ActiveFlow, error)
 }

@@ -6,16 +6,16 @@ import (
 	"net/http"
 	"strconv"
 
-	domains_host "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 )
 
 type HttpHostResponse struct {
 	Rc    int
 	RcStr string
-	Rsp   []domains_host.Host
+	Rsp   []hosts_domains.Host
 }
 
-func (t *NtopNG) GetAllHosts() ([]domains_host.Host, error) {
+func (t *NtopNG) GetAllHosts() ([]hosts_domains.Host, error) {
 
 	HostsListResponse, err := t.getHostsList()
 	if err != nil {
