@@ -32,7 +32,7 @@ func TestSendMessageReturn200(t *testing.T) {
 	response := httptest.NewRecorder()
 
 	requestURL := "/alertnotification"
-	httpRequest, _ := http.NewRequest("GET", requestURL, strings.NewReader(string("")))
+	httpRequest, _ := http.NewRequest("POST", requestURL, strings.NewReader(string("")))
 
 	api.Engine.ServeHTTP(response, httpRequest)
 
@@ -57,7 +57,7 @@ func TestSendMessageReturn500Error(t *testing.T) {
 	response := httptest.NewRecorder()
 
 	requestURL := "/alertnotification"
-	httpRequest, _ := http.NewRequest("GET", requestURL, strings.NewReader(string("")))
+	httpRequest, _ := http.NewRequest("POST", requestURL, strings.NewReader(string("")))
 
 	api.Engine.ServeHTTP(response, httpRequest)
 
