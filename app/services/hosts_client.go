@@ -39,7 +39,7 @@ func (t *NtopNG) getHostsList() (HttpHostResponse, error) {
 	query := req.URL.Query()
 
 	query.Add("ifid", strconv.Itoa(t.InterfaceId))
-	query.Add("field_alias", "name,privatehost,ip,os_detail,mac,city,country")
+	query.Add("field_alias", "asname,privatehost,ip,os_detail,mac,city,country")
 	req.URL.RawQuery = query.Encode()
 
 	response, err := client.Do(req)

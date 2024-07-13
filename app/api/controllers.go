@@ -42,6 +42,7 @@ type HostsResponse struct {
 	PrivateHost bool   `json:"Privado"`
 	IP          string `json:"IP"`
 	Mac         string `json:"MAC"`
+	ASname      string `json:"ASN"`
 }
 
 func (api *Api) GetHosts(c *gin.Context) {
@@ -247,6 +248,7 @@ func parseHostResponse(hosts []hosts.Host) []HostsResponse {
 			PrivateHost: host.PrivateHost,
 			IP:          host.IP,
 			Mac:         host.Mac,
+			ASname:      host.ASname,
 		}
 		response = append(response, h)
 	}

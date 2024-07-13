@@ -4,6 +4,7 @@ package domains
 // Host connected to the network
 type Host struct {
 	Name        string
+	ASname      string `json:"ASname"`
 	PrivateHost bool
 	IP          string
 	Mac         string
