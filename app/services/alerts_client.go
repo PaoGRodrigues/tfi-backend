@@ -16,8 +16,11 @@ type Alert struct {
 	Name   struct {
 		Name string `json:"fullname"`
 	} `json:"Msg"`
-	Family string
-	Time   struct {
+	Family   string
+	Category struct {
+		Label string
+	} `json:"alert_category"`
+	Time struct {
 		Label string
 	} `json:"tstamp"`
 	Severity struct {
@@ -149,8 +152,9 @@ func parseAlertsFromTool(rawAlerts []Alert) ([]domains.Alert, error) {
 		newAlert := domains.Alert{
 			Name:     alert.Name.Name,
 			Family:   alert.Family,
-			Time:     alert.Time,
-			Severity: struct{ Value string }{severityScore[alert.Severity.Value]},
+			Category: alert.Category.Label,
+			Time:     alert.Time.Label,
+			Severity: severityScore[alert.Severity.Value],
 			AlertFlow: domains.AlertFlow{
 				Client: flow.Client{
 					Name: alert.AlertFlow.Client.Value,

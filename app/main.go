@@ -53,11 +53,12 @@ func main() {
 		database = services.NewFakeSQLClient()
 
 	} else {
-		tool = services.NewTool("http://XX:3000", 2, "XX", "XX")
+		tool = services.NewTool("http://XXX:3000", 2, "XX", "XX")
+		/**
 		console, err = initializeConsole()
 		if err != nil {
 			panic(err.Error())
-		}
+		}*/
 		channel = initializedNotifChannel()
 		database, err = newDB("./file.sqlite")
 		if err != nil {
