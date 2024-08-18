@@ -7,14 +7,11 @@ import (
 // *********** Entities
 // Alerts
 type Alert struct {
-	Name   string
-	Family string
-	Time   struct {
-		Label string
-	} `json:"tstamp"`
-	Severity struct {
-		Value string
-	} `json:"severity"`
+	Name          string
+	Family        string
+	Category      string
+	Time          string
+	Severity      string
 	AlertFlow     AlertFlow
 	AlertProtocol flow.Protocol
 }

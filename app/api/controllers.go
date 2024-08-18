@@ -31,6 +31,7 @@ type Api struct {
 
 type AlertsResponse struct {
 	Name        string `json:"Nombre"`
+	Category    string `json:"Categoría"`
 	Time        string `json:"Fecha/hora"`
 	Severity    string `json:"Severidad"`
 	Source      string `json:"Origen"`
@@ -131,8 +132,9 @@ func (api *Api) parseAlertsData(alerts []domains.Alert) []AlertsResponse {
 		source, destination := createFlowString(alert.AlertFlow)
 		ar := AlertsResponse{
 			Name:        alert.Name,
-			Time:        alert.Time.Label,
-			Severity:    alert.Severity.Value,
+			Time:        alert.Time,
+			Category:    alert.Category,
+			Severity:    alert.Severity,
 			Source:      source,
 			Destination: destination,
 		}
