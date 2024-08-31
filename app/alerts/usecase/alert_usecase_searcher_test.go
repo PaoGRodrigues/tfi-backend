@@ -40,7 +40,7 @@ func TestGetAllAlertsReturnAlerts(t *testing.T) {
 	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
 
 	mockService := mocks.NewMockAlertService(ctrl)
-	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return([]domains.Alert{expected[0], expected[1]}, nil)
+	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return(expected, nil)
 
 	alertSearcher := usecase.NewAlertSearcher(mockService)
 	got, err := alertSearcher.GetAllAlerts()
