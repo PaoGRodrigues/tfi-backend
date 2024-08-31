@@ -10,6 +10,7 @@ import (
 )
 
 const seconds = 60
+const cybersecurity = "Cybersecurity"
 
 type AlertNotifier struct {
 	searcher     domains.AlertUseCase
@@ -51,11 +52,13 @@ func ParseAlerts(alerts []domains.Alert) []string {
 	messages := []string{}
 
 	for _, alert := range alerts {
-		b, err := json.Marshal(alert)
-		if err != nil {
-			fmt.Println(err)
+		if alert.Category == cybersecurity {
+			b, err := json.Marshal(alert)
+			if err != nil {
+				fmt.Println(err)
+			}
+			messages = append(messages, string(b))
 		}
-		messages = append(messages, string(b))
 	}
 	return messages
 
