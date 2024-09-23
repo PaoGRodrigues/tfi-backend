@@ -45,15 +45,10 @@ func main() {
 	// *********** Flags *************
 	var err error
 	scope := flag.String("s", "", "scope")
-	flag.Parse()
 	ip := flag.String("ip", "", "ip")
-	flag.Parse()
 	port := flag.String("pr", "", "port")
-	flag.Parse()
 	user := flag.String("u", "", "user")
-	flag.Parse()
 	pass := flag.String("p", "", "pass")
-	flag.Parse()
 	db := flag.String("db", "", "db")
 	flag.Parse()
 	// *******************************

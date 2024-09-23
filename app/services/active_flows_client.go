@@ -31,7 +31,7 @@ func (t *NtopNG) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 
 func (t *NtopNG) getActiveFlows() ([]domains.ActiveFlow, error) {
 	activeFlows := []domains.ActiveFlow{}
-	resp, err := t.getActiveFlowsSinglePage(0)
+	resp, err := t.getActiveFlowsSinglePage(1)
 	if err != nil {
 		return nil, err
 	}
