@@ -42,7 +42,10 @@ func (fs *FlowsStorage) enrichData(activeFlows []domains.ActiveFlow) ([]domains.
 	for _, flow := range activeFlows {
 		serv, err := fs.hostFilter.GetHost(flow.Server.IP)
 		if err != nil {
-			return []domains.ActiveFlow{}, err
+			serv, err = fs.hostFilter.GetHost(flow.Server.Name)
+			if err != nil {
+				return []domains.ActiveFlow{}, err
+			}
 		}
 		flow.Server.Country = serv.Country
 		newFlows = append(newFlows, flow)
