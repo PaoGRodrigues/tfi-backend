@@ -161,6 +161,7 @@ func TestStoreTrafficWithErrorInEnrichData(t *testing.T) {
 	mockSearcher.EXPECT().GetActiveFlows().Return(activeFlowToStore)
 	mockHostFilter := host_mocks.NewMockHostsFilter(ctrl)
 	mockHostFilter.EXPECT().GetHost(server.IP).Return(host_domains.Host{}, fmt.Errorf("Test error"))
+	mockHostFilter.EXPECT().GetHost(server.Name).Return(host_domains.Host{}, fmt.Errorf("Test error"))
 	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
 
 	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostFilter)
