@@ -42,9 +42,16 @@ func main() {
 	var trafficRepo traffic_domains.TrafficRepository
 	// *******************************
 
+	// *********** Flags *************
 	var err error
 	scope := flag.String("s", "", "scope")
+	ip := flag.String("ip", "", "ip")
+	port := flag.String("pr", "", "port")
+	user := flag.String("u", "", "user")
+	pass := flag.String("p", "", "pass")
+	db := flag.String("db", "", "db")
 	flag.Parse()
+	// *******************************
 
 	if *scope != "prod" {
 		tool = services.NewFakeTool()
@@ -53,16 +60,21 @@ func main() {
 		database = services.NewFakeSQLClient()
 
 	} else {
-		tool = services.NewTool("http://XXX:3000", 2, "XX", "XX")
-		/**
-		console, err = initializeConsole()
-		if err != nil {
-			panic(err.Error())
-		}*/
-		channel = initializedNotifChannel()
-		database, err = newDB("./file.sqlite")
-		if err != nil {
-			panic(err.Error())
+		if ip != nil || port != nil || user != nil || pass != nil || db != nil {
+			tool = services.NewTool("http://"+*ip+":"+*port, 2, *user, *pass)
+			console, err = initializeConsole()
+			if err != nil {
+				panic(err.Error())
+			}
+			channel = initializedNotifChannel()
+			database, err = newDB(*db)
+			if err != nil {
+				panic(err.Error())
+			}
+		} else {
+			if err != nil {
+				panic(err.Error())
+			}
 		}
 	}
 
