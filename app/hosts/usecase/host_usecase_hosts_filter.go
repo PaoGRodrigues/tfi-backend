@@ -65,13 +65,13 @@ func (l *HostsFilter) GetHost(attr string) (domains.Host, error) {
 	if err != nil {
 		return domains.Host{}, err
 	}
+	var ip string
 	for _, host := range current {
-		if host.IP == attr {
+		if host.IP == attr || host.Name == attr {
 			return host, nil
 		}
-		if host.Name == attr {
-			return host, nil
-		}
+		ip = host.IP
 	}
-	return domains.Host{}, errors.New("There's no host with this IP")
+
+	return domains.Host{}, errors.New("There's no host with this IP " + ip)
 }

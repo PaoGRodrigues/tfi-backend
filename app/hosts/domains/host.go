@@ -29,6 +29,10 @@ type HostBlocker interface {
 	Block(string) (Host, error)
 }
 
+type HostsStorage interface {
+	StoreHosts() error
+}
+
 // *********** Services
 type HostService interface {
 	GetAllHosts() ([]Host, error)
@@ -36,4 +40,9 @@ type HostService interface {
 
 type HostBlockerService interface {
 	BlockHost(Host) error
+}
+
+// *********** Repositories
+type HostsRepository interface {
+	StoreHosts([]Host) error
 }
