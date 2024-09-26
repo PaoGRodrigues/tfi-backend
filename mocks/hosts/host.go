@@ -192,6 +192,21 @@ func (m *MockHostsStorage) EXPECT() *MockHostsStorageMockRecorder {
 	return m.recorder
 }
 
+// GetHost mocks base method.
+func (m *MockHostsStorage) GetHost(arg0 string) (domains.Host, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHost", arg0)
+	ret0, _ := ret[0].(domains.Host)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetHost indicates an expected call of GetHost.
+func (mr *MockHostsStorageMockRecorder) GetHost(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHost", reflect.TypeOf((*MockHostsStorage)(nil).GetHost), arg0)
+}
+
 // StoreHosts mocks base method.
 func (m *MockHostsStorage) StoreHosts() error {
 	m.ctrl.T.Helper()
@@ -302,6 +317,21 @@ func NewMockHostsRepository(ctrl *gomock.Controller) *MockHostsRepository {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockHostsRepository) EXPECT() *MockHostsRepositoryMockRecorder {
 	return m.recorder
+}
+
+// GetHost mocks base method.
+func (m *MockHostsRepository) GetHost(arg0 string) (domains.Host, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHost", arg0)
+	ret0, _ := ret[0].(domains.Host)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetHost indicates an expected call of GetHost.
+func (mr *MockHostsRepositoryMockRecorder) GetHost(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHost", reflect.TypeOf((*MockHostsRepository)(nil).GetHost), arg0)
 }
 
 // StoreHosts mocks base method.

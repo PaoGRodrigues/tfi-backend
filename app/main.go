@@ -86,7 +86,7 @@ func main() {
 	hostUseCase, hostsFilter, hostsStorage = initializeHostDependencies(tool, hostRepo)
 
 	trafficRepo = initializeTrafficRepository(database)
-	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostsFilter)
+	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostsStorage)
 
 	hostBlocker = initializeHostBlockerUseCase(console, trafficRepo)
 
@@ -151,12 +151,12 @@ func initializeTrafficRepository(db services.Database) traffic_domains.TrafficRe
 	return trafficRepo
 }
 
-func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficRepository, hostFilter hosts_domains.HostsFilter) (traffic_domains.TrafficUseCase,
+func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficRepository, hostStorage hosts_domains.HostsStorage) (traffic_domains.TrafficUseCase,
 	traffic_domains.TrafficBytesParser, traffic_domains.TrafficStorage) {
 
 	trafficSearcher := traffic_useCases.NewTrafficSearcher(tool)
 	trafficBytesParser := traffic_useCases.NewBytesParser(repo)
-	trafficStorage := traffic_useCases.NewFlowsStorage(trafficSearcher, repo, hostFilter)
+	trafficStorage := traffic_useCases.NewFlowsStorage(trafficSearcher, repo, hostStorage)
 
 	return trafficSearcher, trafficBytesParser, trafficStorage
 }

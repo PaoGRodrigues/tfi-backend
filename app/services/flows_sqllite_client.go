@@ -180,3 +180,20 @@ func (client *SQLClient) addHost(host hosts_domains.Host) error {
 	}
 	return nil
 }
+
+func (client *SQLClient) GetHost(ip string) (hosts_domains.Host, error) {
+	host := hosts_domains.Host{}
+
+	rows, err := client.db.Query("SELECT * FROM hosts WHERE ip LIKE ? LIMIT 1", ip)
+	if err != nil {
+		return hosts_domains.Host{}, err
+	}
+	for rows.Next() {
+		err = rows.Scan(&host.Name, &host.ASname, &host.PrivateHost, &host.IP, &host.Mac, &host.City, &host.Country)
+		if err != nil {
+			return hosts_domains.Host{}, err
+		}
+	}
+
+	return host, nil
+}

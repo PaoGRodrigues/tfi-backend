@@ -8,14 +8,14 @@ import (
 type FlowsStorage struct {
 	trafficSearcher domains.TrafficUseCase
 	trafficRepo     domains.TrafficRepository
-	hostFilter      host_domains.HostsFilter
+	hostStorage     host_domains.HostsStorage
 }
 
-func NewFlowsStorage(trafSearcher domains.TrafficUseCase, trafRepo domains.TrafficRepository, hostFilter host_domains.HostsFilter) *FlowsStorage {
+func NewFlowsStorage(trafSearcher domains.TrafficUseCase, trafRepo domains.TrafficRepository, hostStorage host_domains.HostsStorage) *FlowsStorage {
 	return &FlowsStorage{
 		trafficSearcher: trafSearcher,
 		trafficRepo:     trafRepo,
-		hostFilter:      hostFilter,
+		hostStorage:     hostStorage,
 	}
 }
 
@@ -40,12 +40,9 @@ func (fs *FlowsStorage) StoreFlows() error {
 func (fs *FlowsStorage) enrichData(activeFlows []domains.ActiveFlow) ([]domains.ActiveFlow, error) {
 	newFlows := []domains.ActiveFlow{}
 	for _, flow := range activeFlows {
-		serv, err := fs.hostFilter.GetHost(flow.Server.IP)
+		serv, err := fs.hostStorage.GetHost(flow.Server.IP)
 		if err != nil {
-			serv, err = fs.hostFilter.GetHost(flow.Server.Name)
-			if err != nil {
-				return []domains.ActiveFlow{}, err
-			}
+			return []domains.ActiveFlow{}, err
 		}
 		flow.Server.Country = serv.Country
 		newFlows = append(newFlows, flow)

@@ -31,6 +31,7 @@ type HostBlocker interface {
 
 type HostsStorage interface {
 	StoreHosts() error
+	GetHost(string) (Host, error)
 }
 
 // *********** Services
@@ -45,4 +46,5 @@ type HostBlockerService interface {
 // *********** Repositories
 type HostsRepository interface {
 	StoreHosts([]Host) error
+	GetHost(string) (Host, error)
 }

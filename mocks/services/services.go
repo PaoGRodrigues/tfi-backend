@@ -250,6 +250,21 @@ func (mr *MockDatabaseMockRecorder) GetFlowByKey(key interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlowByKey", reflect.TypeOf((*MockDatabase)(nil).GetFlowByKey), key)
 }
 
+// GetHost mocks base method.
+func (m *MockDatabase) GetHost(arg0 string) (domains0.Host, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHost", arg0)
+	ret0, _ := ret[0].(domains0.Host)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetHost indicates an expected call of GetHost.
+func (mr *MockDatabaseMockRecorder) GetHost(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHost", reflect.TypeOf((*MockDatabase)(nil).GetHost), arg0)
+}
+
 // GetServerByAttr mocks base method.
 func (m *MockDatabase) GetServerByAttr(attr string) (domains1.Server, error) {
 	m.ctrl.T.Helper()
