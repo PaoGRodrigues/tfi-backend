@@ -162,6 +162,21 @@ func (client *SQLClient) GetFlowByKey(key string) (traffic_domains.ActiveFlow, e
 	return flow, nil
 }
 
-func (client *SQLClient) AddHosts([]hosts_domains.Host) error {
+func (client *SQLClient) AddHosts(hosts []hosts_domains.Host) error {
+	for _, host := range hosts {
+		err := client.addHost(host)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (client *SQLClient) addHost(host hosts_domains.Host) error {
+	_, err := client.db.Exec("INSERT INTO hosts VALUES(?,?,?,?,?,?,?);",
+		host.Name, host.ASname, host.PrivateHost, host.IP, host.Mac, host.City, host.Country)
+	if err != nil {
+		return err
+	}
 	return nil
 }

@@ -26,6 +26,7 @@ type Api struct {
 	HostBlocker        hosts.HostBlocker
 	NotifChannel       services.NotificationChannel
 	AlertsSender       alerts.AlertsSender
+	HostsStorage       hosts.HostsStorage
 	*gin.Engine
 }
 
@@ -255,4 +256,17 @@ func parseHostResponse(hosts []hosts.Host) []HostsResponse {
 		response = append(response, h)
 	}
 	return response
+}
+
+func (api *Api) StoreHosts(c *gin.Context) {
+	err := api.HostsStorage.StoreHosts()
+	if err != nil {
+		fmt.Println(err)
+		c.JSON(500, gin.H{"data": "error"})
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
+	c.Header("Access-Control-Allow-Methods", "POST")
+	c.JSON(http.StatusOK, gin.H{"message": "ok"})
 }
