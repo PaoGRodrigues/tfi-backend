@@ -148,7 +148,7 @@ func (client *SQLClient) GetServers() ([]traffic_domains.Server, error) {
 func (client *SQLClient) GetFlowByKey(key string) (traffic_domains.ActiveFlow, error) {
 	flow := traffic_domains.ActiveFlow{}
 
-	rows, err := client.db.Query("SELECT * FROM traffic WHERE key LIKE ? LIMIT 1", key)
+	rows, err := client.db.Query("SELECT key,first_seen,last_seen,bytes FROM traffic WHERE key LIKE ? LIMIT 1", key)
 	if err != nil {
 		return traffic_domains.ActiveFlow{}, err
 	}
@@ -173,7 +173,7 @@ func (client *SQLClient) AddHosts(hosts []hosts_domains.Host) error {
 }
 
 func (client *SQLClient) addHost(host hosts_domains.Host) error {
-	_, err := client.db.Exec("INSERT INTO hosts VALUES(?,?,?,?,?,?,?);",
+	_, err := client.db.Exec("INSERT INTO hosts(name,asname,privatehost,ip,mac,city,country) VALUES(?,?,?,?,?,?,?);",
 		host.Name, host.ASname, host.PrivateHost, host.IP, host.Mac, host.City, host.Country)
 	if err != nil {
 		return err
