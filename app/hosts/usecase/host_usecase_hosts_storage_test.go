@@ -1,6 +1,7 @@
 package usecase_test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
@@ -38,6 +39,39 @@ func TestStoreHostsSuccessfully(t *testing.T) {
 	err := hostsStorage.StoreHosts()
 
 	if err != nil {
+		t.Fail()
+	}
+}
+
+func TestStoreHostsGetAllHostsError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockHostsRepo := mocks.NewMockHostsRepository(ctrl)
+	mockHostsSearcher := mocks.NewMockHostUseCase(ctrl)
+	mockHostsSearcher.EXPECT().GetAllHosts().Return([]domains.Host{}, fmt.Errorf("Error test"))
+
+	hostsStorage := usecase.NewHostsStorage(mockHostsSearcher, mockHostsRepo)
+	err := hostsStorage.StoreHosts()
+
+	if err == nil {
+		t.Fail()
+	}
+}
+
+func TestStoreHostsGetsErrorWhenStore(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockHostsRepo := mocks.NewMockHostsRepository(ctrl)
+	mockHostsSearcher := mocks.NewMockHostUseCase(ctrl)
+	mockHostsSearcher.EXPECT().GetAllHosts().Return([]domains.Host{host1, host2}, nil)
+	mockHostsRepo.EXPECT().StoreHosts([]domains.Host{host1, host2}).Return(fmt.Errorf("Error test"))
+
+	hostsStorage := usecase.NewHostsStorage(mockHostsSearcher, mockHostsRepo)
+	err := hostsStorage.StoreHosts()
+
+	if err == nil {
 		t.Fail()
 	}
 }

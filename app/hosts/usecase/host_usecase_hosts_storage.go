@@ -20,9 +20,11 @@ func (hs *HostsStorage) StoreHosts() error {
 		return err
 	}
 
-	err = hs.hostRepo.StoreHosts(activeHosts)
-	if err != nil {
-		return err
+	if activeHosts != nil {
+		err = hs.hostRepo.StoreHosts(activeHosts)
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
