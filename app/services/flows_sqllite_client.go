@@ -184,7 +184,7 @@ func (client *SQLClient) addHost(host hosts_domains.Host) error {
 func (client *SQLClient) GetHost(ip string) (hosts_domains.Host, error) {
 	host := hosts_domains.Host{}
 
-	rows, err := client.db.Query("SELECT * FROM hosts WHERE ip LIKE ? LIMIT 1", ip)
+	rows, err := client.db.Query("SELECT name,asname,privatehost,ip,mac,city,country FROM hosts WHERE ip LIKE ? LIMIT 1", ip)
 	if err != nil {
 		return hosts_domains.Host{}, err
 	}
