@@ -29,7 +29,7 @@ func (client *SQLClient) AddActiveFlows(flows []traffic_domains.ActiveFlow) erro
 }
 
 func (client *SQLClient) addActiveFlow(currentFlow traffic_domains.ActiveFlow) (string, error) {
-	_, err := client.db.Exec("INSERT INTO traffic VALUES(?,?,?,?) ON CONFLICT(key) DO UPDATE SET bytes=?;",
+	_, err := client.db.Exec("INSERT INTO traffic(key,first_seen,last_seen,bytes) VALUES(?,?,?,?) ON CONFLICT(key) DO UPDATE SET bytes=?;",
 		currentFlow.Key, currentFlow.FirstSeen, currentFlow.LastSeen, currentFlow.Bytes, currentFlow.Bytes)
 	if err != nil {
 		return currentFlow.Key, err
@@ -61,6 +61,11 @@ func (client *SQLClient) insertClient(currentClient traffic_domains.Client, key 
 }
 
 func (client *SQLClient) insertServer(currentServer traffic_domains.Server, key string) error {
+
+	if currentServer.IsDHCP {
+		currentServer.Name = currentServer.IP
+	}
+
 	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?,?,?,?,?);",
 		key, currentServer.Name, currentServer.IP, currentServer.Port, currentServer.IsBroadcastDomain,
 		currentServer.IsDHCP, currentServer.Country)
