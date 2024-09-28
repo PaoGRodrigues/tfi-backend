@@ -19,10 +19,11 @@ type Response struct {
 
 func (t *NtopNG) EnableChecks() {
 	for _, check := range Checks {
-		rsp, _ := t.enableCheck(check)
+		rsp, err := t.enableCheck(check)
 		if !rsp.Rsp.Success {
-			log.Fatalf("Error enabling check %s", check.ScriptKey)
+			log.Fatalf("Error enabling check %s", err)
 		}
+		continue
 	}
 }
 

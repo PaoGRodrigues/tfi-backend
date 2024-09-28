@@ -1,8 +1,8 @@
 package services
 
 type Check struct {
-	Subdir    string
-	ScriptKey string
+	Subdir    string `json:"check_subdir"`
+	ScriptKey string `json:"script_key"`
 }
 
 var Checks = []Check{
@@ -26,18 +26,6 @@ var Checks = []Check{
 	{
 		Subdir:    "host",
 		ScriptKey: "dangerous_host",
-	},
-	{
-		Subdir:    "host",
-		ScriptKey: "",
-	},
-	{
-		Subdir:    "host",
-		ScriptKey: "",
-	},
-	{
-		Subdir:    "host",
-		ScriptKey: "",
 	},
 	{
 		Subdir:    "host",
@@ -198,10 +186,6 @@ var Checks = []Check{
 	{
 		Subdir:    "flow",
 		ScriptKey: "remote_to_remote",
-	},
-	{
-		Subdir:    "flow",
-		ScriptKey: "",
 	},
 	{
 		Subdir:    "flow",
