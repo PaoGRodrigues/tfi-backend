@@ -11,6 +11,7 @@ type Tool interface {
 	GetAllHosts() ([]hosts_domains.Host, error)
 	GetAllActiveTraffic() ([]traffic_domains.ActiveFlow, error)
 	GetAllAlerts(epoch_begin, epoch_end int) ([]alerts_domains.Alert, error)
+	EnableChecks()
 }
 
 type Terminal interface {
