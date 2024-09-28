@@ -45,6 +45,9 @@ func (fs *FlowsStorage) enrichData(activeFlows []domains.ActiveFlow) ([]domains.
 			return []domains.ActiveFlow{}, err
 		}
 		flow.Server.Country = serv.Country
+		if flow.Server.IsBroadcastDomain {
+			flow.Server.Name = flow.Server.IP
+		}
 		newFlows = append(newFlows, flow)
 	}
 	return newFlows, nil

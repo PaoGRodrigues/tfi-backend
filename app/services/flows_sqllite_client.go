@@ -61,11 +61,6 @@ func (client *SQLClient) insertClient(currentClient traffic_domains.Client, key 
 }
 
 func (client *SQLClient) insertServer(currentServer traffic_domains.Server, key string) error {
-
-	if currentServer.IsDHCP {
-		currentServer.Name = currentServer.IP
-	}
-
 	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?,?,?,?,?);",
 		key, currentServer.Name, currentServer.IP, currentServer.Port, currentServer.IsBroadcastDomain,
 		currentServer.IsDHCP, currentServer.Country)

@@ -41,6 +41,33 @@ var protocols = domains.Protocol{
 	L7: "TLS.GoogleServices",
 }
 
+var broadcastserver = domains.Server{
+	IP:                "1.1.1.1",
+	IsBroadcastDomain: true,
+	IsDHCP:            false,
+	Port:              443,
+	Name:              "SARASA",
+	Country:           "US",
+	Key:               "12344569",
+}
+
+var broadcastserverchanged = domains.Server{
+	IP:                "1.1.1.1",
+	IsBroadcastDomain: true,
+	IsDHCP:            false,
+	Port:              443,
+	Name:              "1.1.1.1",
+	Country:           "US",
+	Key:               "12344569",
+}
+var publichost = host_domains.Host{
+	Name:        "SARASA",
+	PrivateHost: false,
+	IP:          "1.1.1.1",
+	City:        "",
+	Country:     "US",
+}
+
 func TestStoreTrafficSuccessfullyGettingTrafficFromSearcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
@@ -167,6 +194,43 @@ func TestStoreTrafficWithErrorInEnrichData(t *testing.T) {
 	err := trafficStorage.StoreFlows()
 
 	if err == nil {
+		t.Fail()
+	}
+}
+
+func TestStoreBroadcastServerSuccessfully(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	got := []domains.ActiveFlow{
+		{
+			Client:   client,
+			Server:   broadcastserver,
+			Bytes:    1000,
+			Protocol: protocols,
+		},
+	}
+
+	expected := []domains.ActiveFlow{
+		{
+			Client:   client,
+			Server:   broadcastserverchanged,
+			Bytes:    1000,
+			Protocol: protocols,
+		},
+	}
+
+	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
+	mockSearcher.EXPECT().GetActiveFlows().Return(got)
+	mockHostsStorage := host_mocks.NewMockHostsStorage(ctrl)
+	mockHostsStorage.EXPECT().GetHost(broadcastserver.IP).Return(publichost, nil)
+	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockTrafficRepoStorage.EXPECT().StoreFlows(expected).Return(nil)
+
+	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostsStorage)
+	err := trafficStorage.StoreFlows()
+
+	if err != nil {
 		t.Fail()
 	}
 }
