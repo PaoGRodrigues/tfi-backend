@@ -173,7 +173,7 @@ func (client *SQLClient) AddHosts(hosts []hosts_domains.Host) error {
 }
 
 func (client *SQLClient) addHost(host hosts_domains.Host) error {
-	_, err := client.db.Exec("INSERT or IGNORE INTO hosts(name,asname,privatehost,ip,mac,city,country) VALUES(?,?,?,?,?,?,?);",
+	_, err := client.db.Exec("INSERT INTO hosts(name,asname,privatehost,ip,mac,city,country) VALUES(?,?,?,?,?,?,?);",
 		host.Name, host.ASname, host.PrivateHost, host.IP, host.Mac, host.City, host.Country)
 	if err != nil {
 		return err
