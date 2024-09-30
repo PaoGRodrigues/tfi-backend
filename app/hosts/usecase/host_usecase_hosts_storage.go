@@ -29,8 +29,8 @@ func (hs *HostsStorage) StoreHosts() error {
 	return nil
 }
 
-func (hs *HostsStorage) GetHost(ip string) (domains.Host, error) {
-	host, err := hs.hostRepo.GetHost(ip)
+func (hs *HostsStorage) GetHostByIp(ip string) (domains.Host, error) {
+	host, err := hs.hostRepo.GetHostByIp(ip)
 	if err != nil {
 		return domains.Host{}, err
 	}

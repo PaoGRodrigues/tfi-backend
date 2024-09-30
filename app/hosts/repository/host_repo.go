@@ -23,8 +23,8 @@ func (hr *HostsRepo) StoreHosts(hosts []domains.Host) error {
 	return nil
 }
 
-func (hr *HostsRepo) GetHost(ip string) (domains.Host, error) {
-	host, err := hr.Database.GetHost(ip)
+func (hr *HostsRepo) GetHostByIp(ip string) (domains.Host, error) {
+	host, err := hr.Database.GetHostByIp(ip)
 	if err != nil {
 		return domains.Host{}, err
 	}

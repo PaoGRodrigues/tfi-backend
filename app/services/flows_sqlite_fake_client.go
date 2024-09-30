@@ -44,6 +44,6 @@ func (client *FakeSQLClient) AddHosts([]hosts_domains.Host) error {
 	return nil
 }
 
-func (client *FakeSQLClient) GetHost(string) (hosts_domains.Host, error) {
+func (client *FakeSQLClient) GetHostByIp(string) (hosts_domains.Host, error) {
 	return hosts_domains.Host{}, nil
 }

@@ -38,7 +38,6 @@ type Protocol struct {
 type BytesPerDestination struct {
 	Bytes       int
 	Destination string
-	Country     string
 }
 type BytesPerCountry struct {
 	Bytes   int    `json:"bytes"`

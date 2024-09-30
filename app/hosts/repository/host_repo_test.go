@@ -62,10 +62,10 @@ func TestGetHostReturnHostSuccessfully(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDatabase := services_mocks.NewMockDatabase(ctrl)
-	mockDatabase.EXPECT().GetHost(host1.IP).Return(host1, nil)
+	mockDatabase.EXPECT().GetHostByIp(host1.IP).Return(host1, nil)
 
 	hostStorage := repository.NewHostsRepo(mockDatabase)
-	got, err := hostStorage.GetHost(host1.IP)
+	got, err := hostStorage.GetHostByIp(host1.IP)
 
 	if err != nil {
 		t.Fail()
@@ -79,10 +79,10 @@ func TestGetHostReturnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDatabase := services_mocks.NewMockDatabase(ctrl)
-	mockDatabase.EXPECT().GetHost(host1.IP).Return(domains.Host{}, fmt.Errorf("test Error"))
+	mockDatabase.EXPECT().GetHostByIp(host1.IP).Return(domains.Host{}, fmt.Errorf("test Error"))
 
 	hostStorage := repository.NewHostsRepo(mockDatabase)
-	_, err := hostStorage.GetHost(host1.IP)
+	_, err := hostStorage.GetHostByIp(host1.IP)
 
 	if err == nil {
 		t.Fail()

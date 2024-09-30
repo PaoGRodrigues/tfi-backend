@@ -192,19 +192,19 @@ func (m *MockHostsStorage) EXPECT() *MockHostsStorageMockRecorder {
 	return m.recorder
 }
 
-// GetHost mocks base method.
-func (m *MockHostsStorage) GetHost(arg0 string) (domains.Host, error) {
+// GetHostByIp mocks base method.
+func (m *MockHostsStorage) GetHostByIp(arg0 string) (domains.Host, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetHost", arg0)
+	ret := m.ctrl.Call(m, "GetHostByIp", arg0)
 	ret0, _ := ret[0].(domains.Host)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetHost indicates an expected call of GetHost.
-func (mr *MockHostsStorageMockRecorder) GetHost(arg0 interface{}) *gomock.Call {
+// GetHostByIp indicates an expected call of GetHostByIp.
+func (mr *MockHostsStorageMockRecorder) GetHostByIp(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHost", reflect.TypeOf((*MockHostsStorage)(nil).GetHost), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHostByIp", reflect.TypeOf((*MockHostsStorage)(nil).GetHostByIp), arg0)
 }
 
 // StoreHosts mocks base method.
@@ -319,19 +319,19 @@ func (m *MockHostsRepository) EXPECT() *MockHostsRepositoryMockRecorder {
 	return m.recorder
 }
 
-// GetHost mocks base method.
-func (m *MockHostsRepository) GetHost(arg0 string) (domains.Host, error) {
+// GetHostByIp mocks base method.
+func (m *MockHostsRepository) GetHostByIp(arg0 string) (domains.Host, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetHost", arg0)
+	ret := m.ctrl.Call(m, "GetHostByIp", arg0)
 	ret0, _ := ret[0].(domains.Host)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetHost indicates an expected call of GetHost.
-func (mr *MockHostsRepositoryMockRecorder) GetHost(arg0 interface{}) *gomock.Call {
+// GetHostByIp indicates an expected call of GetHostByIp.
+func (mr *MockHostsRepositoryMockRecorder) GetHostByIp(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHost", reflect.TypeOf((*MockHostsRepository)(nil).GetHost), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHostByIp", reflect.TypeOf((*MockHostsRepository)(nil).GetHostByIp), arg0)
 }
 
 // StoreHosts mocks base method.

@@ -52,7 +52,7 @@ func (client *SQLClient) addActiveFlow(currentFlow traffic_domains.ActiveFlow) (
 }
 
 func (client *SQLClient) insertClient(currentClient traffic_domains.Client, key string) error {
-	_, err := client.db.Exec("INSERT INTO clients VALUES(?,?,?,?);",
+	_, err := client.db.Exec("INSERT INTO clients(key,name,ip,port) VALUES(?,?,?,?);",
 		key, currentClient.Name, currentClient.IP, currentClient.Port)
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func (client *SQLClient) insertClient(currentClient traffic_domains.Client, key 
 }
 
 func (client *SQLClient) insertServer(currentServer traffic_domains.Server, key string) error {
-	_, err := client.db.Exec("INSERT INTO servers VALUES(?,?,?,?,?,?,?);",
+	_, err := client.db.Exec("INSERT INTO servers(key,name,ip,port,is_broadcast_domain,is_dhcp,country) VALUES(?,?,?,?,?,?,?);",
 		key, currentServer.Name, currentServer.IP, currentServer.Port, currentServer.IsBroadcastDomain,
 		currentServer.IsDHCP, currentServer.Country)
 	if err != nil {
@@ -71,7 +71,7 @@ func (client *SQLClient) insertServer(currentServer traffic_domains.Server, key 
 }
 
 func (client *SQLClient) insertProtocol(currentProto traffic_domains.Protocol, key string) error {
-	_, err := client.db.Exec("INSERT INTO protocols VALUES(?,?,?);",
+	_, err := client.db.Exec("INSERT INTO protocols(key,l4,l7) VALUES(?,?,?);",
 		key, currentProto.L4, currentProto.L7)
 	if err != nil {
 		return err
@@ -110,7 +110,7 @@ func (client *SQLClient) GetServerByAttr(attr string) (traffic_domains.Server, e
 func (client *SQLClient) GetClients() ([]traffic_domains.Client, error) {
 	clients := []traffic_domains.Client{}
 
-	rows, err := client.db.Query("SELECT * FROM clients GROUP BY ip")
+	rows, err := client.db.Query("SELECT key,name,ip,port FROM clients GROUP BY key")
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +129,7 @@ func (client *SQLClient) GetClients() ([]traffic_domains.Client, error) {
 func (client *SQLClient) GetServers() ([]traffic_domains.Server, error) {
 	servers := []traffic_domains.Server{}
 
-	rows, err := client.db.Query("SELECT * FROM servers GROUP BY ip")
+	rows, err := client.db.Query("SELECT * FROM servers GROUP BY key")
 	if err != nil {
 		return nil, err
 	}
@@ -148,7 +148,7 @@ func (client *SQLClient) GetServers() ([]traffic_domains.Server, error) {
 func (client *SQLClient) GetFlowByKey(key string) (traffic_domains.ActiveFlow, error) {
 	flow := traffic_domains.ActiveFlow{}
 
-	rows, err := client.db.Query("SELECT key,first_seen,last_seen,bytes FROM traffic WHERE key LIKE ? LIMIT 1", key)
+	rows, err := client.db.Query("SELECT key,first_seen,last_seen,bytes FROM traffic WHERE key LIKE ?", key)
 	if err != nil {
 		return traffic_domains.ActiveFlow{}, err
 	}
@@ -181,7 +181,7 @@ func (client *SQLClient) addHost(host hosts_domains.Host) error {
 	return nil
 }
 
-func (client *SQLClient) GetHost(ip string) (hosts_domains.Host, error) {
+func (client *SQLClient) GetHostByIp(ip string) (hosts_domains.Host, error) {
 	host := hosts_domains.Host{}
 
 	rows, err := client.db.Query("SELECT name,asname,privatehost,ip,mac,city,country FROM hosts WHERE ip LIKE ? LIMIT 1", ip)
