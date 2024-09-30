@@ -40,11 +40,11 @@ type AlertsResponse struct {
 }
 
 type HostsResponse struct {
-	Name        string `json:"Nombre"`
+	Name        string `json:"Nombre,omitempty"`
 	PrivateHost bool   `json:"Privado"`
 	IP          string `json:"IP"`
 	Mac         string `json:"MAC"`
-	ASname      string `json:"ASN"`
+	ASname      string `json:"ASname,omitempty"`
 }
 
 func (api *Api) GetHosts(c *gin.Context) {
@@ -247,11 +247,9 @@ func parseHostResponse(hosts []hosts.Host) []HostsResponse {
 
 	for _, host := range hosts {
 		h := HostsResponse{
-			Name:        host.Name,
 			PrivateHost: host.PrivateHost,
 			IP:          host.IP,
 			Mac:         host.Mac,
-			ASname:      host.ASname,
 		}
 		response = append(response, h)
 	}

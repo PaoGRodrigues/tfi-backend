@@ -41,11 +41,10 @@ CREATE TABLE IF NOT EXISTS protocols (
 );
 
 CREATE TABLE IF NOT EXISTS hosts (
-    key INTEGER PRIMARY KEY AUTOINCREMENT,
+    ip VARCHAR(48) PRIMARY KEY,
     name VARCHAR(48),
     asname VARCHAR(48),
     privatehost BOOLEAN,
-    ip VARCHAR(48),
     mac VARCHAR(48),
     city VARCHAR(48),
     country VARCHAR(48)

@@ -20,7 +20,6 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 		{
 			Bytes:       expectedFlowFromSearcher[0].Bytes,
 			Destination: expectedFlowFromSearcher[0].Server.Name,
-			Country:     expectedHosts[0].Country,
 		},
 	}
 
@@ -47,12 +46,10 @@ func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServer(t *tes
 		{
 			Bytes:       secondExpectedFlowFromSearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes,
 			Destination: secondExpectedFlowFromSearcher[0].Server.Name,
-			Country:     expectedHosts[0].Country,
 		},
 		{
 			Bytes:       expectedPerCountrySearcher[1].Bytes,
 			Destination: expectedPerCountrySearcher[1].Server.Name,
-			Country:     expectedHosts[2].Country,
 		},
 	}
 
@@ -114,7 +111,6 @@ func TestGetBytesPerDestReturnsTheSumOfBytesSuccessfully(t *testing.T) {
 		{
 			Bytes:       secondExpectedFlowFromSearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes,
 			Destination: secondExpectedFlowFromSearcher[0].Server.Name,
-			Country:     secondExpectedFlowFromSearcher[0].Server.Country,
 		},
 	}
 
@@ -139,12 +135,12 @@ func TestGetBytesPerCountryReturnBytesSuccessfully(t *testing.T) {
 
 	expected := []domains.BytesPerCountry{
 		{
-			Bytes:   expectedPerCountrySearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes,
 			Country: "US",
+			Bytes:   expectedPerCountrySearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes,
 		},
 		{
-			Bytes:   expectedPerCountrySearcher[1].Bytes,
 			Country: "RU",
+			Bytes:   expectedPerCountrySearcher[1].Bytes,
 		},
 	}
 
@@ -206,17 +202,14 @@ func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndASer
 		{
 			Bytes:       secondExpectedFlowFromSearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes,
 			Destination: secondExpectedFlowFromSearcher[0].Server.Name,
-			Country:     expectedHosts[0].Country,
 		},
 		{
 			Bytes:       expectedPerCountrySearcher[1].Bytes,
 			Destination: expectedPerCountrySearcher[1].Server.Name,
-			Country:     expectedHosts[2].Country,
 		},
 		{
 			Bytes:       expectedFlowFromSearcherWithoutName[0].Bytes,
 			Destination: expectedFlowFromSearcherWithoutName[0].Server.IP,
-			Country:     expectedHosts[3].Country,
 		},
 	}
 
@@ -244,13 +237,13 @@ func TestGetBytesPerCountryReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndA
 
 	expected := []domains.BytesPerCountry{
 		{
+			Country: "US",
 			Bytes: secondExpectedFlowFromSearcher[0].Bytes + secondExpectedFlowFromSearcher[1].Bytes +
 				expectedFlowFromSearcherWithoutName[0].Bytes,
-			Country: "US",
 		},
 		{
-			Bytes:   expectedPerCountrySearcher[1].Bytes,
 			Country: "RU",
+			Bytes:   expectedPerCountrySearcher[1].Bytes,
 		},
 	}
 

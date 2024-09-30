@@ -66,7 +66,6 @@ func parsePerDest(flows []domains.ActiveFlow) []domains.BytesPerDestination {
 		bpd := domains.BytesPerDestination{
 			Bytes:       flow.Bytes,
 			Destination: serverName,
-			Country:     flow.Server.Country,
 		}
 		bytesDst = append(bytesDst, bpd)
 	}
@@ -81,14 +80,9 @@ func sumBytes(bpd []domains.BytesPerDestination) []domains.BytesPerDestination {
 
 	newBpd := []domains.BytesPerDestination{}
 	for dest, bytes := range m {
-		new := domains.BytesPerDestination{}
-		new.Destination = dest
-		new.Bytes = bytes
-		for _, b := range bpd {
-			if b.Destination == dest {
-				new.Country = b.Country
-				break
-			}
+		new := domains.BytesPerDestination{
+			Destination: dest,
+			Bytes:       bytes,
 		}
 		newBpd = append(newBpd, new)
 	}
