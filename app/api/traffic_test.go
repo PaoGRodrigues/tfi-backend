@@ -108,7 +108,7 @@ func TestCreateTrafficActiveFlowsAndGetBytesPerDest(t *testing.T) {
 		},
 	}
 
-	mockActiveFlowsSearcher := mocks.NewMockTrafficActiveFlowsSearcher(ctrl)
+	mockActiveFlowsSearcher := mocks.NewMockTrafficBytesParser(ctrl)
 	mockActiveFlowsSearcher.EXPECT().GetBytesPerDestination().Return(expected, nil)
 
 	api := &api.Api{
@@ -134,7 +134,7 @@ func TestCreateTrafficActiveFlowsPerDestAndGetAnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockActiveFlowsSearcher := mocks.NewMockTrafficActiveFlowsSearcher(ctrl)
+	mockActiveFlowsSearcher := mocks.NewMockTrafficBytesParser(ctrl)
 	mockActiveFlowsSearcher.EXPECT().GetBytesPerDestination().Return(nil, fmt.Errorf("Testing error case"))
 
 	api := &api.Api{
@@ -167,7 +167,7 @@ func TestGetBytesPerCountryAndReturn200(t *testing.T) {
 		},
 	}
 
-	mockActiveFlowsSearcher := mocks.NewMockTrafficActiveFlowsSearcher(ctrl)
+	mockActiveFlowsSearcher := mocks.NewMockTrafficBytesParser(ctrl)
 	mockActiveFlowsSearcher.EXPECT().GetBytesPerCountry().Return(expected, nil)
 
 	api := &api.Api{
@@ -192,7 +192,7 @@ func TestGetBytesPerCountryReturnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockActiveFlowsSearcher := mocks.NewMockTrafficActiveFlowsSearcher(ctrl)
+	mockActiveFlowsSearcher := mocks.NewMockTrafficBytesParser(ctrl)
 	mockActiveFlowsSearcher.EXPECT().GetBytesPerCountry().Return(nil, fmt.Errorf("Testing error case"))
 
 	api := &api.Api{

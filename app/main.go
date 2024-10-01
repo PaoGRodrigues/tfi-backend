@@ -8,6 +8,7 @@ import (
 	alerts_useCases "github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	hosts_repository "github.com/PaoGRodrigues/tfi-backend/app/hosts/repository"
 	hosts_useCases "github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
@@ -30,6 +31,7 @@ func main() {
 	var hostUseCase hosts_domains.HostUseCase
 	var hostsFilter hosts_domains.HostsFilter
 	var hostBlocker hosts_domains.HostBlocker
+	var hostsStorage hosts_domains.HostsStorage
 
 	var trafficSearcher traffic_domains.TrafficUseCase
 	var trafficBytesParser traffic_domains.TrafficBytesParser
@@ -40,6 +42,7 @@ func main() {
 	// ********************************
 	// *********** Repository ***********
 	var trafficRepo traffic_domains.TrafficRepository
+	var hostRepo hosts_domains.HostsRepository
 	// *******************************
 
 	// *********** Flags *************
@@ -79,10 +82,11 @@ func main() {
 	}
 
 	// *********** Repo & Usecases ***********
-	hostUseCase, hostsFilter = initializeHostDependencies(tool)
+	hostRepo = initializeHostRepository(database)
+	hostUseCase, hostsFilter, hostsStorage = initializeHostDependencies(tool, hostRepo)
 
 	trafficRepo = initializeTrafficRepository(database)
-	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostsFilter)
+	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostsStorage)
 
 	hostBlocker = initializeHostBlockerUseCase(console, trafficRepo)
 
@@ -95,6 +99,7 @@ func main() {
 		HostUseCase:        hostUseCase,
 		HostsFilter:        hostsFilter,
 		HostBlocker:        hostBlocker,
+		HostsStorage:       hostsStorage,
 		TrafficSearcher:    trafficSearcher,
 		TrafficBytesParser: trafficBytesParser,
 		ActiveFlowsStorage: trafficStorage,
@@ -115,20 +120,27 @@ func main() {
 	api.MapNotificationsURL()
 	api.MapConfigureNotifChannelURL()
 	api.MapGetActiveFlowsPerCountryURL()
+	api.MapStoreHostsURL()
 
 	api.Run(":8080")
 }
 
 // *********** Hosts ***********
-func initializeHostDependencies(tool services.Tool) (hosts_domains.HostUseCase, hosts_domains.HostsFilter) {
+func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (hosts_domains.HostUseCase, hosts_domains.HostsFilter, hosts_domains.HostsStorage) {
 	hostSearcher := hosts_useCases.NewHostSearcher(tool)
 	hostsFilter := hosts_useCases.NewHostsFilter(hostSearcher)
-	return hostSearcher, hostsFilter
+	hostStorage := hosts_useCases.NewHostsStorage(hostSearcher, hostRepo)
+	return hostSearcher, hostsFilter, hostStorage
 }
 
 func initializeHostBlockerUseCase(console services.Terminal, filter traffic_domains.TrafficRepository) hosts_domains.HostBlocker {
 	hostBlocker := hosts_useCases.NewBlocker(console, filter)
 	return hostBlocker
+}
+
+func initializeHostRepository(db services.Database) hosts_domains.HostsRepository {
+	hostRepo := hosts_repository.NewHostsRepo(db)
+	return hostRepo
 }
 
 // *****************************
@@ -139,12 +151,12 @@ func initializeTrafficRepository(db services.Database) traffic_domains.TrafficRe
 	return trafficRepo
 }
 
-func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficRepository, hostFilter hosts_domains.HostsFilter) (traffic_domains.TrafficUseCase,
+func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficRepository, hostStorage hosts_domains.HostsStorage) (traffic_domains.TrafficUseCase,
 	traffic_domains.TrafficBytesParser, traffic_domains.TrafficStorage) {
 
 	trafficSearcher := traffic_useCases.NewTrafficSearcher(tool)
 	trafficBytesParser := traffic_useCases.NewBytesParser(repo)
-	trafficStorage := traffic_useCases.NewFlowsStorage(trafficSearcher, repo, hostFilter)
+	trafficStorage := traffic_useCases.NewFlowsStorage(trafficSearcher, repo, hostStorage)
 
 	return trafficSearcher, trafficBytesParser, trafficStorage
 }

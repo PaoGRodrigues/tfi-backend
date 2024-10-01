@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/alerts"
 	"github.com/golang/mock/gomock"
@@ -17,11 +18,11 @@ func TestSendMessageSuccessfully(t *testing.T) {
 
 	now := time.Now()
 	epoch_end := int(now.Unix())
-	epoch_begin := epoch_end - 60
+	epoch_begin := epoch_end - 300
 
 	mockService := mocks.NewMockNotifier(ctrl)
 	mockSearcher := mocks.NewMockAlertUseCase(ctrl)
-	mockSearcher.EXPECT().GetAllAlertsByTime(epoch_begin, epoch_end).Return(expected, nil)
+	mockSearcher.EXPECT().GetAllAlertsByTime(epoch_begin, epoch_end).Return([]domains.Alert{expected[0], expected[1]}, nil)
 	alerts := usecase.ParseAlerts(expected)
 	mockService.EXPECT().SendMessage(alerts[0]).Return(nil)
 	mockService.EXPECT().SendMessage(alerts[1]).Return(nil)
@@ -39,7 +40,7 @@ func TestSendMessageReturnErrorWhenCallGetAllAlertsByTime(t *testing.T) {
 
 	now := time.Now()
 	epoch_end := int(now.Unix())
-	epoch_begin := epoch_end - 60
+	epoch_begin := epoch_end - 300
 
 	mockService := mocks.NewMockNotifier(ctrl)
 	mockSearcher := mocks.NewMockAlertUseCase(ctrl)
@@ -58,11 +59,11 @@ func TestSendMessageReturnErrorSendingAMessageButContinueAnyway(t *testing.T) {
 
 	now := time.Now()
 	epoch_end := int(now.Unix())
-	epoch_begin := epoch_end - 60
+	epoch_begin := epoch_end - 300
 
 	mockService := mocks.NewMockNotifier(ctrl)
 	mockSearcher := mocks.NewMockAlertUseCase(ctrl)
-	mockSearcher.EXPECT().GetAllAlertsByTime(epoch_begin, epoch_end).Return(expected, nil)
+	mockSearcher.EXPECT().GetAllAlertsByTime(epoch_begin, epoch_end).Return([]domains.Alert{expected[0], expected[1]}, nil)
 	alerts := usecase.ParseAlerts(expected)
 	mockService.EXPECT().SendMessage(alerts[0]).Return(fmt.Errorf("test error"))
 	mockService.EXPECT().SendMessage(alerts[1]).Return(nil)

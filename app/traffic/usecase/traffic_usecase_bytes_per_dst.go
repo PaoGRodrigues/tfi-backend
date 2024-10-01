@@ -66,7 +66,6 @@ func parsePerDest(flows []domains.ActiveFlow) []domains.BytesPerDestination {
 		bpd := domains.BytesPerDestination{
 			Bytes:       flow.Bytes,
 			Destination: serverName,
-			Country:     flow.Server.Country,
 		}
 		bytesDst = append(bytesDst, bpd)
 	}
@@ -81,14 +80,9 @@ func sumBytes(bpd []domains.BytesPerDestination) []domains.BytesPerDestination {
 
 	newBpd := []domains.BytesPerDestination{}
 	for dest, bytes := range m {
-		new := domains.BytesPerDestination{}
-		new.Destination = dest
-		new.Bytes = bytes
-		for _, b := range bpd {
-			if b.Destination == dest {
-				new.Country = b.Country
-				break
-			}
+		new := domains.BytesPerDestination{
+			Destination: dest,
+			Bytes:       bytes,
 		}
 		newBpd = append(newBpd, new)
 	}
@@ -115,23 +109,39 @@ func (parser *BytesAggregatorParser) GetBytesPerCountry() ([]domains.BytesPerCou
 		flows = append(flows, flow)
 	}
 
-	bytesCountry := sumCountries(flows)
+	parsedBytesCountry := parsePerCountry(flows)
+	bytesCountry := sumCountries(parsedBytesCountry)
 	return bytesCountry, nil
 }
 
-func sumCountries(flow []domains.ActiveFlow) []domains.BytesPerCountry {
+func sumCountries(bpc []domains.BytesPerCountry) []domains.BytesPerCountry {
 	m := map[string]int{}
-	for _, v := range flow {
-		m[v.Server.Country] += v.Bytes
+	for _, v := range bpc {
+		m[v.Country] += v.Bytes
 	}
 
 	bsCountry := []domains.BytesPerCountry{}
-	for k, v := range m {
+	for country, bytes := range m {
 		bpc := domains.BytesPerCountry{
-			Country: k,
-			Bytes:   v,
+			Country: country,
+			Bytes:   bytes,
 		}
 		bsCountry = append(bsCountry, bpc)
 	}
 	return bsCountry
+}
+
+func parsePerCountry(flows []domains.ActiveFlow) []domains.BytesPerCountry {
+
+	bytesCn := []domains.BytesPerCountry{}
+
+	for _, flow := range flows {
+		bpc := domains.BytesPerCountry{
+			Bytes:   flow.Bytes,
+			Country: flow.Server.Country,
+		}
+		bytesCn = append(bytesCn, bpc)
+	}
+
+	return bytesCn
 }

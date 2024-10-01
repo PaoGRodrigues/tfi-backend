@@ -8,37 +8,36 @@ type ActiveFlow struct {
 	Client    Client
 	Server    Server
 	Bytes     int
-	Protocol  Protocol
+	Protocol  Protocol `json:",omitempty"`
 }
 
 type Client struct {
-	Key  string
-	Name string
+	Key  string `json:",omitempty"`
+	Name string `json:",omitempty"`
 	Port int
 	IP   string
 }
 
 type Server struct {
-	Key               string
+	Key               string `json:",omitempty"`
 	IP                string
-	IsBroadcastDomain bool
-	IsDHCP            bool
+	IsBroadcastDomain bool `json:",omitempty"`
+	IsDHCP            bool `json:",omitempty"`
 	Port              int
-	Name              string
-	Country           string
+	Name              string `json:",omitempty"`
+	Country           string `json:",omitempty"`
 }
 
 type Protocol struct {
-	Key   string
-	L4    string
-	L7    string
-	Label string
+	Key   string `json:",omitempty"`
+	L4    string `json:",omitempty"`
+	L7    string `json:",omitempty"`
+	Label string `json:",omitempty"`
 }
 
 type BytesPerDestination struct {
 	Bytes       int
 	Destination string
-	Country     string
 }
 type BytesPerCountry struct {
 	Bytes   int    `json:"bytes"`

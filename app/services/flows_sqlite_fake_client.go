@@ -1,6 +1,9 @@
 package services
 
-import "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+import (
+	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+)
 
 type FakeSQLClient struct {
 }
@@ -9,30 +12,38 @@ func NewFakeSQLClient() *FakeSQLClient {
 	return &FakeSQLClient{}
 }
 
-func (client *FakeSQLClient) AddActiveFlows(flows []domains.ActiveFlow) error {
+func (client *FakeSQLClient) AddActiveFlows(flows []traffic_domains.ActiveFlow) error {
 	return nil
 }
 
-func (client *FakeSQLClient) GetServerByAttr(attr string) (domains.Server, error) {
+func (client *FakeSQLClient) GetServerByAttr(attr string) (traffic_domains.Server, error) {
 
-	server := domains.Server{}
+	server := traffic_domains.Server{}
 	return server, nil
 }
 
-func (client *FakeSQLClient) GetClients() ([]domains.Client, error) {
+func (client *FakeSQLClient) GetClients() ([]traffic_domains.Client, error) {
 
-	clients := []domains.Client{}
+	clients := []traffic_domains.Client{}
 	return clients, nil
 }
 
-func (client *FakeSQLClient) GetServers() ([]domains.Server, error) {
+func (client *FakeSQLClient) GetServers() ([]traffic_domains.Server, error) {
 
-	servers := []domains.Server{}
+	servers := []traffic_domains.Server{}
 	return servers, nil
 }
 
-func (client *FakeSQLClient) GetFlowByKey(key string) (domains.ActiveFlow, error) {
+func (client *FakeSQLClient) GetFlowByKey(key string) (traffic_domains.ActiveFlow, error) {
 
-	flow := domains.ActiveFlow{}
+	flow := traffic_domains.ActiveFlow{}
 	return flow, nil
+}
+
+func (client *FakeSQLClient) AddHosts([]hosts_domains.Host) error {
+	return nil
+}
+
+func (client *FakeSQLClient) GetHostByIp(string) (hosts_domains.Host, error) {
+	return hosts_domains.Host{}, nil
 }

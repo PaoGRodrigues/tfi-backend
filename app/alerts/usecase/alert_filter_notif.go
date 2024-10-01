@@ -9,7 +9,7 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 )
 
-const seconds = 60
+const seconds = 300
 const cybersecurity = "Cybersecurity"
 
 type AlertNotifier struct {

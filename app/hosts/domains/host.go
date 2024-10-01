@@ -4,7 +4,7 @@ package domains
 // Host connected to the network
 type Host struct {
 	Name        string
-	ASname      string `json:"ASname"`
+	ASname      string `json:"ASname,omitempty"`
 	PrivateHost bool
 	IP          string
 	Mac         string
@@ -29,6 +29,11 @@ type HostBlocker interface {
 	Block(string) (Host, error)
 }
 
+type HostsStorage interface {
+	StoreHosts() error
+	GetHostByIp(string) (Host, error)
+}
+
 // *********** Services
 type HostService interface {
 	GetAllHosts() ([]Host, error)
@@ -36,4 +41,10 @@ type HostService interface {
 
 type HostBlockerService interface {
 	BlockHost(Host) error
+}
+
+// *********** Repositories
+type HostsRepository interface {
+	StoreHosts([]Host) error
+	GetHostByIp(string) (Host, error)
 }

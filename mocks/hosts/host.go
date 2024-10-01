@@ -169,6 +169,58 @@ func (mr *MockHostBlockerMockRecorder) Block(arg0 interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Block", reflect.TypeOf((*MockHostBlocker)(nil).Block), arg0)
 }
 
+// MockHostsStorage is a mock of HostsStorage interface.
+type MockHostsStorage struct {
+	ctrl     *gomock.Controller
+	recorder *MockHostsStorageMockRecorder
+}
+
+// MockHostsStorageMockRecorder is the mock recorder for MockHostsStorage.
+type MockHostsStorageMockRecorder struct {
+	mock *MockHostsStorage
+}
+
+// NewMockHostsStorage creates a new mock instance.
+func NewMockHostsStorage(ctrl *gomock.Controller) *MockHostsStorage {
+	mock := &MockHostsStorage{ctrl: ctrl}
+	mock.recorder = &MockHostsStorageMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockHostsStorage) EXPECT() *MockHostsStorageMockRecorder {
+	return m.recorder
+}
+
+// GetHostByIp mocks base method.
+func (m *MockHostsStorage) GetHostByIp(arg0 string) (domains.Host, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHostByIp", arg0)
+	ret0, _ := ret[0].(domains.Host)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetHostByIp indicates an expected call of GetHostByIp.
+func (mr *MockHostsStorageMockRecorder) GetHostByIp(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHostByIp", reflect.TypeOf((*MockHostsStorage)(nil).GetHostByIp), arg0)
+}
+
+// StoreHosts mocks base method.
+func (m *MockHostsStorage) StoreHosts() error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StoreHosts")
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// StoreHosts indicates an expected call of StoreHosts.
+func (mr *MockHostsStorageMockRecorder) StoreHosts() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreHosts", reflect.TypeOf((*MockHostsStorage)(nil).StoreHosts))
+}
+
 // MockHostService is a mock of HostService interface.
 type MockHostService struct {
 	ctrl     *gomock.Controller
@@ -242,4 +294,56 @@ func (m *MockHostBlockerService) BlockHost(arg0 domains.Host) error {
 func (mr *MockHostBlockerServiceMockRecorder) BlockHost(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockHost", reflect.TypeOf((*MockHostBlockerService)(nil).BlockHost), arg0)
+}
+
+// MockHostsRepository is a mock of HostsRepository interface.
+type MockHostsRepository struct {
+	ctrl     *gomock.Controller
+	recorder *MockHostsRepositoryMockRecorder
+}
+
+// MockHostsRepositoryMockRecorder is the mock recorder for MockHostsRepository.
+type MockHostsRepositoryMockRecorder struct {
+	mock *MockHostsRepository
+}
+
+// NewMockHostsRepository creates a new mock instance.
+func NewMockHostsRepository(ctrl *gomock.Controller) *MockHostsRepository {
+	mock := &MockHostsRepository{ctrl: ctrl}
+	mock.recorder = &MockHostsRepositoryMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockHostsRepository) EXPECT() *MockHostsRepositoryMockRecorder {
+	return m.recorder
+}
+
+// GetHostByIp mocks base method.
+func (m *MockHostsRepository) GetHostByIp(arg0 string) (domains.Host, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHostByIp", arg0)
+	ret0, _ := ret[0].(domains.Host)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetHostByIp indicates an expected call of GetHostByIp.
+func (mr *MockHostsRepositoryMockRecorder) GetHostByIp(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHostByIp", reflect.TypeOf((*MockHostsRepository)(nil).GetHostByIp), arg0)
+}
+
+// StoreHosts mocks base method.
+func (m *MockHostsRepository) StoreHosts(arg0 []domains.Host) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StoreHosts", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// StoreHosts indicates an expected call of StoreHosts.
+func (mr *MockHostsRepositoryMockRecorder) StoreHosts(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreHosts", reflect.TypeOf((*MockHostsRepository)(nil).StoreHosts), arg0)
 }

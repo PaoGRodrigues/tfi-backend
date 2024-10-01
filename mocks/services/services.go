@@ -206,6 +206,20 @@ func (mr *MockDatabaseMockRecorder) AddActiveFlows(arg0 interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddActiveFlows", reflect.TypeOf((*MockDatabase)(nil).AddActiveFlows), arg0)
 }
 
+// AddHosts mocks base method.
+func (m *MockDatabase) AddHosts(arg0 []domains0.Host) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AddHosts", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// AddHosts indicates an expected call of AddHosts.
+func (mr *MockDatabaseMockRecorder) AddHosts(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddHosts", reflect.TypeOf((*MockDatabase)(nil).AddHosts), arg0)
+}
+
 // GetClients mocks base method.
 func (m *MockDatabase) GetClients() ([]domains1.Client, error) {
 	m.ctrl.T.Helper()
@@ -234,6 +248,21 @@ func (m *MockDatabase) GetFlowByKey(key string) (domains1.ActiveFlow, error) {
 func (mr *MockDatabaseMockRecorder) GetFlowByKey(key interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetFlowByKey", reflect.TypeOf((*MockDatabase)(nil).GetFlowByKey), key)
+}
+
+// GetHostByIp mocks base method.
+func (m *MockDatabase) GetHostByIp(arg0 string) (domains0.Host, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetHostByIp", arg0)
+	ret0, _ := ret[0].(domains0.Host)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetHostByIp indicates an expected call of GetHostByIp.
+func (mr *MockDatabaseMockRecorder) GetHostByIp(arg0 interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHostByIp", reflect.TypeOf((*MockDatabase)(nil).GetHostByIp), arg0)
 }
 
 // GetServerByAttr mocks base method.
