@@ -64,6 +64,18 @@ var Checks = []Check{
 		ScriptKey: "icmp_flood",
 	},
 	{
+		Subdir:    "host",
+		ScriptKey: "external_host_script",
+	},
+	{
+		Subdir:    "host",
+		ScriptKey: "remote_connection",
+	},
+	{
+		Subdir:    "host",
+		ScriptKey: "custom_host_lua_script",
+	},
+	{
 		Subdir:    "network",
 		ScriptKey: "ip_reassignment",
 	},
@@ -82,6 +94,10 @@ var Checks = []Check{
 	{
 		Subdir:    "network",
 		ScriptKey: "network_discovery",
+	},
+	{
+		Subdir:    "network",
+		ScriptKey: "network_issues",
 	},
 	{
 		Subdir:    "network",
@@ -386,5 +402,9 @@ var Checks = []Check{
 	{
 		Subdir:    "flow",
 		ScriptKey: "ndpi_fully_encrypted",
+	},
+	{
+		Subdir:    "system",
+		ScriptKey: "ids_ips_log",
 	},
 }

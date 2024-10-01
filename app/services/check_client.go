@@ -19,16 +19,6 @@ type Response struct {
 	Success bool
 }
 
-/*
-for _, check := range Checks {
-		rsp, err := t.enableCheck(check)
-		if !rsp.Rsp.Success {
-			log.Fatalf("Error enabling check %s", check)
-		}
-		continue
-	}
-*/
-
 func (t *NtopNG) EnableChecks() {
 	checksChannel := make(chan Check)
 
@@ -57,7 +47,7 @@ func (t *NtopNG) EnableChecks() {
 	}
 
 	// WaitGroup is used for synchronous closing of the results channel when all work is done
-	numWorkers := 6
+	numWorkers := 5
 	wg := &sync.WaitGroup{}
 	wg.Add(numWorkers)
 	for i := 0; i < numWorkers; i++ {
