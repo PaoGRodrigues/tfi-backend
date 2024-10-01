@@ -47,7 +47,7 @@ func (t *NtopNG) EnableChecks() {
 	}
 
 	// WaitGroup is used for synchronous closing of the results channel when all work is done
-	numWorkers := 2
+	numWorkers := 5
 	wg := &sync.WaitGroup{}
 	wg.Add(numWorkers)
 	for i := 0; i < numWorkers; i++ {
