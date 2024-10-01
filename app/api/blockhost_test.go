@@ -31,7 +31,7 @@ func TestBlockHostByIPReturn200(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockBlocker := mocks.NewMockHostBlocker(ctrl)
-	mockBlocker.EXPECT().Block(Host.IP).Return(Host, nil)
+	mockBlocker.EXPECT().Block(Host.IP).Return(&Host.IP, nil)
 
 	api := &api.Api{
 		HostBlocker: mockBlocker,
@@ -62,7 +62,7 @@ func TestBlockHostURLReturn200(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockBlocker := mocks.NewMockHostBlocker(ctrl)
-	mockBlocker.EXPECT().Block(Host.Name).Return(Host, nil)
+	mockBlocker.EXPECT().Block(Host.Name).Return(&Host.Name, nil)
 
 	api := &api.Api{
 		HostBlocker: mockBlocker,
@@ -120,7 +120,7 @@ func TestBlockHostFunctionReturningErrorReturn400(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockBlocker := mocks.NewMockHostBlocker(ctrl)
-	mockBlocker.EXPECT().Block(Host.Name).Return(domains.Host{}, fmt.Errorf("Test error"))
+	mockBlocker.EXPECT().Block(Host.Name).Return(nil, fmt.Errorf("Test error"))
 
 	api := &api.Api{
 		HostBlocker: mockBlocker,
@@ -177,7 +177,7 @@ func TestBlockHostFunctionReturningErrorReturn400WhenIPNotExist(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockBlocker := mocks.NewMockHostBlocker(ctrl)
-	mockBlocker.EXPECT().Block(Host.IP).Return(domains.Host{}, nil)
+	mockBlocker.EXPECT().Block(Host.IP).Return(nil, nil)
 
 	api := &api.Api{
 		HostBlocker: mockBlocker,

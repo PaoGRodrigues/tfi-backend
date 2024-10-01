@@ -155,10 +155,10 @@ func (m *MockHostBlocker) EXPECT() *MockHostBlockerMockRecorder {
 }
 
 // Block mocks base method.
-func (m *MockHostBlocker) Block(arg0 string) (domains.Host, error) {
+func (m *MockHostBlocker) Block(arg0 string) (*string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Block", arg0)
-	ret0, _ := ret[0].(domains.Host)
+	ret0, _ := ret[0].(*string)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -283,7 +283,7 @@ func (m *MockHostBlockerService) EXPECT() *MockHostBlockerServiceMockRecorder {
 }
 
 // BlockHost mocks base method.
-func (m *MockHostBlockerService) BlockHost(arg0 domains.Host) error {
+func (m *MockHostBlockerService) BlockHost(arg0 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BlockHost", arg0)
 	ret0, _ := ret[0].(error)

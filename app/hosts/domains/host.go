@@ -26,7 +26,7 @@ type HostsFilter interface {
 }
 
 type HostBlocker interface {
-	Block(string) (Host, error)
+	Block(string) (*string, error)
 }
 
 type HostsStorage interface {
@@ -40,7 +40,7 @@ type HostService interface {
 }
 
 type HostBlockerService interface {
-	BlockHost(Host) error
+	BlockHost(string) error
 }
 
 // *********** Repositories

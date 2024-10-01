@@ -90,7 +90,7 @@ func main() {
 	trafficRepo = initializeTrafficRepository(database)
 	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostsStorage)
 
-	hostBlocker = initializeHostBlockerUseCase(console, trafficRepo)
+	hostBlocker = initializeHostBlockerUseCase(console)
 
 	alertsSearcher = initializeAlertsDependencies(tool)
 	alertSender = initializeAlertSender(channel, alertsSearcher)
@@ -135,8 +135,8 @@ func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.Hosts
 	return hostSearcher, hostsFilter, hostStorage
 }
 
-func initializeHostBlockerUseCase(console services.Terminal, filter traffic_domains.TrafficRepository) hosts_domains.HostBlocker {
-	hostBlocker := hosts_useCases.NewBlocker(console, filter)
+func initializeHostBlockerUseCase(console services.Terminal) hosts_domains.HostBlocker {
+	hostBlocker := hosts_useCases.NewBlocker(console)
 	return hostBlocker
 }
 
