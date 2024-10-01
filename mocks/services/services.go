@@ -36,6 +36,18 @@ func (m *MockTool) EXPECT() *MockToolMockRecorder {
 	return m.recorder
 }
 
+// EnableChecks mocks base method.
+func (m *MockTool) EnableChecks() {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "EnableChecks")
+}
+
+// EnableChecks indicates an expected call of EnableChecks.
+func (mr *MockToolMockRecorder) EnableChecks() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnableChecks", reflect.TypeOf((*MockTool)(nil).EnableChecks))
+}
+
 // GetAllActiveTraffic mocks base method.
 func (m *MockTool) GetAllActiveTraffic() ([]domains1.ActiveFlow, error) {
 	m.ctrl.T.Helper()
@@ -105,7 +117,7 @@ func (m *MockTerminal) EXPECT() *MockTerminalMockRecorder {
 }
 
 // BlockHost mocks base method.
-func (m *MockTerminal) BlockHost(arg0 domains0.Host) error {
+func (m *MockTerminal) BlockHost(arg0 string) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "BlockHost", arg0)
 	ret0, _ := ret[0].(error)

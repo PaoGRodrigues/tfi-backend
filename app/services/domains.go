@@ -2,7 +2,6 @@ package services
 
 import (
 	alerts_domains "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
@@ -15,7 +14,7 @@ type Tool interface {
 }
 
 type Terminal interface {
-	BlockHost(domains.Host) error
+	BlockHost(string) error
 }
 
 type NotificationChannel interface {

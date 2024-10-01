@@ -181,7 +181,8 @@ func (api *Api) BlockHost(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
-	if (hosts.Host{} == blockedHost) {
+
+	if blockedHost == nil {
 		c.JSON(400, gin.H{"data": "Host not found"})
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
@@ -189,7 +190,7 @@ func (api *Api) BlockHost(c *gin.Context) {
 
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "POST")
-	c.JSON(http.StatusOK, gin.H{"message": "Host has been blocked"})
+	c.JSON(http.StatusOK, gin.H{"message": "Host " + host.Host + "has been blocked"})
 }
 
 func (api *Api) SendAlertNotification(c *gin.Context) {

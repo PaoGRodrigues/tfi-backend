@@ -1,7 +1,6 @@
 package services
 
 import (
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
 	"github.com/coreos/go-iptables/iptables"
 )
 
@@ -18,7 +17,7 @@ func NewConsole(ipTablesClient *iptables.IPTables) *Console {
 	}
 }
 
-func (c *Console) BlockHost(host domains.Host) error {
+func (c *Console) BlockHost(host string) error {
 
 	exists, err := c.IPTables.ChainExists(table, chain)
 	if err != nil {
@@ -31,7 +30,7 @@ func (c *Console) BlockHost(host domains.Host) error {
 		}
 	}
 
-	err = c.IPTables.AppendUnique(table, chain, "-d", host.IP, "-j", "DROP")
+	err = c.IPTables.AppendUnique(table, chain, "-d", host, "-j", "DROP")
 	if err != nil {
 		return err
 	}
