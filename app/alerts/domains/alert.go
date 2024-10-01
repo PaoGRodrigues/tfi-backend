@@ -13,7 +13,7 @@ type Alert struct {
 	Time          string
 	Severity      string
 	AlertFlow     AlertFlow
-	AlertProtocol flow.Protocol
+	AlertProtocol flow.Protocol `json:",omitempty"`
 }
 
 type AlertFlow struct {
