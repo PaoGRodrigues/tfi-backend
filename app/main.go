@@ -65,6 +65,7 @@ func main() {
 	} else {
 		if ip != nil || port != nil || user != nil || pass != nil || db != nil {
 			tool = services.NewTool("http://"+*ip+":"+*port, 2, *user, *pass)
+			tool.EnableChecks()
 			console, err = initializeConsole()
 			if err != nil {
 				panic(err.Error())
