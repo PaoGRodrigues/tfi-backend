@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"sync"
 )
@@ -38,10 +37,10 @@ func (t *NtopNG) EnableChecks() {
 			fmt.Printf("Enabling %s", check)
 			fmt.Print(rsp.Rsp.Success)
 			if err != nil {
-				log.Fatalf("Error enabling check %s", check)
+				fmt.Printf("Error enabling check %s", check)
 			}
 			if !rsp.Rsp.Success {
-				log.Fatalf("Error enabling check %s", check)
+				fmt.Printf("Error enabling check %s", check)
 			}
 		}
 	}
