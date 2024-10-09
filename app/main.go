@@ -64,7 +64,11 @@ func main() {
 
 	} else {
 		if ip != nil || port != nil || user != nil || pass != nil || db != nil {
-			tool = services.NewTool("http://"+*ip+":"+*port, 2, *user, *pass)
+			tool = services.NewTool("http://"+*ip+":"+*port, *user, *pass)
+			err := tool.SetInterfaceID()
+			if err != nil {
+				panic(err.Error())
+			}
 			tool.EnableChecks()
 			tool.EnableChecks()
 			console, err = initializeConsole()
