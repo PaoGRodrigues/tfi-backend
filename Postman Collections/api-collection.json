@@ -8,6 +8,22 @@
 	"item": [
 		{
 			"name": "Ping",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "24af315e-9887-4a79-85e1-ed5c22f2756c",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"  pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "94ab8eba-1769-4116-8e1d-f67a57616416",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
