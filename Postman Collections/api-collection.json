@@ -21,7 +21,37 @@
 				"url": "http://192.168.0.13:8080/ping",
 				"description": "Comprobar estado de la _api_."
 			},
-			"response": []
+			"response": [
+				{
+					"id": "238fc164-9e6f-4d3f-bb51-6f09df768f84",
+					"name": "Ping",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "http://192.168.0.13:8080/ping"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 24 Apr 2025 19:01:54 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "18"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"message\": \"pong\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Hosts",
@@ -38,7 +68,45 @@
 				"url": "http://192.168.0.13:8080/hosts",
 				"description": "Obtener el listado de clientes servidores (_hosts_ o _IPs_ locales y externos) que tienen flujos de tráfico activos siendo analizados por la herramienta."
 			},
-			"response": []
+			"response": [
+				{
+					"id": "db49c592-235b-4a08-9525-f1cc4630b4f7",
+					"name": "Hosts",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "http://192.168.0.13:8080/hosts"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "GET"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 24 Apr 2025 19:02:41 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "208"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"data\": [\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": true,\n            \"IP\": \"255.255.255.255\",\n            \"Mac\": \"FF:FF:FF:FF:FF:FF\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": true,\n            \"IP\": \"0.0.0.0\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        }\n    ]\n}"
+				}
+			]
 		},
 		{
 			"name": "Localhosts",
