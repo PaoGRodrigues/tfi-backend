@@ -504,6 +504,15 @@
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"host\": \"mercadolibre.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": "http://192.168.0.13:8080/blockhost",
 				"description": "Bloquear _IPs_ o dominios en IPTables."
 			},
@@ -614,10 +623,66 @@
 				},
 				"method": "POST",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Token\": \"5823864009:AAHLm2Wq1pX9Yx8AOhpijBZy_t791urqzeI\",\n    \"Username\": \"PaoPao\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": "http://192.168.0.13:8080/configurechannel",
 				"description": "Configurar _bot_ de Telegram para recepción de notificaciones."
 			},
-			"response": []
+			"response": [
+				{
+					"id": "13732a0a-db28-4bea-88f9-eb997c22a668",
+					"name": "Channel Configuration",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"Token\": \"5823864009:AAHLm2Wq1pX9Yx8AOhpijBZy_t791urqzeI\",\n    \"Username\": \"PaoPao\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://192.168.0.13:8080/configurechannel"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 24 Apr 2025 19:27:00 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "32"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"Message\": \"Channel configured\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Alert Notification",
@@ -634,7 +699,45 @@
 				"url": "http://192.168.0.13:8080/alertnotification",
 				"description": "Recuperar las alertas y enviar la notificación a Telegram."
 			},
-			"response": []
+			"response": [
+				{
+					"id": "9f9efd5c-bf31-45d6-85a4-d4778bc81e20",
+					"name": "Alert Notification",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": "http://192.168.0.13:8080/alertnotification"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 24 Apr 2025 19:28:11 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "16"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"message\": \"ok\"\n}"
+				}
+			]
 		}
 	]
 }
