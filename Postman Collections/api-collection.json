@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "6398c7b9-cef2-4113-9226-e3cfa6904840",
+		"name": "Trabajo Final Integrador",
+		"description": "Colección de pruebas manuales para el _backend_.\n\nPara correr las pruebas, ejecutar el _backend_ en la Raspberry Pi y reemplazar la _IP_ en cada llamada por la _IP_ correspondiente.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Hosts",
+			"id": "32eecc94-c34b-4d13-b276-e261eb6bfa17",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://192.168.0.13:8080/hosts"
+			},
+			"response": []
+		},
+		{
+			"name": "Localhosts",
+			"id": "836a0b37-4098-428e-8d3b-9ac5fc2cf7da",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://192.168.0.13:8080/localhosts"
+			},
+			"response": []
+		},
+		{
+			"name": "Traffic",
+			"id": "7d2f3c41-fd0d-433f-8b31-8428b2fad989",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://192.168.0.13:8080/traffic"
+			},
+			"response": []
+		},
+		{
+			"name": "Flows Per Destination",
+			"id": "1c5fd756-9f10-4dfd-ba09-cf95643296fa",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"followRedirects": false,
+				"protocolVersion": "auto"
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://192.168.0.13:8080/activeflowsperdest"
+			},
+			"response": []
+		},
+		{
+			"name": "Flows Per Country",
+			"id": "cb7bb5a9-e6d5-4f39-a2e6-4b446a0d6215",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://192.168.0.13:8080/activeflowspercountry"
+			},
+			"response": []
+		},
+		{
+			"name": "Alerts",
+			"id": "24204004-e55a-42f0-9660-0b5134bc91fa",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://192.168.0.13:8080/alerts"
+			},
+			"response": []
+		},
+		{
+			"name": "Store Traffic",
+			"id": "070af75c-797d-4bb6-a713-5ca7bab3ab99",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": "http://192.168.0.13:8080/activeflows"
+			},
+			"response": []
+		},
+		{
+			"name": "Store Hosts",
+			"id": "2cf8001e-35c1-4c91-9c51-3adfdc19c047",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": "http://192.168.0.13:8080/hosts"
+			},
+			"response": []
+		},
+		{
+			"name": "Block Host",
+			"id": "6c030c22-c2b2-42be-b065-766bfb741b84",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": "http://192.168.0.13:8080/blockhost"
+			},
+			"response": []
+		},
+		{
+			"name": "Channel Configuration",
+			"id": "a3e760fd-6bb8-4810-9534-5de47cd04900",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": "http://192.168.0.13:8080/configurechannel"
+			},
+			"response": []
+		},
+		{
+			"name": "Alert Notification",
+			"id": "1daeb9a3-55c4-4bf1-bd29-1b846ce36af8",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"url": "http://192.168.0.13:8080/alertnotification"
+			},
+			"response": []
+		}
+	]
+}
