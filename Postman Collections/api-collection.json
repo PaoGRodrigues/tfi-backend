@@ -71,6 +71,22 @@
 		},
 		{
 			"name": "Hosts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1efede6b-fa7b-4d9d-8968-a3bf9b742a1b",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"  pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "32eecc94-c34b-4d13-b276-e261eb6bfa17",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
