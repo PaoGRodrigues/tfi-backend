@@ -53,7 +53,7 @@
 				"method": "GET",
 				"header": [],
 				"url": "http://192.168.0.13:8080/localhosts",
-				"description": "Obtener el listado de _hosts_ locales que tienen flujos de tráfico activos siendo analizados por la herramienta."
+				"description": "Obtener el listado de _hosts_ **locales** que tienen flujos de tráfico activos siendo analizados por la herramienta."
 			},
 			"response": []
 		},
@@ -69,7 +69,8 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": "http://192.168.0.13:8080/traffic"
+				"url": "http://192.168.0.13:8080/traffic",
+				"description": "Obtener el listado de flujos de tráfico activos siendo analizados por la herramienta."
 			},
 			"response": []
 		},
@@ -84,7 +85,8 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://192.168.0.13:8080/activeflowsperdest"
+				"url": "http://192.168.0.13:8080/activeflowsperdest",
+				"description": "Obtener la cantidad de bytes transmitidos a un destino particular (_IPs_ públicas o dominios)."
 			},
 			"response": []
 		},
@@ -100,7 +102,8 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": "http://192.168.0.13:8080/activeflowspercountry"
+				"url": "http://192.168.0.13:8080/activeflowspercountry",
+				"description": "Obtener la cantidad de bytes transmitidos a un país particular."
 			},
 			"response": []
 		},
@@ -116,7 +119,8 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": "http://192.168.0.13:8080/alerts"
+				"url": "http://192.168.0.13:8080/alerts",
+				"description": "Obtener el listado de alertas detectadas por la herramienta en los últimos siete (7) días."
 			},
 			"response": []
 		},
