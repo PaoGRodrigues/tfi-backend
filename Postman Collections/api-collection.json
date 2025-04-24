@@ -7,6 +7,23 @@
 	},
 	"item": [
 		{
+			"name": "Ping",
+			"id": "94ab8eba-1769-4116-8e1d-f67a57616416",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://192.168.0.13:8080/ping",
+				"description": "Comprobar estado de la _api_."
+			},
+			"response": []
+		},
+		{
 			"name": "Hosts",
 			"id": "32eecc94-c34b-4d13-b276-e261eb6bfa17",
 			"protocolProfileBehavior": {
@@ -19,7 +36,7 @@
 				"method": "GET",
 				"header": [],
 				"url": "http://192.168.0.13:8080/hosts",
-				"description": "Obtener el listado de _hosts_ (locales y externos) que tienen flujos de tráfico activos siendo analizados por la herramienta."
+				"description": "Obtener el listado de clientes servidores (_hosts_ o _IPs_ locales y externos) que tienen flujos de tráfico activos siendo analizados por la herramienta."
 			},
 			"response": []
 		},
