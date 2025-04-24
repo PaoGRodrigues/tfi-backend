@@ -553,6 +553,52 @@
 					"cookie": [],
 					"responseTime": null,
 					"body": "{\n    \"message\": \"Host 10.10.10.10has been blocked\"\n}"
+				},
+				{
+					"id": "4265a21d-7ef1-4cc4-ba57-c42446edbed6",
+					"name": "Block Host",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"host\": \"mercadolibre.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://192.168.0.13:8080/blockhost"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 24 Apr 2025 19:22:33 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "51"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"message\": \"Host mercadolibre.comhas been blocked\"\n}"
 				}
 			]
 		},
