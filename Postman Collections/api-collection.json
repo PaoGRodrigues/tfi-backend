@@ -456,6 +456,40 @@
 		},
 		{
 			"name": "Flows Per Country",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4308008d-0a15-4c04-befa-3a3809f196fe",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"/*",
+							"La respuesta tiene este formato:",
+							"{",
+							"    \"data\": [",
+							"        {",
+							"            \"bytes\": 254483,",
+							"            \"country\": \"AR\"",
+							"        }",
+							"    ]",
+							"}",
+							"*/",
+							"pm.test(\"Formato correcto de respuesta\", () => {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an(\"object\");",
+							"    pm.expect(jsonData.data).to.be.an(\"array\");",
+							"    pm.expect(jsonData.data[0].bytes).to.be.an(\"number\");",
+							"    pm.expect(jsonData.data[0].country).to.be.a(\"string\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "cb7bb5a9-e6d5-4f39-a2e6-4b446a0d6215",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
