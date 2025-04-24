@@ -136,7 +136,8 @@
 				},
 				"method": "POST",
 				"header": [],
-				"url": "http://192.168.0.13:8080/activeflows"
+				"url": "http://192.168.0.13:8080/activeflows",
+				"description": "Guardar los flujos de datos activos analizados por la herramienta en el momento de la consulta."
 			},
 			"response": []
 		},
@@ -152,7 +153,8 @@
 				},
 				"method": "POST",
 				"header": [],
-				"url": "http://192.168.0.13:8080/hosts"
+				"url": "http://192.168.0.13:8080/hosts",
+				"description": "Guardar los _hosts_ de datos activos analizados por la herramienta en el momento de la consulta, para enriquecer los datos de tráfico."
 			},
 			"response": []
 		},
