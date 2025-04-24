@@ -256,6 +256,63 @@
 		},
 		{
 			"name": "Traffic",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ac8de90f-61e8-4dc2-a380-696a99caebf7",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"/*",
+							"La respuesta tiene este formato:",
+							"{",
+							"\"data\" : ",
+							"    [",
+							"        {",
+							"            \"key\": \"3533864674\",",
+							"            \"first_seen\": 1745521384,",
+							"            \"last_seen\": 1745521491,",
+							"            \"Client\": {",
+							"                \"Name\": \"iphone\",",
+							"                \"Port\": 49175,",
+							"                \"IP\": \"192.168.4.4\"",
+							"            },",
+							"            \"Server\": {",
+							"                \"IP\": \"17.249.252.4\",",
+							"                \"Port\": 5223,",
+							"                \"Name\": \"courier.push.apple.com\"",
+							"            },",
+							"            \"Bytes\": 197807,",
+							"            \"Protocol\": {",
+							"                \"L4\": \"TCP\",",
+							"                \"L7\": \"TLS.ApplePush\"",
+							"            }",
+							"        }",
+							"    ]",
+							"}",
+							"*/",
+							"pm.test(\"Formato correcto de respuesta\", () => {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an(\"object\");",
+							"    pm.expect(jsonData.data).to.be.an(\"array\");",
+							"    pm.expect(jsonData.data[0].Key).to.be.a(\"string\");",
+							"    pm.expect(jsonData.data[0].first_seen).to.be.an(\"integer\");",
+							"    pm.expect(jsonData.data[0].Client).to.be.an(\"object\");",
+							"    pm.expect(jsonData.data[0].Client.Port).to.be.an(\"integer\");",
+							"    pm.expect(jsonData.data[0].Server).to.be.an(\"object\");",
+							"    pm.expect(jsonData.data[0].Server.IP).to.be.a(\"string\");",
+							"    pm.expect(jsonData.data[0].Bytes).to.be.an(\"integer\");",
+							"    pm.expect(jsonData.data[0].Protocol).to.be.an(\"object\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "7d2f3c41-fd0d-433f-8b31-8428b2fad989",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
