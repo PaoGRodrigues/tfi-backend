@@ -397,7 +397,45 @@
 				"url": "http://192.168.0.13:8080/activeflows",
 				"description": "Guardar los flujos de datos activos analizados por la herramienta en el momento de la consulta."
 			},
-			"response": []
+			"response": [
+				{
+					"id": "45eb86ef-deb5-4f1f-975f-35ff1b5657b5",
+					"name": "Store Traffic",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": "http://192.168.0.13:8080/activeflows"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 24 Apr 2025 19:19:29 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "16"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"message\": \"ok\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Store Hosts",
@@ -414,7 +452,45 @@
 				"url": "http://192.168.0.13:8080/hosts",
 				"description": "Guardar los _hosts_ de datos activos analizados por la herramienta en el momento de la consulta, para enriquecer los datos de tráfico."
 			},
-			"response": []
+			"response": [
+				{
+					"id": "e6b13233-d070-4f57-b744-ed1547075888",
+					"name": "Store Hosts",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"url": "http://192.168.0.13:8080/hosts"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 24 Apr 2025 19:19:36 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "16"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"message\": \"ok\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Block Host",
@@ -431,7 +507,54 @@
 				"url": "http://192.168.0.13:8080/blockhost",
 				"description": "Bloquear _IPs_ o dominios en IPTables."
 			},
-			"response": []
+			"response": [
+				{
+					"id": "356a64ae-849f-488a-8ff8-7cdce86d139b",
+					"name": "Block Host",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"host\": \"10.10.10.10\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://192.168.0.13:8080/blockhost"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Access-Control-Allow-Methods",
+							"value": "POST"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 24 Apr 2025 19:22:18 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "46"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"message\": \"Host 10.10.10.10has been blocked\"\n}"
+				}
+			]
 		},
 		{
 			"name": "Channel Configuration",
