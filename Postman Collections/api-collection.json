@@ -506,7 +506,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"host\": \"mercadolibre.com\"\n}",
+					"raw": "{\n    \"host\": \"XXXX\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -625,7 +625,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Token\": \"5823864009:AAHLm2Wq1pX9Yx8AOhpijBZy_t791urqzeI\",\n    \"Username\": \"PaoPao\"\n}",
+					"raw": "{\n    \"Token\": \"XXXXX\",\n    \"Username\": \"XXXXX\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
