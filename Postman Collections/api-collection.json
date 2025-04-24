@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "6398c7b9-cef2-4113-9226-e3cfa6904840",
 		"name": "Trabajo Final Integrador",
-		"description": "Colección de pruebas manuales para el _backend_.\n\nPara correr las pruebas, ejecutar el _backend_ en la Raspberry Pi y reemplazar la _IP_ en cada llamada por la _IP_ correspondiente.",
+		"description": "Documentación y colección de pruebas manuales para el _backend_.\n\nPara correr las pruebas, ejecutar el _backend_ en la Raspberry Pi y reemplazar la _IP_ en cada llamada por la _IP_ correspondiente.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
