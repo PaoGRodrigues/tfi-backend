@@ -368,6 +368,40 @@
 		},
 		{
 			"name": "Flows Per Destination",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "baabc7e0-2947-42f5-bc5a-7662c30214bb",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"/*",
+							"La respuesta tiene este formato:",
+							"{",
+							"    \"data\": [",
+							"        {",
+							"            \"Bytes\": 63629,",
+							"            \"Destination\": \"mask.icloud.com\"",
+							"        }",
+							"    ]",
+							"}",
+							"*/",
+							"pm.test(\"Formato correcto de respuesta\", () => {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an(\"object\");",
+							"    pm.expect(jsonData.data).to.be.an(\"array\");",
+							"    pm.expect(jsonData.data[0].Bytes).to.be.an(\"number\");",
+							"    pm.expect(jsonData.data[0].Destination).to.be.a(\"string\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "1c5fd756-9f10-4dfd-ba09-cf95643296fa",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true,
