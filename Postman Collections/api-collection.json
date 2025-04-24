@@ -18,7 +18,8 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": "http://192.168.0.13:8080/hosts"
+				"url": "http://192.168.0.13:8080/hosts",
+				"description": "Obtener el listado de _hosts_ (locales y externos) que generan tráfico, el cual está siendo analizado por la herramienta."
 			},
 			"response": []
 		},
