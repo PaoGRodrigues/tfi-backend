@@ -170,7 +170,8 @@
 				},
 				"method": "POST",
 				"header": [],
-				"url": "http://192.168.0.13:8080/blockhost"
+				"url": "http://192.168.0.13:8080/blockhost",
+				"description": "Bloquear _IPs_ o dominios en IPTables."
 			},
 			"response": []
 		},
@@ -186,7 +187,8 @@
 				},
 				"method": "POST",
 				"header": [],
-				"url": "http://192.168.0.13:8080/configurechannel"
+				"url": "http://192.168.0.13:8080/configurechannel",
+				"description": "Configurar _bot_ de Telegram para recepción de notificaciones."
 			},
 			"response": []
 		},
@@ -202,7 +204,8 @@
 				},
 				"method": "POST",
 				"header": [],
-				"url": "http://192.168.0.13:8080/alertnotification"
+				"url": "http://192.168.0.13:8080/alertnotification",
+				"description": "Recuperar las alertas y enviar la notificación a Telegram."
 			},
 			"response": []
 		}
