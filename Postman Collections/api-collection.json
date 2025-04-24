@@ -83,6 +83,7 @@
 							"",
 							"/*",
 							"La respuesta tiene este formato:",
+							"{",
 							"\"data\" : ",
 							"    [",
 							"        {",
@@ -95,13 +96,14 @@
 							"            \"Country\": \"US\"",
 							"        }",
 							"    ]",
+							"}",
 							"*/",
 							"pm.test(\"Formato correcto de respuesta\", () => {",
-							"    //parse the response JSON and test three properties",
-							"    const responseJson = pm.response.json();",
-							"    pm.expect(responseJson.type).to.eql('vip');",
-							"    pm.expect(responseJson.name).to.be.a('string');",
-							"    pm.expect(responseJson.id).to.have.lengthOf(1);",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an(\"object\");",
+							"    pm.expect(jsonData.data).to.be.an(\"array\");",
+							"    pm.expect(jsonData.data[0].Name).to.be.a(\"string\");",
+							"    pm.expect(jsonData.data[0].PrivateHost).to.be.an(\"boolean\");",
 							"});"
 						],
 						"type": "text/javascript",
@@ -164,6 +166,42 @@
 		},
 		{
 			"name": "Localhosts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "8283350e-cc47-4a32-b5a2-c07da075dce5",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"/*",
+							"La respuesta tiene este formato:",
+							"{",
+							"\"data\" : ",
+							"    [",
+							"       {",
+							"            \"Privado\": true,",
+							"            \"IP\": \"255.255.255.255\",",
+							"            \"MAC\": \"FF:FF:FF:FF:FF:FF\"",
+							"        },",
+							"    ]",
+							"}",
+							"*/",
+							"pm.test(\"Formato correcto de respuesta\", () => {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an(\"object\");",
+							"    pm.expect(jsonData.data).to.be.an(\"array\");",
+							"    pm.expect(jsonData.data[0].Name).to.be.a(\"string\");",
+							"    pm.expect(jsonData.data[0].PrivateHost).to.be.an(\"boolean\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "836a0b37-4098-428e-8d3b-9ac5fc2cf7da",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
