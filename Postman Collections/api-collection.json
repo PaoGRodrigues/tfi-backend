@@ -193,8 +193,7 @@
 							"    const jsonData = pm.response.json();",
 							"    pm.expect(jsonData).to.be.an(\"object\");",
 							"    pm.expect(jsonData.data).to.be.an(\"array\");",
-							"    pm.expect(jsonData.data[0].Name).to.be.a(\"string\");",
-							"    pm.expect(jsonData.data[0].PrivateHost).to.be.an(\"boolean\");",
+							"    pm.expect(jsonData.data[0].Privado).to.eql(true);",
 							"});"
 						],
 						"type": "text/javascript",
