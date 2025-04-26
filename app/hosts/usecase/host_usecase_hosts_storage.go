@@ -6,19 +6,19 @@ import (
 )
 
 type HostsStorage struct {
-	hostSearcher ports.HostRepository
-	hostRepo     host.HostsRepository
+	hostRepositoryReader ports.HostReader
+	hostRepo             host.HostsRepository
 }
 
-func NewHostsStorage(hostSearcher ports.HostRepository, hostRepo host.HostsRepository) *HostsStorage {
+func NewHostsStorage(repository ports.HostReader, hostRepo host.HostsRepository) *HostsStorage {
 	return &HostsStorage{
-		hostSearcher: hostSearcher,
-		hostRepo:     hostRepo,
+		hostRepositoryReader: repository,
+		hostRepo:             hostRepo,
 	}
 }
 
 func (hs *HostsStorage) StoreHosts() error {
-	activeHosts, err := hs.hostSearcher.GetAllHosts()
+	activeHosts, err := hs.hostRepositoryReader.GetAllHosts()
 	if err != nil {
 		return err
 	}

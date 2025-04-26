@@ -32,7 +32,7 @@ func main() {
 
 	var getLocalhostsUseCase *usecase_hosts.GetLocalhostsUseCase
 	var hostBlocker *usecase_hosts.BlockHostUseCase
-	var hostsStorage hosts_domains.HostsStorage
+	var hostsStorage hosts_domains.HostWriter
 
 	var trafficSearcher traffic_domains.TrafficUseCase
 	var trafficBytesParser traffic_domains.TrafficBytesParser
@@ -132,7 +132,7 @@ func main() {
 }
 
 // *********** Hosts ***********
-func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (*usecase_hosts.GetLocalhostsUseCase, hosts_domains.HostsStorage) {
+func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (*usecase_hosts.GetLocalhostsUseCase, hosts_domains.HostWriter) {
 
 	getLocalhostsUseCase := usecase_hosts.NewGetLocalhostsUseCase(tool)
 	hostStorage := hosts_useCases.NewHostsStorage(tool, hostRepo)
@@ -157,7 +157,7 @@ func initializeTrafficRepository(db services.Database) traffic_domains.TrafficRe
 	return trafficRepo
 }
 
-func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficRepository, hostStorage hosts_domains.HostsStorage) (traffic_domains.TrafficUseCase,
+func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficRepository, hostStorage hosts_domains.HostWriter) (traffic_domains.TrafficUseCase,
 	traffic_domains.TrafficBytesParser, traffic_domains.TrafficStorage) {
 
 	trafficSearcher := traffic_useCases.NewTrafficSearcher(tool)

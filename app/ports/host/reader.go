@@ -2,7 +2,7 @@ package host
 
 import "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 
-// HostRepository needs to be implemented in Host use cases
-type HostRepository interface {
+// HostReader needs to be implemented in Host use cases
+type HostReader interface {
 	GetAllHosts() ([]host.Host, error)
 }

@@ -2,7 +2,7 @@ package host
 
 // *********** Use Cases
 
-type HostsStorage interface {
+type HostWriter interface {
 	StoreHosts() error
 	GetHostByIp(string) (Host, error)
 }

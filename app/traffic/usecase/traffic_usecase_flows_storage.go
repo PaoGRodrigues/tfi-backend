@@ -1,17 +1,17 @@
 package usecase
 
 import (
-	host_domains "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
+	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
 type FlowsStorage struct {
 	trafficSearcher domains.TrafficUseCase
 	trafficRepo     domains.TrafficRepository
-	hostStorage     host_domains.HostsStorage
+	hostStorage     hostPorts.HostWriter
 }
 
-func NewFlowsStorage(trafSearcher domains.TrafficUseCase, trafRepo domains.TrafficRepository, hostStorage host_domains.HostsStorage) *FlowsStorage {
+func NewFlowsStorage(trafSearcher domains.TrafficUseCase, trafRepo domains.TrafficRepository, hostStorage hostPorts.HostWriter) *FlowsStorage {
 	return &FlowsStorage{
 		trafficSearcher: trafSearcher,
 		trafficRepo:     trafRepo,

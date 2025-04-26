@@ -6,10 +6,10 @@ import (
 )
 
 type GetLocalhostsUseCase struct {
-	repository ports.HostRepository
+	repository ports.HostReader
 }
 
-func NewGetLocalhostsUseCase(repository ports.HostRepository) *GetLocalhostsUseCase {
+func NewGetLocalhostsUseCase(repository ports.HostReader) *GetLocalhostsUseCase {
 	return &GetLocalhostsUseCase{
 		repository: repository,
 	}

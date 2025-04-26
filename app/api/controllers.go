@@ -19,7 +19,7 @@ import (
 
 type Api struct {
 	Tool                 services.Tool
-	HostUseCase          hostPorts.HostRepository
+	HostUseCase          hostPorts.HostReader
 	TrafficSearcher      traffic.TrafficUseCase
 	GetLocalhostsUseCase *hostUsecases.GetLocalhostsUseCase
 	TrafficBytesParser   traffic.TrafficBytesParser
@@ -28,7 +28,7 @@ type Api struct {
 	BlockHostUseCase     *hostUsecases.BlockHostUseCase
 	NotifChannel         services.NotificationChannel
 	AlertsSender         alerts.AlertsSender
-	HostsStorage         host.HostsStorage
+	HostsStorage         hostPorts.HostWriter
 	*gin.Engine
 }
 
