@@ -7,15 +7,6 @@ type HostsStorage interface {
 	GetHostByIp(string) (Host, error)
 }
 
-// *********** Services
-type HostService interface {
-	GetAllHosts() ([]Host, error)
-}
-
-type HostBlockerService interface {
-	BlockHost(string) error
-}
-
 // *********** Repositories
 type HostsRepository interface {
 	StoreHosts([]Host) error
