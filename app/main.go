@@ -14,7 +14,7 @@ import (
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	traffic_useCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
-	hosts_usecases_temp "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
+	usecase_hosts "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 	"github.com/coreos/go-iptables/iptables"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
@@ -30,7 +30,7 @@ func main() {
 	// ********************************
 	// *********** UseCases ***********
 	var hostUseCase hosts_domains.HostUseCase
-	var hostsFilter hosts_domains.HostsFilter
+	var getLocalhostsUseCase api.GetLocalhostsUseCase
 	var hostBlocker hosts_domains.HostBlocker
 	var hostsStorage hosts_domains.HostsStorage
 
@@ -90,7 +90,7 @@ func main() {
 
 	// *********** Repo & Usecases ***********
 	hostRepo = initializeHostRepository(database)
-	hostUseCase, hostsFilter, hostsStorage = initializeHostDependencies(tool, hostRepo)
+	hostUseCase, getLocalhostsUseCase, hostsStorage = initializeHostDependencies(tool, hostRepo)
 
 	trafficRepo = initializeTrafficRepository(database)
 	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostsStorage)
@@ -102,18 +102,18 @@ func main() {
 	// ****************************************
 
 	api := &api.Api{
-		Tool:               tool,
-		HostUseCase:        hostUseCase,
-		HostsFilter:        hostsFilter,
-		HostBlocker:        hostBlocker,
-		HostsStorage:       hostsStorage,
-		TrafficSearcher:    trafficSearcher,
-		TrafficBytesParser: trafficBytesParser,
-		ActiveFlowsStorage: trafficStorage,
-		AlertsSearcher:     alertsSearcher,
-		AlertsSender:       alertSender,
-		NotifChannel:       channel,
-		Engine:             gin.Default(),
+		Tool:                 tool,
+		HostUseCase:          hostUseCase,
+		GetLocalhostsUseCase: getLocalhostsUseCase,
+		HostBlocker:          hostBlocker,
+		HostsStorage:         hostsStorage,
+		TrafficSearcher:      trafficSearcher,
+		TrafficBytesParser:   trafficBytesParser,
+		ActiveFlowsStorage:   trafficStorage,
+		AlertsSearcher:       alertsSearcher,
+		AlertsSender:         alertSender,
+		NotifChannel:         channel,
+		Engine:               gin.Default(),
 	}
 
 	api.MapURLToPing()
@@ -133,11 +133,11 @@ func main() {
 }
 
 // *********** Hosts ***********
-func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (hosts_domains.HostUseCase, hosts_domains.HostsFilter, hosts_domains.HostsStorage) {
+func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (hosts_domains.HostUseCase, api.GetLocalhostsUseCase, hosts_domains.HostsStorage) {
 	hostSearcher := hosts_useCases.NewHostSearcher(tool)
-	hostsFilter := hosts_usecases_temp.NewGetLocalhostsUseCase(hostSearcher)
+	getLocalhostsUseCase := usecase_hosts.NewGetLocalhostsUseCase(hostSearcher)
 	hostStorage := hosts_useCases.NewHostsStorage(hostSearcher, hostRepo)
-	return hostSearcher, hostsFilter, hostStorage
+	return hostSearcher, getLocalhostsUseCase, hostStorage
 }
 
 func initializeHostBlockerUseCase(console services.Terminal) hosts_domains.HostBlocker {

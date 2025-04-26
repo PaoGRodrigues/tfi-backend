@@ -101,8 +101,8 @@ func TestCreateHostFilterCaseAndGetAllLocalHosts(t *testing.T) {
 	mockHostFilter.EXPECT().GetLocalHosts().Return(localhosts, nil)
 
 	api := &api.Api{
-		HostsFilter: mockHostFilter,
-		Engine:      gin.Default(),
+		GetLocalhostsUseCase: mockHostFilter,
+		Engine:               gin.Default(),
 	}
 
 	api.MapGetLocalHostsURL()
@@ -127,8 +127,8 @@ func TestCreateHostFilterCaseAndReturnsAnError(t *testing.T) {
 	mockHostFilter.EXPECT().GetLocalHosts().Return(nil, fmt.Errorf("Testing error case"))
 
 	api := &api.Api{
-		HostsFilter: mockHostFilter,
-		Engine:      gin.Default(),
+		GetLocalhostsUseCase: mockHostFilter,
+		Engine:               gin.Default(),
 	}
 
 	api.MapGetLocalHostsURL()

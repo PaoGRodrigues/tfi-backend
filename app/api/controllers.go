@@ -16,17 +16,17 @@ import (
 )
 
 type Api struct {
-	Tool               services.Tool
-	HostUseCase        host.HostUseCase
-	TrafficSearcher    traffic.TrafficUseCase
-	HostsFilter        host.HostsFilter
-	TrafficBytesParser traffic.TrafficBytesParser
-	ActiveFlowsStorage traffic.TrafficStorage
-	AlertsSearcher     alerts.AlertUseCase
-	HostBlocker        host.HostBlocker
-	NotifChannel       services.NotificationChannel
-	AlertsSender       alerts.AlertsSender
-	HostsStorage       host.HostsStorage
+	Tool                 services.Tool
+	HostUseCase          host.HostUseCase
+	TrafficSearcher      traffic.TrafficUseCase
+	GetLocalhostsUseCase GetLocalhostsUseCase
+	TrafficBytesParser   traffic.TrafficBytesParser
+	ActiveFlowsStorage   traffic.TrafficStorage
+	AlertsSearcher       alerts.AlertUseCase
+	HostBlocker          host.HostBlocker
+	NotifChannel         services.NotificationChannel
+	AlertsSender         alerts.AlertsSender
+	HostsStorage         host.HostsStorage
 	*gin.Engine
 }
 
@@ -75,7 +75,7 @@ func (api *Api) GetTraffic(c *gin.Context) {
 }
 
 func (api *Api) GetLocalHosts(c *gin.Context) {
-	hosts, err := api.HostsFilter.GetLocalHosts()
+	hosts, err := api.GetLocalhostsUseCase.GetLocalHosts()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})

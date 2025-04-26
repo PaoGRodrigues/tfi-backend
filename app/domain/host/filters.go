@@ -8,7 +8,6 @@ type HostUseCase interface {
 }
 
 type HostsFilter interface {
-	GetLocalHosts() ([]Host, error)
 	GetRemoteHosts() ([]Host, error)
 	GetHost(string) (Host, error)
 }
