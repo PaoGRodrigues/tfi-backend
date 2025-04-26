@@ -9,7 +9,6 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	hosts_repository "github.com/PaoGRodrigues/tfi-backend/app/hosts/repository"
-	hosts_useCases "github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
@@ -135,7 +134,7 @@ func main() {
 func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (*usecase_hosts.GetLocalhostsUseCase, hosts_domains.HostWriter) {
 
 	getLocalhostsUseCase := usecase_hosts.NewGetLocalhostsUseCase(tool)
-	hostStorage := hosts_useCases.NewHostsStorage(tool, hostRepo)
+	hostStorage := usecase_hosts.NewHostsStorage(tool, hostRepo)
 	return getLocalhostsUseCase, hostStorage
 }
 

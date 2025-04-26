@@ -1,11 +1,12 @@
-package usecase_test
+package host_test
 
 import (
 	"fmt"
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
+	usecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
+
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	hostPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/host"
 	"go.uber.org/mock/gomock"

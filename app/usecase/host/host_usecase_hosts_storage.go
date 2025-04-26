@@ -1,4 +1,4 @@
-package usecase
+package host
 
 import (
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
