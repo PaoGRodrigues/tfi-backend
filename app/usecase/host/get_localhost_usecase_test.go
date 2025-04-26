@@ -1,11 +1,11 @@
-package usecase_test
+package host_test
 
 import (
 	"fmt"
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
+	usecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -34,7 +34,7 @@ func TestGetLocalHostWithHostsReturnedFromSearcherReturnLocalHosts(t *testing.T)
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
 	mockSearcher.EXPECT().GetHosts().Return(expected)
 
-	filter := usecase.NewHostsFilter(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
 	got, err := filter.GetLocalHosts()
 	if err != nil {
 		t.Fail()
@@ -51,7 +51,7 @@ func TestGetLocalHostCallingGetHostFromRepoInSearcherReturnLocalHosts(t *testing
 	mockSearcher.EXPECT().GetHosts().Return([]host.Host{})
 	mockSearcher.EXPECT().GetAllHosts().Return(expected, nil)
 
-	filter := usecase.NewHostsFilter(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
 	got, err := filter.GetLocalHosts()
 	if err != nil {
 		t.Fail()
@@ -67,7 +67,7 @@ func TestGetLocalHostAndGetAllHostsInSearcherReturnError(t *testing.T) {
 	mockSearcher.EXPECT().GetHosts().Return([]host.Host{})
 	mockSearcher.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
 
-	filter := usecase.NewHostsFilter(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
 	_, err := filter.GetLocalHosts()
 
 	if err == nil {
@@ -82,7 +82,7 @@ func TestGetRemoteHostAndCallGetAllHostsInSearcherReturnRemoteHostsSuccessfully(
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
 	mockSearcher.EXPECT().GetHosts().Return(expected)
 
-	filter := usecase.NewHostsFilter(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
 	got, err := filter.GetRemoteHosts()
 	if err != nil {
 		t.Fail()
@@ -99,7 +99,7 @@ func TestGetRemoteHostCallingGetHostFromRepoInSearcherReturnRemoteHosts(t *testi
 	mockSearcher.EXPECT().GetHosts().Return([]host.Host{})
 	mockSearcher.EXPECT().GetAllHosts().Return(expected, nil)
 
-	filter := usecase.NewHostsFilter(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
 	got, err := filter.GetRemoteHosts()
 	if err != nil {
 		t.Fail()
@@ -116,7 +116,7 @@ func TestGetRemoteHostAndGetAllHostsInSearcherReturnAnError(t *testing.T) {
 	mockSearcher.EXPECT().GetHosts().Return([]host.Host{})
 	mockSearcher.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
 
-	filter := usecase.NewHostsFilter(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
 	_, err := filter.GetRemoteHosts()
 
 	if err == nil {
@@ -131,7 +131,7 @@ func TestGetHostByIPReturnCorrectHost(t *testing.T) {
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
 	mockSearcher.EXPECT().GetHosts().Return(expected)
 
-	filter := usecase.NewHostsFilter(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
 	got, err := filter.GetHost(local.IP)
 
 	if err != nil {
@@ -149,7 +149,7 @@ func TestGetHostByIPGetAllHostsReturnError(t *testing.T) {
 	mockSearcher.EXPECT().GetHosts().Return(nil)
 	mockSearcher.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Error Test"))
 
-	filter := usecase.NewHostsFilter(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
 	_, err := filter.GetHost(local.IP)
 
 	if err == nil {
@@ -164,7 +164,7 @@ func TestGetHostByIPWithAnUnexistingIPReturnError(t *testing.T) {
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
 	mockSearcher.EXPECT().GetHosts().Return(expected)
 
-	filter := usecase.NewHostsFilter(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
 	_, err := filter.GetHost("10.10.10.10")
 
 	if err == nil {
@@ -179,7 +179,7 @@ func TestGetHostByURLReturnCorrectHost(t *testing.T) {
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
 	mockSearcher.EXPECT().GetHosts().Return(expected)
 
-	filter := usecase.NewHostsFilter(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
 	got, err := filter.GetHost(remote.Name)
 
 	if err != nil {
@@ -196,7 +196,7 @@ func TestGetHostByAnUnexistingURLReturnError(t *testing.T) {
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
 	mockSearcher.EXPECT().GetHosts().Return(expected)
 
-	filter := usecase.NewHostsFilter(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
 	_, err := filter.GetHost("test.test.com")
 
 	if err == nil {

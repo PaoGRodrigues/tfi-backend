@@ -14,6 +14,7 @@ import (
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	traffic_useCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
+	hosts_usecases_temp "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 	"github.com/coreos/go-iptables/iptables"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
@@ -134,7 +135,7 @@ func main() {
 // *********** Hosts ***********
 func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (hosts_domains.HostUseCase, hosts_domains.HostsFilter, hosts_domains.HostsStorage) {
 	hostSearcher := hosts_useCases.NewHostSearcher(tool)
-	hostsFilter := hosts_useCases.NewHostsFilter(hostSearcher)
+	hostsFilter := hosts_usecases_temp.NewGetLocalhostsUseCase(hostSearcher)
 	hostStorage := hosts_useCases.NewHostsStorage(hostSearcher, hostRepo)
 	return hostSearcher, hostsFilter, hostStorage
 }

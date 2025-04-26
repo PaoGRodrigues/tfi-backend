@@ -1,4 +1,4 @@
-package usecase
+package host
 
 import (
 	"errors"
@@ -6,17 +6,17 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 )
 
-type HostsFilter struct {
+type GetLocalhostsUseCase struct {
 	searcher host.HostUseCase
 }
 
-func NewHostsFilter(huc host.HostUseCase) *HostsFilter {
-	return &HostsFilter{
+func NewGetLocalhostsUseCase(huc host.HostUseCase) *GetLocalhostsUseCase {
+	return &GetLocalhostsUseCase{
 		searcher: huc,
 	}
 }
 
-func (l *HostsFilter) checkHosts() ([]host.Host, error) {
+func (l *GetLocalhostsUseCase) checkHosts() ([]host.Host, error) {
 	current := l.searcher.GetHosts()
 	if len(current) == 0 {
 		hosts, err := l.searcher.GetAllHosts()
@@ -28,7 +28,7 @@ func (l *HostsFilter) checkHosts() ([]host.Host, error) {
 	return current, nil
 }
 
-func (l *HostsFilter) GetLocalHosts() ([]host.Host, error) {
+func (l *GetLocalhostsUseCase) GetLocalHosts() ([]host.Host, error) {
 	current, err := l.checkHosts()
 	if err != nil {
 		return []host.Host{}, err
@@ -44,7 +44,7 @@ func (l *HostsFilter) GetLocalHosts() ([]host.Host, error) {
 	return localHosts, nil
 }
 
-func (l *HostsFilter) GetRemoteHosts() ([]host.Host, error) {
+func (l *GetLocalhostsUseCase) GetRemoteHosts() ([]host.Host, error) {
 	current, err := l.checkHosts()
 	if err != nil {
 		return []host.Host{}, err
@@ -60,7 +60,7 @@ func (l *HostsFilter) GetRemoteHosts() ([]host.Host, error) {
 	return remoteHosts, nil
 }
 
-func (l *HostsFilter) GetHost(attr string) (host.Host, error) {
+func (l *GetLocalhostsUseCase) GetHost(attr string) (host.Host, error) {
 	current, err := l.checkHosts()
 	if err != nil {
 		return host.Host{}, err
