@@ -1,13 +1,16 @@
 package usecase
 
-import "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
+import (
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
+	ports "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
+)
 
 type HostsStorage struct {
-	hostSearcher host.HostUseCase
+	hostSearcher ports.HostRepository
 	hostRepo     host.HostsRepository
 }
 
-func NewHostsStorage(hostSearcher host.HostUseCase, hostRepo host.HostsRepository) *HostsStorage {
+func NewHostsStorage(hostSearcher ports.HostRepository, hostRepo host.HostsRepository) *HostsStorage {
 	return &HostsStorage{
 		hostSearcher: hostSearcher,
 		hostRepo:     hostRepo,

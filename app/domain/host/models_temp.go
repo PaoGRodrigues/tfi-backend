@@ -1,11 +1,6 @@
 package host
 
 // *********** Use Cases
-// HostUseCase needs to be implemented in Host use cases
-type HostUseCase interface {
-	GetAllHosts() ([]Host, error)
-	GetHosts() []Host
-}
 
 type HostBlocker interface {
 	Block(string) (*string, error)

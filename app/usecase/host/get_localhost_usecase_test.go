@@ -32,23 +32,6 @@ func TestGetLocalHostWithHostsReturnedFromSearcherReturnLocalHosts(t *testing.T)
 	defer ctrl.Finish()
 
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockSearcher.EXPECT().GetHosts().Return(expected)
-
-	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
-	got, err := filter.GetLocalHosts()
-	if err != nil {
-		t.Fail()
-	}
-
-	assert.Equal(t, []host.Host{local}, got)
-}
-
-func TestGetLocalHostCallingGetHostFromRepoInSearcherReturnLocalHosts(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockSearcher.EXPECT().GetHosts().Return([]host.Host{})
 	mockSearcher.EXPECT().GetAllHosts().Return(expected, nil)
 
 	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
@@ -56,6 +39,7 @@ func TestGetLocalHostCallingGetHostFromRepoInSearcherReturnLocalHosts(t *testing
 	if err != nil {
 		t.Fail()
 	}
+
 	assert.Equal(t, []host.Host{local}, got)
 }
 
@@ -64,7 +48,6 @@ func TestGetLocalHostAndGetAllHostsInSearcherReturnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockSearcher.EXPECT().GetHosts().Return([]host.Host{})
 	mockSearcher.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
 
 	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)

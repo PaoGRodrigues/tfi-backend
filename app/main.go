@@ -10,6 +10,7 @@ import (
 	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	hosts_repository "github.com/PaoGRodrigues/tfi-backend/app/hosts/repository"
 	hosts_useCases "github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
+	ports "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
@@ -29,7 +30,7 @@ func main() {
 	var database services.Database
 	// ********************************
 	// *********** UseCases ***********
-	var hostUseCase hosts_domains.HostUseCase
+	var hostUseCase ports.HostRepository
 	var getLocalhostsUseCase api.GetLocalhostsUseCase
 	var hostBlocker hosts_domains.HostBlocker
 	var hostsStorage hosts_domains.HostsStorage
@@ -133,7 +134,7 @@ func main() {
 }
 
 // *********** Hosts ***********
-func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (hosts_domains.HostUseCase, api.GetLocalhostsUseCase, hosts_domains.HostsStorage) {
+func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (ports.HostRepository, api.GetLocalhostsUseCase, hosts_domains.HostsStorage) {
 	hostSearcher := hosts_useCases.NewHostSearcher(tool)
 	getLocalhostsUseCase := usecase_hosts.NewGetLocalhostsUseCase(hostSearcher)
 	hostStorage := hosts_useCases.NewHostsStorage(hostSearcher, hostRepo)

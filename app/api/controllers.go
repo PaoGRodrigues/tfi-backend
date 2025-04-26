@@ -9,6 +9,7 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	alerts "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
+	ports "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 
@@ -17,7 +18,7 @@ import (
 
 type Api struct {
 	Tool                 services.Tool
-	HostUseCase          host.HostUseCase
+	HostUseCase          ports.HostRepository
 	TrafficSearcher      traffic.TrafficUseCase
 	GetLocalhostsUseCase GetLocalhostsUseCase
 	TrafficBytesParser   traffic.TrafficBytesParser
