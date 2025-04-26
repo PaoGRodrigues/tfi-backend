@@ -19,7 +19,7 @@ func TestBlockSourceIPReturnCorrect(t *testing.T) {
 	mockBlockerService := hostPortsMock.NewMockHostBlocker(ctrl)
 	mockBlockerService.EXPECT().Block(server).Return(&server, nil)
 
-	blocker := host.NewBlocker(mockBlockerService)
+	blocker := host.NewBlockHostUseCase(mockBlockerService)
 	get, err := blocker.Block(server)
 
 	if err != nil {
@@ -36,7 +36,7 @@ func TestBlockSourceIPGetHostReturnError(t *testing.T) {
 	mockBlockerService := hostPortsMock.NewMockHostBlocker(ctrl)
 	mockBlockerService.EXPECT().Block("sarasa").Return(nil, fmt.Errorf("Error Test"))
 
-	blocker := host.NewBlocker(mockBlockerService)
+	blocker := host.NewBlockHostUseCase(mockBlockerService)
 	_, err := blocker.Block("sarasa")
 
 	if err == nil {
@@ -51,7 +51,7 @@ func TestBlockSourceIPBlockHostReturnError(t *testing.T) {
 	mockBlockerService := hostPortsMock.NewMockHostBlocker(ctrl)
 	mockBlockerService.EXPECT().Block(server).Return(nil, fmt.Errorf("Error Test"))
 
-	blocker := host.NewBlocker(mockBlockerService)
+	blocker := host.NewBlockHostUseCase(mockBlockerService)
 	_, err := blocker.Block(server)
 
 	if err == nil {

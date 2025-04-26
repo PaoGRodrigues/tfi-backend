@@ -140,7 +140,7 @@ func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.Hosts
 }
 
 func initializeHostBlockerUseCase(console services.Terminal) *usecase_hosts.BlockHostUseCase {
-	hostBlocker := usecase_hosts.NewBlocker(console)
+	hostBlocker := usecase_hosts.NewBlockHostUseCase(console)
 	return hostBlocker
 }
 

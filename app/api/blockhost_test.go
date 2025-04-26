@@ -34,7 +34,7 @@ func TestBlockHostByIPReturn200(t *testing.T) {
 
 	mockBlocker := hostPortsMock.NewMockHostBlocker(ctrl)
 	mockBlocker.EXPECT().Block(Host.IP).Return(&Host.IP, nil)
-	blockHostUsecase := hostUsecase.NewBlocker(mockBlocker)
+	blockHostUsecase := hostUsecase.NewBlockHostUseCase(mockBlocker)
 
 	api := &api.Api{
 		BlockHostUseCase: blockHostUsecase,
@@ -66,7 +66,7 @@ func TestBlockHostURLReturn200(t *testing.T) {
 
 	mockBlocker := hostPortsMock.NewMockHostBlocker(ctrl)
 	mockBlocker.EXPECT().Block(Host.Name).Return(&Host.Name, nil)
-	blockHostUsecase := hostUsecase.NewBlocker(mockBlocker)
+	blockHostUsecase := hostUsecase.NewBlockHostUseCase(mockBlocker)
 
 	api := &api.Api{
 		BlockHostUseCase: blockHostUsecase,
@@ -125,7 +125,7 @@ func TestBlockHostFunctionReturningErrorReturn400(t *testing.T) {
 
 	mockBlocker := hostPortsMock.NewMockHostBlocker(ctrl)
 	mockBlocker.EXPECT().Block(Host.Name).Return(nil, fmt.Errorf("Test error"))
-	blockHostUsecase := hostUsecase.NewBlocker(mockBlocker)
+	blockHostUsecase := hostUsecase.NewBlockHostUseCase(mockBlocker)
 
 	api := &api.Api{
 		BlockHostUseCase: blockHostUsecase,
@@ -156,7 +156,7 @@ func TestBlockHostFunctionReturnErrorWhenTheBodyIsWrong(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockBlocker := hostPortsMock.NewMockHostBlocker(ctrl)
-	blockHostUsecase := hostUsecase.NewBlocker(mockBlocker)
+	blockHostUsecase := hostUsecase.NewBlockHostUseCase(mockBlocker)
 
 	api := &api.Api{
 		BlockHostUseCase: blockHostUsecase,
@@ -184,7 +184,7 @@ func TestBlockHostFunctionReturningErrorReturn400WhenIPNotExist(t *testing.T) {
 
 	mockBlocker := hostPortsMock.NewMockHostBlocker(ctrl)
 	mockBlocker.EXPECT().Block(Host.IP).Return(nil, nil)
-	blockHostUsecase := hostUsecase.NewBlocker(mockBlocker)
+	blockHostUsecase := hostUsecase.NewBlockHostUseCase(mockBlocker)
 
 	api := &api.Api{
 		BlockHostUseCase: blockHostUsecase,

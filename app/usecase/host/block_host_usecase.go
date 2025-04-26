@@ -8,7 +8,7 @@ type BlockHostUseCase struct {
 	blockService hostPorts.HostBlocker
 }
 
-func NewBlocker(srv hostPorts.HostBlocker) *BlockHostUseCase {
+func NewBlockHostUseCase(srv hostPorts.HostBlocker) *BlockHostUseCase {
 	return &BlockHostUseCase{
 		blockService: srv,
 	}
