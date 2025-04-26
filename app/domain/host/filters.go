@@ -1,37 +1,13 @@
 package host
 
-// *********** Use Cases
-// HostUseCase needs to be implemented in Host use cases
-type HostUseCase interface {
-	GetAllHosts() ([]Host, error)
-	GetHosts() []Host
-}
-
-type HostsFilter interface {
-	GetRemoteHosts() ([]Host, error)
-	GetHost(string) (Host, error)
-}
-
-type HostBlocker interface {
-	Block(string) (*string, error)
-}
-
-type HostsStorage interface {
-	StoreHosts() error
-	GetHostByIp(string) (Host, error)
-}
-
-// *********** Services
-type HostService interface {
-	GetAllHosts() ([]Host, error)
-}
-
-type HostBlockerService interface {
-	BlockHost(string) error
-}
-
-// *********** Repositories
-type HostsRepository interface {
-	StoreHosts([]Host) error
-	GetHostByIp(string) (Host, error)
+func GetLocalHosts(current []Host) []Host {
+	localHosts := []Host{}
+	if len(current) != 0 {
+		for _, host := range current {
+			if host.PrivateHost {
+				localHosts = append(localHosts, host)
+			}
+		}
+	}
+	return localHosts
 }
