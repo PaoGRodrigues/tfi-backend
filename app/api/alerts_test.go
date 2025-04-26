@@ -12,8 +12,8 @@ import (
 	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/alerts"
 	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestCreateAlertsUsecaseGetAllAlertsReturnAlerts(t *testing.T) {

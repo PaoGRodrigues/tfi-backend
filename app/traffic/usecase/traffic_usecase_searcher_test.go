@@ -8,7 +8,7 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
-	"github.com/golang/mock/gomock"
+	"go.uber.org/mock/gomock"
 )
 
 func TestGetAllTrafficReturnAListOfTrafficJsons(t *testing.T) {

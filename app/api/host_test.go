@@ -9,10 +9,11 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
+	api_mocks "github.com/PaoGRodrigues/tfi-backend/mocks/api"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 func TestCreateHostUseCaseAndGetAllHosts(t *testing.T) {
@@ -97,7 +98,7 @@ func TestCreateHostFilterCaseAndGetAllLocalHosts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockHostFilter := mocks.NewMockHostsFilter(ctrl)
+	mockHostFilter := api_mocks.NewMockGetLocalhostsUseCase(ctrl)
 	mockHostFilter.EXPECT().GetLocalHosts().Return(localhosts, nil)
 
 	api := &api.Api{
@@ -123,7 +124,7 @@ func TestCreateHostFilterCaseAndReturnsAnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockHostFilter := mocks.NewMockHostsFilter(ctrl)
+	mockHostFilter := api_mocks.NewMockGetLocalhostsUseCase(ctrl)
 	mockHostFilter.EXPECT().GetLocalHosts().Return(nil, fmt.Errorf("Testing error case"))
 
 	api := &api.Api{

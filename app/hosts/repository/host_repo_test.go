@@ -8,7 +8,7 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/repository"
 	services_mocks "github.com/PaoGRodrigues/tfi-backend/mocks/services"
 	"github.com/go-playground/assert/v2"
-	"github.com/golang/mock/gomock"
+	"go.uber.org/mock/gomock"
 )
 
 var host1 = host.Host{

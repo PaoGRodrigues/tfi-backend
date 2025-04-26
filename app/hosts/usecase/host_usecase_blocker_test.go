@@ -6,8 +6,8 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	hosts_mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 var server = "13.13.13.13"

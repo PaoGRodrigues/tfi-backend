@@ -9,7 +9,7 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	host_mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
-	"github.com/golang/mock/gomock"
+	"go.uber.org/mock/gomock"
 )
 
 var host = host_domains.Host{

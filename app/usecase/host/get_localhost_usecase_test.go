@@ -7,8 +7,8 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	usecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 var local = host.Host{

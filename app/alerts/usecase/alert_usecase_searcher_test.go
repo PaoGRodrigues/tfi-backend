@@ -9,7 +9,7 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/alerts"
 	"github.com/go-playground/assert/v2"
-	"github.com/golang/mock/gomock"
+	"go.uber.org/mock/gomock"
 )
 
 func TestGetAllAlertsReturnError(t *testing.T) {
