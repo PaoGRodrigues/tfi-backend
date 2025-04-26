@@ -74,19 +74,6 @@ func (api *Api) GetTraffic(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": traffic})
 }
 
-func (api *Api) GetLocalHosts(c *gin.Context) {
-	hosts, err := api.GetLocalhostsUseCase.GetLocalHosts()
-	if err != nil {
-		fmt.Println(err)
-		c.JSON(500, gin.H{"data": "error"})
-		c.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
-	c.Header("Access-Control-Allow-Methods", "GET")
-	c.JSON(http.StatusOK, gin.H{"data": parseHostResponse(hosts)})
-}
-
 func (api *Api) GetActiveFlowsPerDestination(c *gin.Context) {
 	activeFlows, err := api.TrafficBytesParser.GetBytesPerDestination()
 	if err != nil {
