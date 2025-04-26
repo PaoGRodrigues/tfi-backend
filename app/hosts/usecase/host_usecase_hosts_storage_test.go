@@ -7,6 +7,7 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
+	hostPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/host"
 	"go.uber.org/mock/gomock"
 )
 
@@ -31,11 +32,12 @@ func TestStoreHostsSuccessfully(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockHostsRepo := mocks.NewMockHostsRepository(ctrl)
-	mockHostsSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockHostsSearcher.EXPECT().GetAllHosts().Return([]host.Host{host1, host2}, nil)
+
+	mockRepository := hostPortsMock.NewMockHostRepository(ctrl)
+	mockRepository.EXPECT().GetAllHosts().Return([]host.Host{host1, host2}, nil)
 	mockHostsRepo.EXPECT().StoreHosts([]host.Host{host1, host2}).Return(nil)
 
-	hostsStorage := usecase.NewHostsStorage(mockHostsSearcher, mockHostsRepo)
+	hostsStorage := usecase.NewHostsStorage(mockRepository, mockHostsRepo)
 	err := hostsStorage.StoreHosts()
 
 	if err != nil {
@@ -48,10 +50,10 @@ func TestStoreHostsGetAllHostsError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockHostsRepo := mocks.NewMockHostsRepository(ctrl)
-	mockHostsSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockHostsSearcher.EXPECT().GetAllHosts().Return([]host.Host{}, fmt.Errorf("Error test"))
+	mockRepository := hostPortsMock.NewMockHostRepository(ctrl)
+	mockRepository.EXPECT().GetAllHosts().Return([]host.Host{}, fmt.Errorf("Error test"))
 
-	hostsStorage := usecase.NewHostsStorage(mockHostsSearcher, mockHostsRepo)
+	hostsStorage := usecase.NewHostsStorage(mockRepository, mockHostsRepo)
 	err := hostsStorage.StoreHosts()
 
 	if err == nil {
@@ -64,11 +66,11 @@ func TestStoreHostsGetsErrorWhenStore(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockHostsRepo := mocks.NewMockHostsRepository(ctrl)
-	mockHostsSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockHostsSearcher.EXPECT().GetAllHosts().Return([]host.Host{host1, host2}, nil)
+	mockRepository := hostPortsMock.NewMockHostRepository(ctrl)
+	mockRepository.EXPECT().GetAllHosts().Return([]host.Host{host1, host2}, nil)
 	mockHostsRepo.EXPECT().StoreHosts([]host.Host{host1, host2}).Return(fmt.Errorf("Error test"))
 
-	hostsStorage := usecase.NewHostsStorage(mockHostsSearcher, mockHostsRepo)
+	hostsStorage := usecase.NewHostsStorage(mockRepository, mockHostsRepo)
 	err := hostsStorage.StoreHosts()
 
 	if err == nil {

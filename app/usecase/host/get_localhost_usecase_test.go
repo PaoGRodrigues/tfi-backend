@@ -6,7 +6,8 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	usecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
+	hostPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/host"
+
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -31,10 +32,10 @@ func TestGetLocalHostWithHostsReturnedFromSearcherReturnLocalHosts(t *testing.T)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockSearcher.EXPECT().GetAllHosts().Return(expected, nil)
+	mockRepository := hostPortsMock.NewMockHostRepository(ctrl)
+	mockRepository.EXPECT().GetAllHosts().Return(expected, nil)
 
-	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockRepository)
 	got, err := filter.GetLocalHosts()
 	if err != nil {
 		t.Fail()
@@ -47,10 +48,10 @@ func TestGetLocalHostAndGetAllHostsInSearcherReturnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockSearcher.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
+	mockRepository := hostPortsMock.NewMockHostRepository(ctrl)
+	mockRepository.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
 
-	filter := usecase.NewGetLocalhostsUseCase(mockSearcher)
+	filter := usecase.NewGetLocalhostsUseCase(mockRepository)
 	_, err := filter.GetLocalHosts()
 
 	if err == nil {
