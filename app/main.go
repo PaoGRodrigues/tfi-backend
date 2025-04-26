@@ -9,11 +9,13 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	hosts_repository "github.com/PaoGRodrigues/tfi-backend/app/hosts/repository"
+	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	traffic_useCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	usecase_hosts "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
+
 	"github.com/coreos/go-iptables/iptables"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
@@ -31,7 +33,7 @@ func main() {
 
 	var getLocalhostsUseCase *usecase_hosts.GetLocalhostsUseCase
 	var hostBlocker *usecase_hosts.BlockHostUseCase
-	var hostsStorage hosts_domains.HostWriter
+	var hostsStorage *usecase_hosts.StoreHostUseCase
 
 	var trafficSearcher traffic_domains.TrafficUseCase
 	var trafficBytesParser traffic_domains.TrafficBytesParser
@@ -92,7 +94,7 @@ func main() {
 	getLocalhostsUseCase, hostsStorage = initializeHostDependencies(tool, hostRepo)
 
 	trafficRepo = initializeTrafficRepository(database)
-	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostsStorage)
+	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostRepo)
 
 	hostBlocker = initializeHostBlockerUseCase(console)
 
@@ -131,7 +133,7 @@ func main() {
 }
 
 // *********** Hosts ***********
-func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (*usecase_hosts.GetLocalhostsUseCase, hosts_domains.HostWriter) {
+func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (*usecase_hosts.GetLocalhostsUseCase, *usecase_hosts.StoreHostUseCase) {
 
 	getLocalhostsUseCase := usecase_hosts.NewGetLocalhostsUseCase(tool)
 	hostStorage := usecase_hosts.NewHostsStorage(tool, hostRepo)
@@ -156,7 +158,7 @@ func initializeTrafficRepository(db services.Database) traffic_domains.TrafficRe
 	return trafficRepo
 }
 
-func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficRepository, hostStorage hosts_domains.HostWriter) (traffic_domains.TrafficUseCase,
+func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficRepository, hostStorage hostPorts.HostDBRepository) (traffic_domains.TrafficUseCase,
 	traffic_domains.TrafficBytesParser, traffic_domains.TrafficStorage) {
 
 	trafficSearcher := traffic_useCases.NewTrafficSearcher(tool)

@@ -5,26 +5,26 @@ import (
 	ports "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 )
 
-type HostsStorage struct {
+type StoreHostUseCase struct {
 	hostRepositoryReader ports.HostReader
-	hostRepo             host.HostsRepository
+	hostDBRepository     ports.HostDBRepository
 }
 
-func NewHostsStorage(repository ports.HostReader, hostRepo host.HostsRepository) *HostsStorage {
-	return &HostsStorage{
+func NewHostsStorage(repository ports.HostReader, hostDBRepository host.HostsRepository) *StoreHostUseCase {
+	return &StoreHostUseCase{
 		hostRepositoryReader: repository,
-		hostRepo:             hostRepo,
+		hostDBRepository:     hostDBRepository,
 	}
 }
 
-func (hs *HostsStorage) StoreHosts() error {
+func (hs *StoreHostUseCase) StoreHosts() error {
 	activeHosts, err := hs.hostRepositoryReader.GetAllHosts()
 	if err != nil {
 		return err
 	}
 
 	if activeHosts != nil {
-		err = hs.hostRepo.StoreHosts(activeHosts)
+		err = hs.hostDBRepository.StoreHosts(activeHosts)
 		if err != nil {
 			return err
 		}
@@ -32,8 +32,8 @@ func (hs *HostsStorage) StoreHosts() error {
 	return nil
 }
 
-func (hs *HostsStorage) GetHostByIp(ip string) (host.Host, error) {
-	current, err := hs.hostRepo.GetHostByIp(ip)
+func (hs *StoreHostUseCase) GetHostByIp(ip string) (host.Host, error) {
+	current, err := hs.hostDBRepository.GetHostByIp(ip)
 	if err != nil {
 		return host.Host{}, err
 	}

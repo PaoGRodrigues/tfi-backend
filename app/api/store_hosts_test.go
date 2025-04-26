@@ -9,7 +9,9 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
+	hostUsecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
+	hostPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/host"
+
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -36,11 +38,14 @@ func TestStoreHostSuccessfullyReturn200(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockHostStorage := mocks.NewMockHostsStorage(ctrl)
-	mockHostStorage.EXPECT().StoreHosts().Return(nil)
+	mocksHostReader := hostPortsMock.NewMockHostRepository(ctrl)
+	mockHostDBRepository := hostPortsMock.NewMockHostDBRepository(ctrl)
+	storeHostUsecase := hostUsecase.NewHostsStorage(mocksHostReader, mockHostDBRepository)
+	mocksHostReader.EXPECT().GetAllHosts().Return([]host.Host{host1, host2}, nil)
+	mockHostDBRepository.EXPECT().StoreHosts([]host.Host{host1, host2}).Return(nil)
 
 	api := &api.Api{
-		HostsStorage: mockHostStorage,
+		HostsStorage: storeHostUsecase,
 		Engine:       gin.Default(),
 	}
 
@@ -61,11 +66,14 @@ func TestStoreHostsFailedAndReturn500(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockHostStorage := mocks.NewMockHostsStorage(ctrl)
-	mockHostStorage.EXPECT().StoreHosts().Return(fmt.Errorf("Testing error case"))
+	mocksHostReader := hostPortsMock.NewMockHostRepository(ctrl)
+	mockHostDBRepository := hostPortsMock.NewMockHostDBRepository(ctrl)
+	mocksHostReader.EXPECT().GetAllHosts().Return([]host.Host{host1, host2}, nil)
+	storeHostUsecase := hostUsecase.NewHostsStorage(mocksHostReader, mockHostDBRepository)
+	mockHostDBRepository.EXPECT().StoreHosts([]host.Host{host1, host2}).Return(fmt.Errorf("Testing error case"))
 
 	api := &api.Api{
-		HostsStorage: mockHostStorage,
+		HostsStorage: storeHostUsecase,
 		Engine:       gin.Default(),
 	}
 

@@ -8,10 +8,10 @@ import (
 type FlowsStorage struct {
 	trafficSearcher domains.TrafficUseCase
 	trafficRepo     domains.TrafficRepository
-	hostStorage     hostPorts.HostWriter
+	hostStorage     hostPorts.HostDBRepository
 }
 
-func NewFlowsStorage(trafSearcher domains.TrafficUseCase, trafRepo domains.TrafficRepository, hostStorage hostPorts.HostWriter) *FlowsStorage {
+func NewFlowsStorage(trafSearcher domains.TrafficUseCase, trafRepo domains.TrafficRepository, hostStorage hostPorts.HostDBRepository) *FlowsStorage {
 	return &FlowsStorage{
 		trafficSearcher: trafSearcher,
 		trafficRepo:     trafRepo,

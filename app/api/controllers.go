@@ -28,7 +28,7 @@ type Api struct {
 	BlockHostUseCase     *hostUsecases.BlockHostUseCase
 	NotifChannel         services.NotificationChannel
 	AlertsSender         alerts.AlertsSender
-	HostsStorage         hostPorts.HostWriter
+	HostsStorage         *hostUsecases.StoreHostUseCase
 	*gin.Engine
 }
 
