@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	"github.com/golang/mock/gomock"
@@ -16,8 +16,8 @@ func TestGetAllHostsSearcherReturnAListOfHosts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	expected := []domains.Host{
-		domains.Host{
+	expected := []host.Host{
+		host.Host{
 			Name: "Test",
 			IP:   "13.13.13.13",
 		},

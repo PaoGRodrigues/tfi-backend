@@ -8,7 +8,7 @@ import (
 	reflect "reflect"
 
 	domains "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
-	domains0 "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	domains0 "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	domains1 "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	gomock "github.com/golang/mock/gomock"
 )

@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
@@ -21,8 +21,8 @@ func TestCreateHostUseCaseAndGetAllHosts(t *testing.T) {
 		name = "Test"
 		ip   = "13.13.13.13"
 	)
-	expectedHosts := []domains.Host{
-		domains.Host{
+	expectedHosts := []host.Host{
+		host.Host{
 			Name: name,
 			IP:   ip,
 		},
@@ -85,8 +85,8 @@ func TestCreateHostFilterCaseAndGetAllLocalHosts(t *testing.T) {
 		privateHost = true
 	)
 
-	localhosts := []domains.Host{
-		domains.Host{
+	localhosts := []host.Host{
+		host.Host{
 			Name:        name,
 			IP:          ip,
 			PrivateHost: privateHost,

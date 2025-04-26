@@ -7,7 +7,7 @@ import (
 	alerts_domains "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	alerts_useCases "github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	hosts_repository "github.com/PaoGRodrigues/tfi-backend/app/hosts/repository"
 	hosts_useCases "github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"

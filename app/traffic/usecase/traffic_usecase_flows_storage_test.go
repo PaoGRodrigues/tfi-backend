@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	host_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	host_domains "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	host_mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"

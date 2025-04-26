@@ -7,7 +7,7 @@ package mock_domains
 import (
 	reflect "reflect"
 
-	domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	gomock "github.com/golang/mock/gomock"
 )
 

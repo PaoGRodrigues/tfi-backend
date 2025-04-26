@@ -8,7 +8,7 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	alerts "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
-	hosts "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 
@@ -17,16 +17,16 @@ import (
 
 type Api struct {
 	Tool               services.Tool
-	HostUseCase        hosts.HostUseCase
+	HostUseCase        host.HostUseCase
 	TrafficSearcher    traffic.TrafficUseCase
-	HostsFilter        hosts.HostsFilter
+	HostsFilter        host.HostsFilter
 	TrafficBytesParser traffic.TrafficBytesParser
 	ActiveFlowsStorage traffic.TrafficStorage
 	AlertsSearcher     alerts.AlertUseCase
-	HostBlocker        hosts.HostBlocker
+	HostBlocker        host.HostBlocker
 	NotifChannel       services.NotificationChannel
 	AlertsSender       alerts.AlertsSender
-	HostsStorage       hosts.HostsStorage
+	HostsStorage       host.HostsStorage
 	*gin.Engine
 }
 
@@ -243,7 +243,7 @@ func (api *Api) GetActiveFlowsPerCountry(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": activeFlows})
 }
 
-func parseHostResponse(hosts []hosts.Host) []HostsResponse {
+func parseHostResponse(hosts []host.Host) []HostsResponse {
 	response := []HostsResponse{}
 
 	for _, host := range hosts {

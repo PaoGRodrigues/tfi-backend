@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/repository"
 	services_mocks "github.com/PaoGRodrigues/tfi-backend/mocks/services"
 	"github.com/go-playground/assert/v2"
 	"github.com/golang/mock/gomock"
 )
 
-var host1 = domains.Host{
+var host1 = host.Host{
 	Name:        "test",
 	PrivateHost: false,
 	IP:          "123.123.123.123",
@@ -19,7 +19,7 @@ var host1 = domains.Host{
 	Country:     "US",
 }
 
-var host2 = domains.Host{
+var host2 = host.Host{
 	Name:        "test.randomdns.com",
 	PrivateHost: false,
 	IP:          "13.13.13.13",
@@ -32,10 +32,10 @@ func TestStoreHostsSuccessfully(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDatabase := services_mocks.NewMockDatabase(ctrl)
-	mockDatabase.EXPECT().AddHosts([]domains.Host{host1, host2}).Return(nil)
+	mockDatabase.EXPECT().AddHosts([]host.Host{host1, host2}).Return(nil)
 
 	hostsStorage := repository.NewHostsRepo(mockDatabase)
-	err := hostsStorage.StoreHosts([]domains.Host{host1, host2})
+	err := hostsStorage.StoreHosts([]host.Host{host1, host2})
 
 	if err != nil {
 		t.Fail()
@@ -47,10 +47,10 @@ func TestStoreHostsWithError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDatabase := services_mocks.NewMockDatabase(ctrl)
-	mockDatabase.EXPECT().AddHosts([]domains.Host{host1, host2}).Return(fmt.Errorf("Test error"))
+	mockDatabase.EXPECT().AddHosts([]host.Host{host1, host2}).Return(fmt.Errorf("Test error"))
 
 	hostsStorage := repository.NewHostsRepo(mockDatabase)
-	err := hostsStorage.StoreHosts([]domains.Host{host1, host2})
+	err := hostsStorage.StoreHosts([]host.Host{host1, host2})
 
 	if err == nil {
 		t.Fail()
@@ -79,7 +79,7 @@ func TestGetHostReturnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDatabase := services_mocks.NewMockDatabase(ctrl)
-	mockDatabase.EXPECT().GetHostByIp(host1.IP).Return(domains.Host{}, fmt.Errorf("test Error"))
+	mockDatabase.EXPECT().GetHostByIp(host1.IP).Return(host.Host{}, fmt.Errorf("test Error"))
 
 	hostStorage := repository.NewHostsRepo(mockDatabase)
 	_, err := hostStorage.GetHostByIp(host1.IP)

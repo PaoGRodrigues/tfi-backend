@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	"github.com/PaoGRodrigues/tfi-backend/app/services"
 )
 
@@ -15,7 +15,7 @@ func NewHostsRepo(database services.Database) *HostsRepo {
 	}
 }
 
-func (hr *HostsRepo) StoreHosts(hosts []domains.Host) error {
+func (hr *HostsRepo) StoreHosts(hosts []host.Host) error {
 	err := hr.Database.AddHosts(hosts)
 	if err != nil {
 		return err
@@ -23,10 +23,10 @@ func (hr *HostsRepo) StoreHosts(hosts []domains.Host) error {
 	return nil
 }
 
-func (hr *HostsRepo) GetHostByIp(ip string) (domains.Host, error) {
-	host, err := hr.Database.GetHostByIp(ip)
+func (hr *HostsRepo) GetHostByIp(ip string) (host.Host, error) {
+	current, err := hr.Database.GetHostByIp(ip)
 	if err != nil {
-		return domains.Host{}, err
+		return host.Host{}, err
 	}
-	return host, nil
+	return current, nil
 }

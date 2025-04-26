@@ -1,4 +1,4 @@
-package domains
+package host
 
 // *********** Entities
 // Host connected to the network

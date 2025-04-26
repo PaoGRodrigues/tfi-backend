@@ -3,37 +3,37 @@ package usecase
 import (
 	"errors"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 )
 
 type HostsFilter struct {
-	searcher domains.HostUseCase
+	searcher host.HostUseCase
 }
 
-func NewHostsFilter(huc domains.HostUseCase) *HostsFilter {
+func NewHostsFilter(huc host.HostUseCase) *HostsFilter {
 	return &HostsFilter{
 		searcher: huc,
 	}
 }
 
-func (l *HostsFilter) checkHosts() ([]domains.Host, error) {
+func (l *HostsFilter) checkHosts() ([]host.Host, error) {
 	current := l.searcher.GetHosts()
 	if len(current) == 0 {
 		hosts, err := l.searcher.GetAllHosts()
 		if err != nil {
-			return []domains.Host{}, err
+			return []host.Host{}, err
 		}
 		current = hosts
 	}
 	return current, nil
 }
 
-func (l *HostsFilter) GetLocalHosts() ([]domains.Host, error) {
+func (l *HostsFilter) GetLocalHosts() ([]host.Host, error) {
 	current, err := l.checkHosts()
 	if err != nil {
-		return []domains.Host{}, err
+		return []host.Host{}, err
 	}
-	localHosts := []domains.Host{}
+	localHosts := []host.Host{}
 	if len(current) != 0 {
 		for _, host := range current {
 			if host.PrivateHost {
@@ -44,12 +44,12 @@ func (l *HostsFilter) GetLocalHosts() ([]domains.Host, error) {
 	return localHosts, nil
 }
 
-func (l *HostsFilter) GetRemoteHosts() ([]domains.Host, error) {
+func (l *HostsFilter) GetRemoteHosts() ([]host.Host, error) {
 	current, err := l.checkHosts()
 	if err != nil {
-		return []domains.Host{}, err
+		return []host.Host{}, err
 	}
-	remoteHosts := []domains.Host{}
+	remoteHosts := []host.Host{}
 	if len(current) != 0 {
 		for _, host := range current {
 			if !host.PrivateHost {
@@ -60,10 +60,10 @@ func (l *HostsFilter) GetRemoteHosts() ([]domains.Host, error) {
 	return remoteHosts, nil
 }
 
-func (l *HostsFilter) GetHost(attr string) (domains.Host, error) {
+func (l *HostsFilter) GetHost(attr string) (host.Host, error) {
 	current, err := l.checkHosts()
 	if err != nil {
-		return domains.Host{}, err
+		return host.Host{}, err
 	}
 	var ip string
 	for _, host := range current {
@@ -73,5 +73,5 @@ func (l *HostsFilter) GetHost(attr string) (domains.Host, error) {
 		ip = host.IP
 	}
 
-	return domains.Host{}, errors.New("There's no host with this IP " + ip)
+	return host.Host{}, errors.New("There's no host with this IP " + ip)
 }

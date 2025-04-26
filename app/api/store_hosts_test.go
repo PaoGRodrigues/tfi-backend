@@ -8,14 +8,14 @@ import (
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	"github.com/gin-gonic/gin"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
 
-var host1 = domains.Host{
+var host1 = host.Host{
 	Name:        "test",
 	PrivateHost: false,
 	IP:          "123.123.123.123",
@@ -23,7 +23,7 @@ var host1 = domains.Host{
 	Country:     "US",
 }
 
-var host2 = domains.Host{
+var host2 = host.Host{
 	Name:        "test.randomdns.com",
 	PrivateHost: false,
 	IP:          "13.13.13.13",

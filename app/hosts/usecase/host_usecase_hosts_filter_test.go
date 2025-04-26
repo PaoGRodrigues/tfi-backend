@@ -4,25 +4,25 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	"github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
 )
 
-var local = domains.Host{
+var local = host.Host{
 	Name:        "Test",
 	IP:          "13.13.13.13",
 	PrivateHost: true,
 }
-var remote = domains.Host{
+var remote = host.Host{
 	Name:        "Test2.google.com",
 	IP:          "172.172.172.172",
 	PrivateHost: false,
 }
 
-var expected = []domains.Host{
+var expected = []host.Host{
 	local,
 	remote,
 }
@@ -40,7 +40,7 @@ func TestGetLocalHostWithHostsReturnedFromSearcherReturnLocalHosts(t *testing.T)
 		t.Fail()
 	}
 
-	assert.Equal(t, []domains.Host{local}, got)
+	assert.Equal(t, []host.Host{local}, got)
 }
 
 func TestGetLocalHostCallingGetHostFromRepoInSearcherReturnLocalHosts(t *testing.T) {
@@ -48,7 +48,7 @@ func TestGetLocalHostCallingGetHostFromRepoInSearcherReturnLocalHosts(t *testing
 	defer ctrl.Finish()
 
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockSearcher.EXPECT().GetHosts().Return([]domains.Host{})
+	mockSearcher.EXPECT().GetHosts().Return([]host.Host{})
 	mockSearcher.EXPECT().GetAllHosts().Return(expected, nil)
 
 	filter := usecase.NewHostsFilter(mockSearcher)
@@ -56,7 +56,7 @@ func TestGetLocalHostCallingGetHostFromRepoInSearcherReturnLocalHosts(t *testing
 	if err != nil {
 		t.Fail()
 	}
-	assert.Equal(t, []domains.Host{local}, got)
+	assert.Equal(t, []host.Host{local}, got)
 }
 
 func TestGetLocalHostAndGetAllHostsInSearcherReturnError(t *testing.T) {
@@ -64,7 +64,7 @@ func TestGetLocalHostAndGetAllHostsInSearcherReturnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockSearcher.EXPECT().GetHosts().Return([]domains.Host{})
+	mockSearcher.EXPECT().GetHosts().Return([]host.Host{})
 	mockSearcher.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
 
 	filter := usecase.NewHostsFilter(mockSearcher)
@@ -88,7 +88,7 @@ func TestGetRemoteHostAndCallGetAllHostsInSearcherReturnRemoteHostsSuccessfully(
 		t.Fail()
 	}
 
-	assert.Equal(t, []domains.Host{remote}, got)
+	assert.Equal(t, []host.Host{remote}, got)
 }
 
 func TestGetRemoteHostCallingGetHostFromRepoInSearcherReturnRemoteHosts(t *testing.T) {
@@ -96,7 +96,7 @@ func TestGetRemoteHostCallingGetHostFromRepoInSearcherReturnRemoteHosts(t *testi
 	defer ctrl.Finish()
 
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockSearcher.EXPECT().GetHosts().Return([]domains.Host{})
+	mockSearcher.EXPECT().GetHosts().Return([]host.Host{})
 	mockSearcher.EXPECT().GetAllHosts().Return(expected, nil)
 
 	filter := usecase.NewHostsFilter(mockSearcher)
@@ -105,7 +105,7 @@ func TestGetRemoteHostCallingGetHostFromRepoInSearcherReturnRemoteHosts(t *testi
 		t.Fail()
 	}
 
-	assert.Equal(t, []domains.Host{remote}, got)
+	assert.Equal(t, []host.Host{remote}, got)
 }
 
 func TestGetRemoteHostAndGetAllHostsInSearcherReturnAnError(t *testing.T) {
@@ -113,7 +113,7 @@ func TestGetRemoteHostAndGetAllHostsInSearcherReturnAnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockSearcher := mocks.NewMockHostUseCase(ctrl)
-	mockSearcher.EXPECT().GetHosts().Return([]domains.Host{})
+	mockSearcher.EXPECT().GetHosts().Return([]host.Host{})
 	mockSearcher.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing Error"))
 
 	filter := usecase.NewHostsFilter(mockSearcher)

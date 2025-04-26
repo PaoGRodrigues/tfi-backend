@@ -1,7 +1,7 @@
 package services
 
 import (
-	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
@@ -40,10 +40,10 @@ func (client *FakeSQLClient) GetFlowByKey(key string) (traffic_domains.ActiveFlo
 	return flow, nil
 }
 
-func (client *FakeSQLClient) AddHosts([]hosts_domains.Host) error {
+func (client *FakeSQLClient) AddHosts([]host.Host) error {
 	return nil
 }
 
-func (client *FakeSQLClient) GetHostByIp(string) (hosts_domains.Host, error) {
-	return hosts_domains.Host{}, nil
+func (client *FakeSQLClient) GetHostByIp(string) (host.Host, error) {
+	return host.Host{}, nil
 }

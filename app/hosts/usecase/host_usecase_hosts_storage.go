@@ -1,13 +1,13 @@
 package usecase
 
-import "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+import "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 
 type HostsStorage struct {
-	hostSearcher domains.HostUseCase
-	hostRepo     domains.HostsRepository
+	hostSearcher host.HostUseCase
+	hostRepo     host.HostsRepository
 }
 
-func NewHostsStorage(hostSearcher domains.HostUseCase, hostRepo domains.HostsRepository) *HostsStorage {
+func NewHostsStorage(hostSearcher host.HostUseCase, hostRepo host.HostsRepository) *HostsStorage {
 	return &HostsStorage{
 		hostSearcher: hostSearcher,
 		hostRepo:     hostRepo,
@@ -29,11 +29,11 @@ func (hs *HostsStorage) StoreHosts() error {
 	return nil
 }
 
-func (hs *HostsStorage) GetHostByIp(ip string) (domains.Host, error) {
-	host, err := hs.hostRepo.GetHostByIp(ip)
+func (hs *HostsStorage) GetHostByIp(ip string) (host.Host, error) {
+	current, err := hs.hostRepo.GetHostByIp(ip)
 	if err != nil {
-		return domains.Host{}, err
+		return host.Host{}, err
 	}
 
-	return host, nil
+	return current, nil
 }

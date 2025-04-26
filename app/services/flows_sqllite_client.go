@@ -3,7 +3,7 @@ package services
 import (
 	"database/sql"
 
-	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
@@ -162,7 +162,7 @@ func (client *SQLClient) GetFlowByKey(key string) (traffic_domains.ActiveFlow, e
 	return flow, nil
 }
 
-func (client *SQLClient) AddHosts(hosts []hosts_domains.Host) error {
+func (client *SQLClient) AddHosts(hosts []host.Host) error {
 	for _, host := range hosts {
 		err := client.addHost(host)
 		if err != nil {
@@ -172,7 +172,7 @@ func (client *SQLClient) AddHosts(hosts []hosts_domains.Host) error {
 	return nil
 }
 
-func (client *SQLClient) addHost(host hosts_domains.Host) error {
+func (client *SQLClient) addHost(host host.Host) error {
 	_, err := client.db.Exec("INSERT INTO hosts(name,asname,privatehost,ip,mac,city,country) VALUES(?,?,?,?,?,?,?);",
 		host.Name, host.ASname, host.PrivateHost, host.IP, host.Mac, host.City, host.Country)
 	if err != nil {
@@ -181,19 +181,19 @@ func (client *SQLClient) addHost(host hosts_domains.Host) error {
 	return nil
 }
 
-func (client *SQLClient) GetHostByIp(ip string) (hosts_domains.Host, error) {
-	host := hosts_domains.Host{}
+func (client *SQLClient) GetHostByIp(ip string) (host.Host, error) {
+	current := host.Host{}
 
 	rows, err := client.db.Query("SELECT name,asname,privatehost,ip,mac,city,country FROM hosts WHERE ip LIKE ? LIMIT 1", ip)
 	if err != nil {
-		return hosts_domains.Host{}, err
+		return host.Host{}, err
 	}
 	for rows.Next() {
-		err = rows.Scan(&host.Name, &host.ASname, &host.PrivateHost, &host.IP, &host.Mac, &host.City, &host.Country)
+		err = rows.Scan(&current.Name, &current.ASname, &current.PrivateHost, &current.IP, &current.Mac, &current.City, &current.Country)
 		if err != nil {
-			return hosts_domains.Host{}, err
+			return host.Host{}, err
 		}
 	}
 
-	return host, nil
+	return current, nil
 }
