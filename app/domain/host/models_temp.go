@@ -2,10 +2,6 @@ package host
 
 // *********** Use Cases
 
-type HostBlocker interface {
-	Block(string) (*string, error)
-}
-
 type HostsStorage interface {
 	StoreHosts() error
 	GetHostByIp(string) (Host, error)

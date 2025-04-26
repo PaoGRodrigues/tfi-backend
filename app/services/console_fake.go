@@ -11,7 +11,7 @@ func NewFakeConsole() *FakeConsole {
 	return &FakeConsole{}
 }
 
-func (fc *FakeConsole) BlockHost(host string) error {
+func (fc *FakeConsole) Block(host string) (*string, error) {
 	fmt.Printf("Blocking... %s ", host)
-	return nil
+	return &host, nil
 }

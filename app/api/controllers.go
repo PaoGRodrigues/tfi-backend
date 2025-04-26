@@ -9,22 +9,23 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	alerts "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	ports "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
+	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	hostUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Api struct {
 	Tool                 services.Tool
-	HostUseCase          ports.HostRepository
+	HostUseCase          hostPorts.HostRepository
 	TrafficSearcher      traffic.TrafficUseCase
-	GetLocalhostsUseCase GetLocalhostsUseCase
+	GetLocalhostsUseCase *hostUsecases.GetLocalhostsUseCase
 	TrafficBytesParser   traffic.TrafficBytesParser
 	ActiveFlowsStorage   traffic.TrafficStorage
 	AlertsSearcher       alerts.AlertUseCase
-	HostBlocker          host.HostBlocker
+	BlockHostUseCase     *hostUsecases.BlockHostUseCase
 	NotifChannel         services.NotificationChannel
 	AlertsSender         alerts.AlertsSender
 	HostsStorage         host.HostsStorage
@@ -46,20 +47,6 @@ type HostsResponse struct {
 	IP          string `json:"IP"`
 	Mac         string `json:"MAC"`
 	ASname      string `json:"ASname,omitempty"`
-}
-
-func (api *Api) GetHosts(c *gin.Context) {
-	hosts, err := api.HostUseCase.GetAllHosts()
-	if err != nil {
-		fmt.Println(err)
-		c.JSON(500, gin.H{"data": "error"})
-		c.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
-	c.Header("Access-Control-Allow-Methods", "GET")
-	c.JSON(http.StatusOK, gin.H{"data": hosts})
-	return
 }
 
 func (api *Api) GetTraffic(c *gin.Context) {
@@ -163,7 +150,7 @@ func (api *Api) BlockHost(c *gin.Context) {
 		return
 	}
 
-	blockedHost, err := api.HostBlocker.Block(host.Host)
+	blockedHost, err := api.BlockHostUseCase.Block(host.Host)
 	if err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		c.JSON(http.StatusBadRequest, err)

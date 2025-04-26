@@ -137,18 +137,19 @@ func (m *MockTerminal) EXPECT() *MockTerminalMockRecorder {
 	return m.recorder
 }
 
-// BlockHost mocks base method.
-func (m *MockTerminal) BlockHost(arg0 string) error {
+// Block mocks base method.
+func (m *MockTerminal) Block(arg0 string) (*string, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "BlockHost", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret := m.ctrl.Call(m, "Block", arg0)
+	ret0, _ := ret[0].(*string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// BlockHost indicates an expected call of BlockHost.
-func (mr *MockTerminalMockRecorder) BlockHost(arg0 any) *gomock.Call {
+// Block indicates an expected call of Block.
+func (mr *MockTerminalMockRecorder) Block(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "BlockHost", reflect.TypeOf((*MockTerminal)(nil).BlockHost), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Block", reflect.TypeOf((*MockTerminal)(nil).Block), arg0)
 }
 
 // MockNotificationChannel is a mock of NotificationChannel interface.

@@ -15,7 +15,7 @@ type Tool interface {
 }
 
 type Terminal interface {
-	BlockHost(string) error
+	Block(string) (*string, error)
 }
 
 type NotificationChannel interface {

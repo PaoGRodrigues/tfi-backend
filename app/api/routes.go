@@ -12,10 +12,6 @@ func (api *Api) MapURLToPing() {
 	})
 }
 
-func (api *Api) MapGetHostsURL() {
-	api.GET("/hosts", api.GetHosts)
-}
-
 func (api *Api) MapGetTrafficURL() {
 	api.GET("/traffic", api.GetTraffic)
 }

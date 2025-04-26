@@ -30,8 +30,8 @@ func main() {
 	// ********************************
 	// *********** UseCases ***********
 
-	var getLocalhostsUseCase api.GetLocalhostsUseCase
-	var hostBlocker hosts_domains.HostBlocker
+	var getLocalhostsUseCase *usecase_hosts.GetLocalhostsUseCase
+	var hostBlocker *usecase_hosts.BlockHostUseCase
 	var hostsStorage hosts_domains.HostsStorage
 
 	var trafficSearcher traffic_domains.TrafficUseCase
@@ -105,7 +105,7 @@ func main() {
 		Tool: tool,
 
 		GetLocalhostsUseCase: getLocalhostsUseCase,
-		HostBlocker:          hostBlocker,
+		BlockHostUseCase:     hostBlocker,
 		HostsStorage:         hostsStorage,
 		TrafficSearcher:      trafficSearcher,
 		TrafficBytesParser:   trafficBytesParser,
@@ -117,7 +117,6 @@ func main() {
 	}
 
 	api.MapURLToPing()
-	api.MapGetHostsURL()
 	api.MapGetTrafficURL()
 	api.MapGetLocalHostsURL()
 	api.MapGetActiveFlowsPerDestinationURL()
@@ -133,16 +132,17 @@ func main() {
 }
 
 // *********** Hosts ***********
-func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (api.GetLocalhostsUseCase, hosts_domains.HostsStorage) {
+func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (*usecase_hosts.GetLocalhostsUseCase, hosts_domains.HostsStorage) {
 
 	getLocalhostsUseCase := usecase_hosts.NewGetLocalhostsUseCase(tool)
 	hostStorage := hosts_useCases.NewHostsStorage(tool, hostRepo)
 	return getLocalhostsUseCase, hostStorage
 }
 
-func initializeHostBlockerUseCase(console services.Terminal) hosts_domains.HostBlocker {
-	hostBlocker := hosts_useCases.NewBlocker(console)
-	return hostBlocker
+func initializeHostBlockerUseCase(console services.Terminal) *usecase_hosts.BlockHostUseCase {
+	//hostBlocker := usecase_hosts.NewBlocker(console)
+	//return hostBlocker
+	return nil
 }
 
 func initializeHostRepository(db services.Database) hosts_domains.HostsRepository {

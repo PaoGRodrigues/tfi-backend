@@ -9,74 +9,12 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	api_mocks "github.com/PaoGRodrigues/tfi-backend/mocks/api"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
+	hostUsecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
+	hostPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/host"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
-
-func TestCreateHostUseCaseAndGetAllHosts(t *testing.T) {
-
-	var (
-		name = "Test"
-		ip   = "13.13.13.13"
-	)
-	expectedHosts := []host.Host{
-		host.Host{
-			Name: name,
-			IP:   ip,
-		},
-	}
-
-	gin.SetMode(gin.TestMode)
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockHostSearcherUseCase := mocks.NewMockHostUseCase(ctrl)
-	mockHostSearcherUseCase.EXPECT().GetAllHosts().Return(expectedHosts, nil)
-
-	api := &api.Api{
-		HostUseCase: mockHostSearcherUseCase,
-		Engine:      gin.Default(),
-	}
-
-	api.MapGetHostsURL()
-
-	response := httptest.NewRecorder()
-	requestUrl := "/hosts"
-	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
-	api.Engine.ServeHTTP(response, httpRequest)
-
-	assert.Equal(t, http.StatusOK, response.Code)
-}
-
-func TestCreateAHostUsecaseAndGetHostsReturnsAnError(t *testing.T) {
-
-	gin.SetMode(gin.TestMode)
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockHostSearcherUseCase := mocks.NewMockHostUseCase(ctrl)
-	mockHostSearcherUseCase.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing error case"))
-
-	api := &api.Api{
-		HostUseCase: mockHostSearcherUseCase,
-		Engine:      gin.Default(),
-	}
-
-	api.MapGetHostsURL()
-
-	response := httptest.NewRecorder()
-
-	requestUrl := "/hosts"
-	httpRequest, _ := http.NewRequest("GET", requestUrl, strings.NewReader(string("")))
-
-	api.Engine.ServeHTTP(response, httpRequest)
-
-	assert.Equal(t, http.StatusInternalServerError, response.Code)
-
-}
 
 func TestCreateHostFilterCaseAndGetAllLocalHosts(t *testing.T) {
 
@@ -98,11 +36,12 @@ func TestCreateHostFilterCaseAndGetAllLocalHosts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockHostFilter := api_mocks.NewMockGetLocalhostsUseCase(ctrl)
-	mockHostFilter.EXPECT().GetLocalHosts().Return(localhosts, nil)
+	mockRepository := hostPortsMock.NewMockHostRepository(ctrl)
+	getLocalhostUseCase := hostUsecase.NewGetLocalhostsUseCase(mockRepository)
+	mockRepository.EXPECT().GetAllHosts().Return(localhosts, nil)
 
 	api := &api.Api{
-		GetLocalhostsUseCase: mockHostFilter,
+		GetLocalhostsUseCase: getLocalhostUseCase,
 		Engine:               gin.Default(),
 	}
 
@@ -124,11 +63,12 @@ func TestCreateHostFilterCaseAndReturnsAnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockHostFilter := api_mocks.NewMockGetLocalhostsUseCase(ctrl)
-	mockHostFilter.EXPECT().GetLocalHosts().Return(nil, fmt.Errorf("Testing error case"))
+	mockRepository := hostPortsMock.NewMockHostRepository(ctrl)
+	getLocalhostUseCase := hostUsecase.NewGetLocalhostsUseCase(mockRepository)
+	mockRepository.EXPECT().GetAllHosts().Return(nil, fmt.Errorf("Testing error case"))
 
 	api := &api.Api{
-		GetLocalhostsUseCase: mockHostFilter,
+		GetLocalhostsUseCase: getLocalhostUseCase,
 		Engine:               gin.Default(),
 	}
 
