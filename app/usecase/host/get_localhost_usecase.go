@@ -6,17 +6,17 @@ import (
 )
 
 type GetLocalhostsUseCase struct {
-	searcher ports.HostRepository
+	repository ports.HostRepository
 }
 
-func NewGetLocalhostsUseCase(huc ports.HostRepository) *GetLocalhostsUseCase {
+func NewGetLocalhostsUseCase(repository ports.HostRepository) *GetLocalhostsUseCase {
 	return &GetLocalhostsUseCase{
-		searcher: huc,
+		repository: repository,
 	}
 }
 
-func (l *GetLocalhostsUseCase) GetLocalHosts() ([]host.Host, error) {
-	current, err := l.searcher.GetAllHosts()
+func (usecase *GetLocalhostsUseCase) GetLocalHosts() ([]host.Host, error) {
+	current, err := usecase.repository.GetAllHosts()
 	if err != nil {
 		return []host.Host{}, err
 	}

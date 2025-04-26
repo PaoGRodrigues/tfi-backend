@@ -10,7 +10,6 @@ import (
 	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	hosts_repository "github.com/PaoGRodrigues/tfi-backend/app/hosts/repository"
 	hosts_useCases "github.com/PaoGRodrigues/tfi-backend/app/hosts/usecase"
-	ports "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
@@ -30,7 +29,7 @@ func main() {
 	var database services.Database
 	// ********************************
 	// *********** UseCases ***********
-	var hostUseCase ports.HostRepository
+
 	var getLocalhostsUseCase api.GetLocalhostsUseCase
 	var hostBlocker hosts_domains.HostBlocker
 	var hostsStorage hosts_domains.HostsStorage
@@ -91,7 +90,7 @@ func main() {
 
 	// *********** Repo & Usecases ***********
 	hostRepo = initializeHostRepository(database)
-	hostUseCase, getLocalhostsUseCase, hostsStorage = initializeHostDependencies(tool, hostRepo)
+	getLocalhostsUseCase, hostsStorage = initializeHostDependencies(tool, hostRepo)
 
 	trafficRepo = initializeTrafficRepository(database)
 	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostsStorage)
@@ -103,8 +102,8 @@ func main() {
 	// ****************************************
 
 	api := &api.Api{
-		Tool:                 tool,
-		HostUseCase:          hostUseCase,
+		Tool: tool,
+
 		GetLocalhostsUseCase: getLocalhostsUseCase,
 		HostBlocker:          hostBlocker,
 		HostsStorage:         hostsStorage,
@@ -134,11 +133,11 @@ func main() {
 }
 
 // *********** Hosts ***********
-func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (ports.HostRepository, api.GetLocalhostsUseCase, hosts_domains.HostsStorage) {
-	hostSearcher := hosts_useCases.NewHostSearcher(tool)
-	getLocalhostsUseCase := usecase_hosts.NewGetLocalhostsUseCase(hostSearcher)
-	hostStorage := hosts_useCases.NewHostsStorage(hostSearcher, hostRepo)
-	return hostSearcher, getLocalhostsUseCase, hostStorage
+func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (api.GetLocalhostsUseCase, hosts_domains.HostsStorage) {
+
+	getLocalhostsUseCase := usecase_hosts.NewGetLocalhostsUseCase(tool)
+	hostStorage := hosts_useCases.NewHostsStorage(tool, hostRepo)
+	return getLocalhostsUseCase, hostStorage
 }
 
 func initializeHostBlockerUseCase(console services.Terminal) hosts_domains.HostBlocker {
