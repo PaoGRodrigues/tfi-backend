@@ -4,16 +4,17 @@ import (
 	"time"
 
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
+	alertPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/alert"
 )
 
 type GetAlertsUseCase struct {
-	alertService alert.AlertService
-	alerts       []alert.Alert
+	repository alertPorts.AlertReader
+	alerts     []alert.Alert
 }
 
-func NewGetAlertsUseCase(service alert.AlertService) *GetAlertsUseCase {
+func NewGetAlertsUseCase(service alertPorts.AlertReader) *GetAlertsUseCase {
 	return &GetAlertsUseCase{
-		alertService: service,
+		repository: service,
 	}
 }
 
@@ -32,7 +33,7 @@ func (searcher *GetAlertsUseCase) GetAllAlerts() ([]alert.Alert, error) {
 func (searcher *GetAlertsUseCase) GetAllAlertsByTime(epochBegin int, epochEnd int) ([]alert.Alert, error) {
 
 	alerts := []alert.Alert{}
-	res, err := searcher.alertService.GetAllAlerts(epochBegin, epochEnd)
+	res, err := searcher.repository.GetAllAlerts(epochBegin, epochEnd)
 	if err != nil {
 		return nil, err
 	}

@@ -7,7 +7,7 @@ import (
 
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	usecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/alerts"
+	alertPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/alert"
 	"github.com/go-playground/assert/v2"
 	"go.uber.org/mock/gomock"
 )
@@ -20,10 +20,10 @@ func TestGetAllAlertsReturnError(t *testing.T) {
 	epoch_end := int(now.Unix())
 	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
 
-	mockService := mocks.NewMockAlertService(ctrl)
-	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return([]alert.Alert{}, fmt.Errorf("test error"))
+	mockAlertReader := alertPortsMock.NewMockAlertReader(ctrl)
+	mockAlertReader.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return([]alert.Alert{}, fmt.Errorf("test error"))
 
-	alertSearcher := usecase.NewGetAlertsUseCase(mockService)
+	alertSearcher := usecase.NewGetAlertsUseCase(mockAlertReader)
 	_, err := alertSearcher.GetAllAlerts()
 
 	if err == nil {
@@ -39,10 +39,10 @@ func TestGetAllAlertsReturnAlerts(t *testing.T) {
 	epoch_end := int(now.Unix())
 	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
 
-	mockService := mocks.NewMockAlertService(ctrl)
-	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return(expected, nil)
+	mockAlertReader := alertPortsMock.NewMockAlertReader(ctrl)
+	mockAlertReader.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return(expected, nil)
 
-	alertSearcher := usecase.NewGetAlertsUseCase(mockService)
+	alertSearcher := usecase.NewGetAlertsUseCase(mockAlertReader)
 	got, err := alertSearcher.GetAllAlerts()
 
 	if err != nil {
