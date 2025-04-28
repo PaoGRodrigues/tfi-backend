@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/alerts"
 	"github.com/go-playground/assert/v2"
 	"go.uber.org/mock/gomock"
@@ -21,7 +21,7 @@ func TestGetAllAlertsReturnError(t *testing.T) {
 	epoch_begin := int(now.AddDate(0, 0, -7).Unix())
 
 	mockService := mocks.NewMockAlertService(ctrl)
-	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return([]domains.Alert{}, fmt.Errorf("test error"))
+	mockService.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return([]alert.Alert{}, fmt.Errorf("test error"))
 
 	alertSearcher := usecase.NewAlertSearcher(mockService)
 	_, err := alertSearcher.GetAllAlerts()

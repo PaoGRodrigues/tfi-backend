@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/alerts"
 	"github.com/gin-gonic/gin"
@@ -18,14 +18,14 @@ import (
 
 func TestCreateAlertsUsecaseGetAllAlertsReturnAlerts(t *testing.T) {
 
-	expected := []domains.Alert{
-		domains.Alert{
+	expected := []alert.Alert{
+		alert.Alert{
 
 			Name:     "test",
 			Family:   "flow",
 			Time:     "10/10/10 11:11:11",
 			Severity: "Advertencia",
-			AlertFlow: domains.AlertFlow{
+			AlertFlow: alert.AlertFlow{
 				Client: flow.Client{
 					Port: 33566,
 					IP:   "192.168.4.14",
@@ -77,7 +77,7 @@ func TestCreateAlertsUsecaseGetAllAlertsReturnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockAlertSearcher := mocks.NewMockAlertUseCase(ctrl)
-	mockAlertSearcher.EXPECT().GetAllAlerts().Return([]domains.Alert{}, fmt.Errorf("Error test"))
+	mockAlertSearcher.EXPECT().GetAllAlerts().Return([]alert.Alert{}, fmt.Errorf("Error test"))
 
 	api := &api.Api{
 		AlertsSearcher: mockAlertSearcher,
@@ -98,14 +98,14 @@ func TestCreateAlertsUsecaseGetAllAlertsReturnError(t *testing.T) {
 
 func TestCreateAlertsUsecaseGetAllAlertsWithDestNameEmptyReturnAlerts(t *testing.T) {
 
-	expected := []domains.Alert{
-		domains.Alert{
+	expected := []alert.Alert{
+		alert.Alert{
 
 			Name:     "test",
 			Family:   "flow",
 			Time:     "10/10/10 11:11:11",
 			Severity: "Advertencia",
-			AlertFlow: domains.AlertFlow{
+			AlertFlow: alert.AlertFlow{
 				Client: flow.Client{
 					Port: 33566,
 					IP:   "192.168.4.14",

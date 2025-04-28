@@ -3,21 +3,21 @@ package usecase
 import (
 	"time"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 )
 
 type AlertSearcher struct {
-	alertService domains.AlertService
-	alerts       []domains.Alert
+	alertService alert.AlertService
+	alerts       []alert.Alert
 }
 
-func NewAlertSearcher(service domains.AlertService) *AlertSearcher {
+func NewAlertSearcher(service alert.AlertService) *AlertSearcher {
 	return &AlertSearcher{
 		alertService: service,
 	}
 }
 
-func (searcher *AlertSearcher) GetAllAlerts() ([]domains.Alert, error) {
+func (searcher *AlertSearcher) GetAllAlerts() ([]alert.Alert, error) {
 	now := time.Now()
 	epoch_end := int(now.Unix())
 	epoch_begin := int(now.AddDate(0, 0, -7).Unix()) //To get 7 days back
@@ -29,9 +29,9 @@ func (searcher *AlertSearcher) GetAllAlerts() ([]domains.Alert, error) {
 	return alerts, nil
 }
 
-func (searcher *AlertSearcher) GetAllAlertsByTime(epochBegin int, epochEnd int) ([]domains.Alert, error) {
+func (searcher *AlertSearcher) GetAllAlertsByTime(epochBegin int, epochEnd int) ([]alert.Alert, error) {
 
-	alerts := []domains.Alert{}
+	alerts := []alert.Alert{}
 	res, err := searcher.alertService.GetAllAlerts(epochBegin, epochEnd)
 	if err != nil {
 		return nil, err

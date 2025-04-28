@@ -6,18 +6,18 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 )
 
 const seconds = 300
 const cybersecurity = "Cybersecurity"
 
 type AlertNotifier struct {
-	searcher     domains.AlertUseCase
-	notifService domains.Notifier
+	searcher     alert.AlertUseCase
+	notifService alert.Notifier
 }
 
-func NewAlertNotifier(service domains.Notifier, searcher domains.AlertUseCase) *AlertNotifier {
+func NewAlertNotifier(service alert.Notifier, searcher alert.AlertUseCase) *AlertNotifier {
 	return &AlertNotifier{
 		searcher:     searcher,
 		notifService: service,
@@ -48,7 +48,7 @@ func (an *AlertNotifier) SendLastAlertMessages() error {
 	return nil
 }
 
-func ParseAlerts(alerts []domains.Alert) []string {
+func ParseAlerts(alerts []alert.Alert) []string {
 	messages := []string{}
 
 	for _, alert := range alerts {

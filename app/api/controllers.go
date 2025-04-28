@@ -6,8 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
-	alerts "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
@@ -24,10 +23,10 @@ type Api struct {
 	GetLocalhostsUseCase *hostUsecases.GetLocalhostsUseCase
 	TrafficBytesParser   traffic.TrafficBytesParser
 	ActiveFlowsStorage   traffic.TrafficStorage
-	AlertsSearcher       alerts.AlertUseCase
+	AlertsSearcher       alert.AlertUseCase
 	BlockHostUseCase     *hostUsecases.BlockHostUseCase
 	NotifChannel         services.NotificationChannel
-	AlertsSender         alerts.AlertsSender
+	AlertsSender         alert.AlertsSender
 	HostsStorage         *hostUsecases.StoreHostUseCase
 	*gin.Engine
 }
@@ -102,7 +101,7 @@ func (api *Api) GetAlerts(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": alertsResponse})
 }
 
-func (api *Api) parseAlertsData(alerts []domains.Alert) []AlertsResponse {
+func (api *Api) parseAlertsData(alerts []alert.Alert) []AlertsResponse {
 	response := []AlertsResponse{}
 	for _, alert := range alerts {
 		source, destination := createFlowString(alert.AlertFlow)
@@ -119,7 +118,7 @@ func (api *Api) parseAlertsData(alerts []domains.Alert) []AlertsResponse {
 	return response
 }
 
-func createFlowString(flow alerts.AlertFlow) (string, string) {
+func createFlowString(flow alert.AlertFlow) (string, string) {
 	var source strings.Builder
 	var destination strings.Builder
 

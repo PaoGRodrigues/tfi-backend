@@ -12,7 +12,7 @@ package mock_services
 import (
 	reflect "reflect"
 
-	domains "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	host "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	domains0 "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	gomock "go.uber.org/mock/gomock"

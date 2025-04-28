@@ -1,20 +1,20 @@
 package services
 
 import (
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
-func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
+func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int) ([]alert.Alert, error) {
 
-	alerts := []domains.Alert{
+	alerts := []alert.Alert{
 		{
 
 			Name:     "test",
 			Family:   "flow",
 			Time:     "10/10/10 11:11:11",
 			Severity: "Advertencia",
-			AlertFlow: domains.AlertFlow{
+			AlertFlow: alert.AlertFlow{
 				Client: flow.Client{
 					Name: "192.168.4.14",
 					IP:   "192.168.4.14",
@@ -40,7 +40,7 @@ func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, er
 			Family:   "flow",
 			Time:     "10/10/10 11:11:11",
 			Severity: "Advertencia",
-			AlertFlow: domains.AlertFlow{
+			AlertFlow: alert.AlertFlow{
 				Client: flow.Client{
 					IP:   "192.168.4.14",
 					Name: "192.168.4.14",

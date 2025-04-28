@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/alerts"
 	"go.uber.org/mock/gomock"
 )
@@ -22,7 +22,7 @@ func TestSendMessageSuccessfully(t *testing.T) {
 
 	mockService := mocks.NewMockNotifier(ctrl)
 	mockSearcher := mocks.NewMockAlertUseCase(ctrl)
-	mockSearcher.EXPECT().GetAllAlertsByTime(epoch_begin, epoch_end).Return([]domains.Alert{expected[0], expected[1]}, nil)
+	mockSearcher.EXPECT().GetAllAlertsByTime(epoch_begin, epoch_end).Return([]alert.Alert{expected[0], expected[1]}, nil)
 	alerts := usecase.ParseAlerts(expected)
 	mockService.EXPECT().SendMessage(alerts[0]).Return(nil)
 	mockService.EXPECT().SendMessage(alerts[1]).Return(nil)
@@ -63,7 +63,7 @@ func TestSendMessageReturnErrorSendingAMessageButContinueAnyway(t *testing.T) {
 
 	mockService := mocks.NewMockNotifier(ctrl)
 	mockSearcher := mocks.NewMockAlertUseCase(ctrl)
-	mockSearcher.EXPECT().GetAllAlertsByTime(epoch_begin, epoch_end).Return([]domains.Alert{expected[0], expected[1]}, nil)
+	mockSearcher.EXPECT().GetAllAlertsByTime(epoch_begin, epoch_end).Return([]alert.Alert{expected[0], expected[1]}, nil)
 	alerts := usecase.ParseAlerts(expected)
 	mockService.EXPECT().SendMessage(alerts[0]).Return(fmt.Errorf("test error"))
 	mockService.EXPECT().SendMessage(alerts[1]).Return(nil)
