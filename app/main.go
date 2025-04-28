@@ -12,6 +12,7 @@ import (
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	traffic_useCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
+	alertUsecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
 	usecase_hosts "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 
 	"github.com/coreos/go-iptables/iptables"
@@ -163,7 +164,7 @@ func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficR
 
 // *********** Alerts ***********
 func initializeAlertsDependencies(tool services.Tool) alert.AlertUseCase {
-	alertsSearcher := alerts_useCases.NewAlertSearcher(tool)
+	alertsSearcher := alertUsecase.NewAlertSearcher(tool)
 	return alertsSearcher
 }
 

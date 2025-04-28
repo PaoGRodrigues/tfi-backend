@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
+	usecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/alerts"
 	"github.com/go-playground/assert/v2"
 	"go.uber.org/mock/gomock"
