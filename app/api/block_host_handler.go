@@ -6,6 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type blockHostRequest struct {
+	Host string `json:"host" binding:"required"` // Host can be IP or URL
+}
+
 func (api *Api) BlockHost(c *gin.Context) {
 	host := blockHostRequest{}
 	if err := c.BindJSON(&host); err != nil {
