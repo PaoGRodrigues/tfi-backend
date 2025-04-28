@@ -7,7 +7,6 @@ import (
 	alerts_domains "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	alerts_useCases "github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	hosts_domains "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	hosts_repository "github.com/PaoGRodrigues/tfi-backend/app/hosts/repository"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
@@ -44,7 +43,7 @@ func main() {
 	// ********************************
 	// *********** Repository ***********
 	var trafficRepo traffic_domains.TrafficRepository
-	var hostRepo hosts_domains.HostsRepository
+	var hostDBRepository hostPorts.HostDBRepository
 	// *******************************
 
 	// *********** Flags *************
@@ -90,11 +89,11 @@ func main() {
 	}
 
 	// *********** Repo & Usecases ***********
-	hostRepo = initializeHostRepository(database)
-	getLocalhostsUseCase, hostsStorage = initializeHostDependencies(tool, hostRepo)
+	hostDBRepository = initializeHostRepository(database)
+	getLocalhostsUseCase, hostsStorage = initializeHostDependencies(tool, hostDBRepository)
 
 	trafficRepo = initializeTrafficRepository(database)
-	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostRepo)
+	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostDBRepository)
 
 	hostBlocker = initializeHostBlockerUseCase(console)
 
@@ -133,10 +132,10 @@ func main() {
 }
 
 // *********** Hosts ***********
-func initializeHostDependencies(tool services.Tool, hostRepo hosts_domains.HostsRepository) (*usecase_hosts.GetLocalhostsUseCase, *usecase_hosts.StoreHostUseCase) {
+func initializeHostDependencies(tool services.Tool, hostDBRepository hostPorts.HostDBRepository) (*usecase_hosts.GetLocalhostsUseCase, *usecase_hosts.StoreHostUseCase) {
 
 	getLocalhostsUseCase := usecase_hosts.NewGetLocalhostsUseCase(tool)
-	hostStorage := usecase_hosts.NewHostsStorage(tool, hostRepo)
+	hostStorage := usecase_hosts.NewHostsStorage(tool, hostDBRepository)
 	return getLocalhostsUseCase, hostStorage
 }
 
@@ -145,7 +144,7 @@ func initializeHostBlockerUseCase(console services.Terminal) *usecase_hosts.Bloc
 	return hostBlocker
 }
 
-func initializeHostRepository(db services.Database) hosts_domains.HostsRepository {
+func initializeHostRepository(db services.Database) hostPorts.HostDBRepository {
 	hostRepo := hosts_repository.NewHostsRepo(db)
 	return hostRepo
 }

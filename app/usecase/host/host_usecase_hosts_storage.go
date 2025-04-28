@@ -10,7 +10,7 @@ type StoreHostUseCase struct {
 	hostDBRepository     ports.HostDBRepository
 }
 
-func NewHostsStorage(repository ports.HostReader, hostDBRepository host.HostsRepository) *StoreHostUseCase {
+func NewHostsStorage(repository ports.HostReader, hostDBRepository ports.HostDBRepository) *StoreHostUseCase {
 	return &StoreHostUseCase{
 		hostRepositoryReader: repository,
 		hostDBRepository:     hostDBRepository,
