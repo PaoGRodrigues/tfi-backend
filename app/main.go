@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"flag"
 
+	usecase_alerts "github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
@@ -37,7 +38,7 @@ func main() {
 	var trafficBytesParser traffic_domains.TrafficBytesParser
 	var trafficStorage traffic_domains.TrafficStorage
 
-	var alertsSearcher alert.AlertReaderTemp
+	var getAlertsUseCase *alertUsecase.GetAlertsUseCase
 	var alertSender alert.AlertsSender
 	// ********************************
 	// *********** Repository ***********
@@ -94,8 +95,8 @@ func main() {
 
 	hostBlocker = initializeHostBlockerUseCase(console)
 
-	alertsSearcher = initializeAlertsDependencies(tool)
-	alertSender = initializeAlertSender(channel, alertsSearcher)
+	getAlertsUseCase = initializeAlertsDependencies(tool)
+	alertSender = initializeAlertSender(channel, tool)
 	// ****************************************
 
 	api := &api.Api{
@@ -107,7 +108,7 @@ func main() {
 		TrafficSearcher:      trafficSearcher,
 		TrafficBytesParser:   trafficBytesParser,
 		ActiveFlowsStorage:   trafficStorage,
-		AlertsSearcher:       alertsSearcher,
+		GetAlertsUseCase:     getAlertsUseCase,
 		AlertsSender:         alertSender,
 		NotifChannel:         channel,
 		Engine:               gin.Default(),
@@ -162,15 +163,14 @@ func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficR
 // *******************************
 
 // *********** Alerts ***********
-func initializeAlertsDependencies(tool services.Tool) alert.AlertReaderTemp {
-	alertsSearcher := alertUsecase.NewGetAlertsUseCase(tool)
-	return alertsSearcher
+func initializeAlertsDependencies(tool services.Tool) *alertUsecase.GetAlertsUseCase {
+	getAlertsUseCase := alertUsecase.NewGetAlertsUseCase(tool)
+	return getAlertsUseCase
 }
 
-func initializeAlertSender(notifier services.NotificationChannel, searcher alert.AlertReaderTemp) alert.AlertsSender {
-	//alertsSender := alerts_useCases.NewAlertNotifier(notifier, searcher)
-	//return alertsSender
-	return nil
+func initializeAlertSender(notifier services.NotificationChannel, tool services.Tool) alert.AlertsSender {
+	alertsSender := usecase_alerts.NewAlertNotifier(notifier, tool)
+	return alertsSender
 }
 
 // ******************************

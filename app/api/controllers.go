@@ -11,6 +11,7 @@ import (
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
 	hostUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +24,7 @@ type Api struct {
 	GetLocalhostsUseCase *hostUsecases.GetLocalhostsUseCase
 	TrafficBytesParser   traffic.TrafficBytesParser
 	ActiveFlowsStorage   traffic.TrafficStorage
-	AlertsSearcher       alert.AlertReaderTemp
+	GetAlertsUseCase     *alertUsecases.GetAlertsUseCase
 	BlockHostUseCase     *hostUsecases.BlockHostUseCase
 	NotifChannel         services.NotificationChannel
 	AlertsSender         alert.AlertsSender
@@ -88,7 +89,7 @@ func (api *Api) StoreActiveTraffic(c *gin.Context) {
 }
 
 func (api *Api) GetAlerts(c *gin.Context) {
-	alerts, err := api.AlertsSearcher.GetAllAlerts()
+	alerts, err := api.GetAlertsUseCase.GetAllAlerts()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})
