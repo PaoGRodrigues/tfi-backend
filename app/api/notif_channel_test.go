@@ -11,8 +11,8 @@ import (
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/services"
 	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 type configRequest struct {

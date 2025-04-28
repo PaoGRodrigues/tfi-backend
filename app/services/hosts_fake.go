@@ -1,11 +1,9 @@
 package services
 
-import (
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
-)
+import "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 
-func (d *FakeTool) GetAllHosts() ([]domains.Host, error) {
-	Hosts := []domains.Host{
+func (d *FakeTool) GetAllHosts() ([]host.Host, error) {
+	Hosts := []host.Host{
 		{
 			Name:        "Test1",
 			IP:          "13.13.13.13",

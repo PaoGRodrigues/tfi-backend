@@ -12,16 +12,12 @@ func (api *Api) MapURLToPing() {
 	})
 }
 
-func (api *Api) MapGetHostsURL() {
-	api.GET("/hosts", api.GetHosts)
+func (api *Api) MapGetLocalHostsURL() {
+	api.GET("/localhosts", api.GetLocalHosts)
 }
 
 func (api *Api) MapGetTrafficURL() {
 	api.GET("/traffic", api.GetTraffic)
-}
-
-func (api *Api) MapGetLocalHostsURL() {
-	api.GET("/localhosts", api.GetLocalHosts)
 }
 
 func (api *Api) MapGetActiveFlowsPerDestinationURL() {
@@ -30,10 +26,6 @@ func (api *Api) MapGetActiveFlowsPerDestinationURL() {
 
 func (api *Api) MapGetActiveFlowsPerCountryURL() {
 	api.GET("/activeflowspercountry", api.GetActiveFlowsPerCountry)
-}
-
-func (api *Api) MapStoreActiveFlowsURL() {
-	api.POST("/activeflows", api.StoreActiveTraffic)
 }
 
 func (api *Api) MapAlertsURL() {
@@ -54,4 +46,8 @@ func (api *Api) MapConfigureNotifChannelURL() {
 
 func (api *Api) MapStoreHostsURL() {
 	api.POST("/hosts", api.StoreHosts)
+}
+
+func (api *Api) MapStoreActiveFlowsURL() {
+	api.POST("/activeflows", api.StoreActiveTraffic)
 }

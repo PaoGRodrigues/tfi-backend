@@ -8,25 +8,27 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	alerts "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
-	hosts "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
+	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	hostUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Api struct {
-	Tool               services.Tool
-	HostUseCase        hosts.HostUseCase
-	TrafficSearcher    traffic.TrafficUseCase
-	HostsFilter        hosts.HostsFilter
-	TrafficBytesParser traffic.TrafficBytesParser
-	ActiveFlowsStorage traffic.TrafficStorage
-	AlertsSearcher     alerts.AlertUseCase
-	HostBlocker        hosts.HostBlocker
-	NotifChannel       services.NotificationChannel
-	AlertsSender       alerts.AlertsSender
-	HostsStorage       hosts.HostsStorage
+	Tool                 services.Tool
+	HostUseCase          hostPorts.HostReader
+	TrafficSearcher      traffic.TrafficUseCase
+	GetLocalhostsUseCase *hostUsecases.GetLocalhostsUseCase
+	TrafficBytesParser   traffic.TrafficBytesParser
+	ActiveFlowsStorage   traffic.TrafficStorage
+	AlertsSearcher       alerts.AlertUseCase
+	BlockHostUseCase     *hostUsecases.BlockHostUseCase
+	NotifChannel         services.NotificationChannel
+	AlertsSender         alerts.AlertsSender
+	HostsStorage         *hostUsecases.StoreHostUseCase
 	*gin.Engine
 }
 
@@ -47,20 +49,6 @@ type HostsResponse struct {
 	ASname      string `json:"ASname,omitempty"`
 }
 
-func (api *Api) GetHosts(c *gin.Context) {
-	hosts, err := api.HostUseCase.GetAllHosts()
-	if err != nil {
-		fmt.Println(err)
-		c.JSON(500, gin.H{"data": "error"})
-		c.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
-	c.Header("Access-Control-Allow-Methods", "GET")
-	c.JSON(http.StatusOK, gin.H{"data": hosts})
-	return
-}
-
 func (api *Api) GetTraffic(c *gin.Context) {
 	traffic, err := api.TrafficSearcher.GetAllActiveTraffic()
 	if err != nil {
@@ -72,19 +60,6 @@ func (api *Api) GetTraffic(c *gin.Context) {
 	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
 	c.Header("Access-Control-Allow-Methods", "GET")
 	c.JSON(http.StatusOK, gin.H{"data": traffic})
-}
-
-func (api *Api) GetLocalHosts(c *gin.Context) {
-	hosts, err := api.HostsFilter.GetLocalHosts()
-	if err != nil {
-		fmt.Println(err)
-		c.JSON(500, gin.H{"data": "error"})
-		c.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
-	c.Header("Access-Control-Allow-Methods", "GET")
-	c.JSON(http.StatusOK, gin.H{"data": parseHostResponse(hosts)})
 }
 
 func (api *Api) GetActiveFlowsPerDestination(c *gin.Context) {
@@ -163,36 +138,6 @@ func createFlowString(flow alerts.AlertFlow) (string, string) {
 	return source.String(), destination.String()
 }
 
-type blockHostRequest struct {
-	Host string `json:"host" binding:"required"` // Host can be IP or URL
-}
-
-func (api *Api) BlockHost(c *gin.Context) {
-	host := blockHostRequest{}
-	if err := c.BindJSON(&host); err != nil {
-		c.JSON(400, gin.H{"data": "error"})
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
-	blockedHost, err := api.HostBlocker.Block(host.Host)
-	if err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
-		c.JSON(http.StatusBadRequest, err)
-		return
-	}
-
-	if blockedHost == nil {
-		c.JSON(400, gin.H{"data": "Host not found"})
-		c.AbortWithStatus(http.StatusBadRequest)
-		return
-	}
-
-	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
-	c.Header("Access-Control-Allow-Methods", "POST")
-	c.JSON(http.StatusOK, gin.H{"message": "Host " + host.Host + "has been blocked"})
-}
-
 func (api *Api) SendAlertNotification(c *gin.Context) {
 	err := api.AlertsSender.SendLastAlertMessages()
 	if err != nil {
@@ -243,7 +188,7 @@ func (api *Api) GetActiveFlowsPerCountry(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": activeFlows})
 }
 
-func parseHostResponse(hosts []hosts.Host) []HostsResponse {
+func parseHostResponse(hosts []host.Host) []HostsResponse {
 	response := []HostsResponse{}
 
 	for _, host := range hosts {
@@ -255,17 +200,4 @@ func parseHostResponse(hosts []hosts.Host) []HostsResponse {
 		response = append(response, h)
 	}
 	return response
-}
-
-func (api *Api) StoreHosts(c *gin.Context) {
-	err := api.HostsStorage.StoreHosts()
-	if err != nil {
-		fmt.Println(err)
-		c.JSON(500, gin.H{"data": "error"})
-		c.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-	c.Header("Access-Control-Allow-Origin", "*") //There is a vuln here, that's only for testing purpose.
-	c.Header("Access-Control-Allow-Methods", "POST")
-	c.JSON(http.StatusOK, gin.H{"message": "ok"})
 }

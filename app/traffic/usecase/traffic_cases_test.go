@@ -1,7 +1,7 @@
 package usecase_test
 
 import (
-	hosts "github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
+	hosts "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 

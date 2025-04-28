@@ -17,22 +17,22 @@ func NewConsole(ipTablesClient *iptables.IPTables) *Console {
 	}
 }
 
-func (c *Console) BlockHost(host string) error {
+func (c *Console) Block(host string) (*string, error) {
 
 	exists, err := c.IPTables.ChainExists(table, chain)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if !exists {
 		err := c.IPTables.NewChain(table, chain)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
 
 	err = c.IPTables.AppendUnique(table, chain, "-d", host, "-j", "DROP")
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return &host, nil
 }

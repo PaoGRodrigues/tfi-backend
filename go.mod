@@ -1,6 +1,8 @@
 module github.com/PaoGRodrigues/tfi-backend
 
-go 1.19
+go 1.22
+
+toolchain go1.24.2
 
 require (
 	github.com/coreos/go-iptables v0.6.0
@@ -8,8 +10,11 @@ require (
 	github.com/go-playground/assert/v2 v2.0.1
 	github.com/golang/mock v1.6.0
 	github.com/mattn/go-sqlite3 v1.14.14
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.9.0
+	go.uber.org/mock v0.5.1
 )
+
+require gopkg.in/yaml.v3 v3.0.1 // indirect
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

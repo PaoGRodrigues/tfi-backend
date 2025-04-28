@@ -9,14 +9,16 @@ import (
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
+	hostUsecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
+	hostPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/host"
+
 	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
-var Host = domains.Host{
+var Host = host.Host{
 	Name: "test.google.com",
 	IP:   "192.192.192.10",
 }
@@ -30,12 +32,13 @@ func TestBlockHostByIPReturn200(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockBlocker := mocks.NewMockHostBlocker(ctrl)
+	mockBlocker := hostPortsMock.NewMockHostBlocker(ctrl)
 	mockBlocker.EXPECT().Block(Host.IP).Return(&Host.IP, nil)
+	blockHostUsecase := hostUsecase.NewBlockHostUseCase(mockBlocker)
 
 	api := &api.Api{
-		HostBlocker: mockBlocker,
-		Engine:      gin.Default(),
+		BlockHostUseCase: blockHostUsecase,
+		Engine:           gin.Default(),
 	}
 
 	api.MapBlockHostURL()
@@ -61,12 +64,13 @@ func TestBlockHostURLReturn200(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockBlocker := mocks.NewMockHostBlocker(ctrl)
+	mockBlocker := hostPortsMock.NewMockHostBlocker(ctrl)
 	mockBlocker.EXPECT().Block(Host.Name).Return(&Host.Name, nil)
+	blockHostUsecase := hostUsecase.NewBlockHostUseCase(mockBlocker)
 
 	api := &api.Api{
-		HostBlocker: mockBlocker,
-		Engine:      gin.Default(),
+		BlockHostUseCase: blockHostUsecase,
+		Engine:           gin.Default(),
 	}
 
 	api.MapBlockHostURL()
@@ -119,12 +123,13 @@ func TestBlockHostFunctionReturningErrorReturn400(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockBlocker := mocks.NewMockHostBlocker(ctrl)
+	mockBlocker := hostPortsMock.NewMockHostBlocker(ctrl)
 	mockBlocker.EXPECT().Block(Host.Name).Return(nil, fmt.Errorf("Test error"))
+	blockHostUsecase := hostUsecase.NewBlockHostUseCase(mockBlocker)
 
 	api := &api.Api{
-		HostBlocker: mockBlocker,
-		Engine:      gin.Default(),
+		BlockHostUseCase: blockHostUsecase,
+		Engine:           gin.Default(),
 	}
 
 	api.MapBlockHostURL()
@@ -150,11 +155,12 @@ func TestBlockHostFunctionReturnErrorWhenTheBodyIsWrong(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockBlocker := mocks.NewMockHostBlocker(ctrl)
+	mockBlocker := hostPortsMock.NewMockHostBlocker(ctrl)
+	blockHostUsecase := hostUsecase.NewBlockHostUseCase(mockBlocker)
 
 	api := &api.Api{
-		HostBlocker: mockBlocker,
-		Engine:      gin.Default(),
+		BlockHostUseCase: blockHostUsecase,
+		Engine:           gin.Default(),
 	}
 
 	api.MapBlockHostURL()
@@ -176,12 +182,13 @@ func TestBlockHostFunctionReturningErrorReturn400WhenIPNotExist(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockBlocker := mocks.NewMockHostBlocker(ctrl)
+	mockBlocker := hostPortsMock.NewMockHostBlocker(ctrl)
 	mockBlocker.EXPECT().Block(Host.IP).Return(nil, nil)
+	blockHostUsecase := hostUsecase.NewBlockHostUseCase(mockBlocker)
 
 	api := &api.Api{
-		HostBlocker: mockBlocker,
-		Engine:      gin.Default(),
+		BlockHostUseCase: blockHostUsecase,
+		Engine:           gin.Default(),
 	}
 
 	api.MapBlockHostURL()

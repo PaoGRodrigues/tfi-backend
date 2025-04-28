@@ -8,14 +8,16 @@ import (
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	"github.com/PaoGRodrigues/tfi-backend/app/hosts/domains"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/hosts"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
+	hostUsecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
+	hostPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/host"
+
 	"github.com/gin-gonic/gin"
-	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
-var host1 = domains.Host{
+var host1 = host.Host{
 	Name:        "test",
 	PrivateHost: false,
 	IP:          "123.123.123.123",
@@ -23,7 +25,7 @@ var host1 = domains.Host{
 	Country:     "US",
 }
 
-var host2 = domains.Host{
+var host2 = host.Host{
 	Name:        "test.randomdns.com",
 	PrivateHost: false,
 	IP:          "13.13.13.13",
@@ -36,11 +38,14 @@ func TestStoreHostSuccessfullyReturn200(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockHostStorage := mocks.NewMockHostsStorage(ctrl)
-	mockHostStorage.EXPECT().StoreHosts().Return(nil)
+	mocksHostReader := hostPortsMock.NewMockHostRepository(ctrl)
+	mockHostDBRepository := hostPortsMock.NewMockHostDBRepository(ctrl)
+	storeHostUsecase := hostUsecase.NewHostsStorage(mocksHostReader, mockHostDBRepository)
+	mocksHostReader.EXPECT().GetAllHosts().Return([]host.Host{host1, host2}, nil)
+	mockHostDBRepository.EXPECT().StoreHosts([]host.Host{host1, host2}).Return(nil)
 
 	api := &api.Api{
-		HostsStorage: mockHostStorage,
+		HostsStorage: storeHostUsecase,
 		Engine:       gin.Default(),
 	}
 
@@ -61,11 +66,14 @@ func TestStoreHostsFailedAndReturn500(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockHostStorage := mocks.NewMockHostsStorage(ctrl)
-	mockHostStorage.EXPECT().StoreHosts().Return(fmt.Errorf("Testing error case"))
+	mocksHostReader := hostPortsMock.NewMockHostRepository(ctrl)
+	mockHostDBRepository := hostPortsMock.NewMockHostDBRepository(ctrl)
+	mocksHostReader.EXPECT().GetAllHosts().Return([]host.Host{host1, host2}, nil)
+	storeHostUsecase := hostUsecase.NewHostsStorage(mocksHostReader, mockHostDBRepository)
+	mockHostDBRepository.EXPECT().StoreHosts([]host.Host{host1, host2}).Return(fmt.Errorf("Testing error case"))
 
 	api := &api.Api{
-		HostsStorage: mockHostStorage,
+		HostsStorage: storeHostUsecase,
 		Engine:       gin.Default(),
 	}
 
