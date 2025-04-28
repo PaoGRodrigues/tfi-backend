@@ -29,6 +29,6 @@ type Database interface {
 	GetClients() ([]traffic_domains.Client, error)
 	GetServers() ([]traffic_domains.Server, error)
 	GetFlowByKey(key string) (traffic_domains.ActiveFlow, error)
-	AddHosts([]host.Host) error
+	StoreHosts([]host.Host) error
 	GetHostByIp(string) (host.Host, error)
 }

@@ -242,20 +242,6 @@ func (mr *MockDatabaseMockRecorder) AddActiveFlows(arg0 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddActiveFlows", reflect.TypeOf((*MockDatabase)(nil).AddActiveFlows), arg0)
 }
 
-// AddHosts mocks base method.
-func (m *MockDatabase) AddHosts(arg0 []host.Host) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddHosts", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// AddHosts indicates an expected call of AddHosts.
-func (mr *MockDatabaseMockRecorder) AddHosts(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddHosts", reflect.TypeOf((*MockDatabase)(nil).AddHosts), arg0)
-}
-
 // GetClients mocks base method.
 func (m *MockDatabase) GetClients() ([]domains0.Client, error) {
 	m.ctrl.T.Helper()
@@ -329,4 +315,18 @@ func (m *MockDatabase) GetServers() ([]domains0.Server, error) {
 func (mr *MockDatabaseMockRecorder) GetServers() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetServers", reflect.TypeOf((*MockDatabase)(nil).GetServers))
+}
+
+// StoreHosts mocks base method.
+func (m *MockDatabase) StoreHosts(arg0 []host.Host) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StoreHosts", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// StoreHosts indicates an expected call of StoreHosts.
+func (mr *MockDatabaseMockRecorder) StoreHosts(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreHosts", reflect.TypeOf((*MockDatabase)(nil).StoreHosts), arg0)
 }

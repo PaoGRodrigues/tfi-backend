@@ -40,7 +40,7 @@ func (client *FakeSQLClient) GetFlowByKey(key string) (traffic_domains.ActiveFlo
 	return flow, nil
 }
 
-func (client *FakeSQLClient) AddHosts([]host.Host) error {
+func (client *FakeSQLClient) StoreHosts([]host.Host) error {
 	return nil
 }
 

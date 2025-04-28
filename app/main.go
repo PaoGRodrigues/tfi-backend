@@ -7,7 +7,6 @@ import (
 	alerts_domains "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	alerts_useCases "github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	hosts_repository "github.com/PaoGRodrigues/tfi-backend/app/hosts/repository"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
@@ -43,7 +42,6 @@ func main() {
 	// ********************************
 	// *********** Repository ***********
 	var trafficRepo traffic_domains.TrafficRepository
-	var hostDBRepository hostPorts.HostDBRepository
 	// *******************************
 
 	// *********** Flags *************
@@ -89,11 +87,10 @@ func main() {
 	}
 
 	// *********** Repo & Usecases ***********
-	hostDBRepository = initializeHostRepository(database)
-	getLocalhostsUseCase, hostsStorage = initializeHostDependencies(tool, hostDBRepository)
+	getLocalhostsUseCase, hostsStorage = initializeHostDependencies(tool, database)
 
 	trafficRepo = initializeTrafficRepository(database)
-	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, hostDBRepository)
+	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, database)
 
 	hostBlocker = initializeHostBlockerUseCase(console)
 
@@ -142,11 +139,6 @@ func initializeHostDependencies(tool services.Tool, hostDBRepository hostPorts.H
 func initializeHostBlockerUseCase(console services.Terminal) *usecase_hosts.BlockHostUseCase {
 	hostBlocker := usecase_hosts.NewBlockHostUseCase(console)
 	return hostBlocker
-}
-
-func initializeHostRepository(db services.Database) hostPorts.HostDBRepository {
-	hostRepo := hosts_repository.NewHostsRepo(db)
-	return hostRepo
 }
 
 // *****************************
