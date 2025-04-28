@@ -6,18 +6,18 @@ import (
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 )
 
-type AlertSearcher struct {
+type GetAlertsUseCase struct {
 	alertService alert.AlertService
 	alerts       []alert.Alert
 }
 
-func NewAlertSearcher(service alert.AlertService) *AlertSearcher {
-	return &AlertSearcher{
+func NewGetAlertsUseCase(service alert.AlertService) *GetAlertsUseCase {
+	return &GetAlertsUseCase{
 		alertService: service,
 	}
 }
 
-func (searcher *AlertSearcher) GetAllAlerts() ([]alert.Alert, error) {
+func (searcher *GetAlertsUseCase) GetAllAlerts() ([]alert.Alert, error) {
 	now := time.Now()
 	epoch_end := int(now.Unix())
 	epoch_begin := int(now.AddDate(0, 0, -7).Unix()) //To get 7 days back
@@ -29,7 +29,7 @@ func (searcher *AlertSearcher) GetAllAlerts() ([]alert.Alert, error) {
 	return alerts, nil
 }
 
-func (searcher *AlertSearcher) GetAllAlertsByTime(epochBegin int, epochEnd int) ([]alert.Alert, error) {
+func (searcher *GetAlertsUseCase) GetAllAlertsByTime(epochBegin int, epochEnd int) ([]alert.Alert, error) {
 
 	alerts := []alert.Alert{}
 	res, err := searcher.alertService.GetAllAlerts(epochBegin, epochEnd)

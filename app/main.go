@@ -164,7 +164,7 @@ func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficR
 
 // *********** Alerts ***********
 func initializeAlertsDependencies(tool services.Tool) alert.AlertUseCase {
-	alertsSearcher := alertUsecase.NewAlertSearcher(tool)
+	alertsSearcher := alertUsecase.NewGetAlertsUseCase(tool)
 	return alertsSearcher
 }
 
