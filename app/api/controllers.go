@@ -23,7 +23,7 @@ type Api struct {
 	GetLocalhostsUseCase *hostUsecases.GetLocalhostsUseCase
 	TrafficBytesParser   traffic.TrafficBytesParser
 	ActiveFlowsStorage   traffic.TrafficStorage
-	AlertsSearcher       alert.AlertUseCase
+	AlertsSearcher       alert.AlertReaderTemp
 	BlockHostUseCase     *hostUsecases.BlockHostUseCase
 	NotifChannel         services.NotificationChannel
 	AlertsSender         alert.AlertsSender

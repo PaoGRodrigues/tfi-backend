@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"flag"
 
-	alerts_useCases "github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
@@ -38,7 +37,7 @@ func main() {
 	var trafficBytesParser traffic_domains.TrafficBytesParser
 	var trafficStorage traffic_domains.TrafficStorage
 
-	var alertsSearcher alert.AlertUseCase
+	var alertsSearcher alert.AlertReaderTemp
 	var alertSender alert.AlertsSender
 	// ********************************
 	// *********** Repository ***********
@@ -163,14 +162,15 @@ func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficR
 // *******************************
 
 // *********** Alerts ***********
-func initializeAlertsDependencies(tool services.Tool) alert.AlertUseCase {
+func initializeAlertsDependencies(tool services.Tool) alert.AlertReaderTemp {
 	alertsSearcher := alertUsecase.NewGetAlertsUseCase(tool)
 	return alertsSearcher
 }
 
-func initializeAlertSender(notifier services.NotificationChannel, searcher alert.AlertUseCase) alert.AlertsSender {
-	alertsSender := alerts_useCases.NewAlertNotifier(notifier, searcher)
-	return alertsSender
+func initializeAlertSender(notifier services.NotificationChannel, searcher alert.AlertReaderTemp) alert.AlertsSender {
+	//alertsSender := alerts_useCases.NewAlertNotifier(notifier, searcher)
+	//return alertsSender
+	return nil
 }
 
 // ******************************

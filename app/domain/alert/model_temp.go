@@ -1,8 +1,8 @@
 package alert
 
 // *********** Use Cases
-// AlertUseCase needs to be implemented in Alert use cases
-type AlertUseCase interface {
+// AlertReaderTemp needs to be implemented in Alert use cases
+type AlertReaderTemp interface {
 	GetAllAlerts() ([]Alert, error)
 	GetAllAlertsByTime(int, int) ([]Alert, error)
 }

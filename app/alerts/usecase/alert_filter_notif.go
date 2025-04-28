@@ -7,19 +7,20 @@ import (
 	"time"
 
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
+	alertPort "github.com/PaoGRodrigues/tfi-backend/app/ports/alert"
 )
 
 const seconds = 300
 const cybersecurity = "Cybersecurity"
 
 type AlertNotifier struct {
-	searcher     alert.AlertUseCase
+	repository   alertPort.AlertReader
 	notifService alert.Notifier
 }
 
-func NewAlertNotifier(service alert.Notifier, searcher alert.AlertUseCase) *AlertNotifier {
+func NewAlertNotifier(service alert.Notifier, repository alertPort.AlertReader) *AlertNotifier {
 	return &AlertNotifier{
-		searcher:     searcher,
+		repository:   repository,
 		notifService: service,
 	}
 }
@@ -29,7 +30,7 @@ func (an *AlertNotifier) SendLastAlertMessages() error {
 	epoch_end := int(now.Unix())
 	epoch_begin := epoch_end - seconds
 
-	lastAlerts, err := an.searcher.GetAllAlertsByTime(epoch_begin, epoch_end)
+	lastAlerts, err := an.repository.GetAllAlerts(epoch_begin, epoch_end)
 	if err != nil {
 		return err
 	}
