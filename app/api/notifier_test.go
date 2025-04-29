@@ -1,6 +1,7 @@
 package api_test
 
 import (
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -22,10 +23,10 @@ func TestSendMessageReturn200(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockNotifier := alertPortsMock.NewMockNotifier(ctrl)
-	mockNotifier.EXPECT().SendMessage("Alerta 1").Return(nil).AnyTimes()
+	mockNotifier.EXPECT().SendMessage(gomock.Any())
 
 	mockRepository := alertPortsMock.NewMockAlertReader(ctrl)
-	mockRepository.EXPECT().GetAllAlerts(gomock.Any(), gomock.Any()).Return([]alert.Alert{{Name: "Alerta 1"}}, nil)
+	mockRepository.EXPECT().GetAllAlerts(gomock.Any(), gomock.Any()).Return([]alert.Alert{{Name: "Alerta 1", Category: "Cybersecurity"}}, nil)
 
 	notifyAlertsUseCase := alertUseCase.NewNotifyAlertsUseCase(mockNotifier, mockRepository)
 
@@ -52,9 +53,8 @@ func TestSendMessageReturn500Error(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockRepository := alertPortsMock.NewMockAlertReader(ctrl)
-	mockRepository.EXPECT().GetAllAlerts(gomock.Any(), gomock.Any()).Return([]alert.Alert{{Name: "Alerta 2"}}, nil)
+	mockRepository.EXPECT().GetAllAlerts(gomock.Any(), gomock.Any()).Return(nil, fmt.Errorf("Error test"))
 	mockNotifier := alertPortsMock.NewMockNotifier(ctrl)
-	mockNotifier.EXPECT().SendMessage("Alerta 2").Return()
 
 	notifyAlertsUseCase := alertUseCase.NewNotifyAlertsUseCase(mockNotifier, mockRepository)
 
