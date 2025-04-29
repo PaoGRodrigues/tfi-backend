@@ -7,10 +7,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/alerts"
+	alertUseCase "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
+	alertPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/alert"
+
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -18,14 +20,14 @@ import (
 
 func TestCreateAlertsUsecaseGetAllAlertsReturnAlerts(t *testing.T) {
 
-	expected := []domains.Alert{
-		domains.Alert{
+	expected := []alert.Alert{
+		alert.Alert{
 
 			Name:     "test",
 			Family:   "flow",
 			Time:     "10/10/10 11:11:11",
 			Severity: "Advertencia",
-			AlertFlow: domains.AlertFlow{
+			AlertFlow: alert.AlertFlow{
 				Client: flow.Client{
 					Port: 33566,
 					IP:   "192.168.4.14",
@@ -50,12 +52,14 @@ func TestCreateAlertsUsecaseGetAllAlertsReturnAlerts(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockAlertSearcher := mocks.NewMockAlertUseCase(ctrl)
-	mockAlertSearcher.EXPECT().GetAllAlerts().Return(expected, nil)
+	mockRepository := alertPortsMock.NewMockAlertReader(ctrl)
+	mockRepository.EXPECT().GetAllAlerts(gomock.Any(), gomock.Any()).Return(expected, nil)
+
+	getAlertsUseCase := alertUseCase.NewGetAlertsUseCase(mockRepository)
 
 	api := &api.Api{
-		AlertsSearcher: mockAlertSearcher,
-		Engine:         gin.Default(),
+		GetAlertsUseCase: getAlertsUseCase,
+		Engine:           gin.Default(),
 	}
 
 	api.MapAlertsURL()
@@ -76,12 +80,14 @@ func TestCreateAlertsUsecaseGetAllAlertsReturnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockAlertSearcher := mocks.NewMockAlertUseCase(ctrl)
-	mockAlertSearcher.EXPECT().GetAllAlerts().Return([]domains.Alert{}, fmt.Errorf("Error test"))
+	mockRepository := alertPortsMock.NewMockAlertReader(ctrl)
+	mockRepository.EXPECT().GetAllAlerts(gomock.Any(), gomock.Any()).Return([]alert.Alert{}, fmt.Errorf("Error test"))
+
+	getAlertsUseCase := alertUseCase.NewGetAlertsUseCase(mockRepository)
 
 	api := &api.Api{
-		AlertsSearcher: mockAlertSearcher,
-		Engine:         gin.Default(),
+		GetAlertsUseCase: getAlertsUseCase,
+		Engine:           gin.Default(),
 	}
 
 	api.MapAlertsURL()
@@ -98,14 +104,14 @@ func TestCreateAlertsUsecaseGetAllAlertsReturnError(t *testing.T) {
 
 func TestCreateAlertsUsecaseGetAllAlertsWithDestNameEmptyReturnAlerts(t *testing.T) {
 
-	expected := []domains.Alert{
-		domains.Alert{
+	expected := []alert.Alert{
+		alert.Alert{
 
 			Name:     "test",
 			Family:   "flow",
 			Time:     "10/10/10 11:11:11",
 			Severity: "Advertencia",
-			AlertFlow: domains.AlertFlow{
+			AlertFlow: alert.AlertFlow{
 				Client: flow.Client{
 					Port: 33566,
 					IP:   "192.168.4.14",
@@ -130,12 +136,14 @@ func TestCreateAlertsUsecaseGetAllAlertsWithDestNameEmptyReturnAlerts(t *testing
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockAlertSearcher := mocks.NewMockAlertUseCase(ctrl)
-	mockAlertSearcher.EXPECT().GetAllAlerts().Return(expected, nil)
+	mockRepository := alertPortsMock.NewMockAlertReader(ctrl)
+	mockRepository.EXPECT().GetAllAlerts(gomock.Any(), gomock.Any()).Return(expected, nil)
+
+	getAlertsUseCase := alertUseCase.NewGetAlertsUseCase(mockRepository)
 
 	api := &api.Api{
-		AlertsSearcher: mockAlertSearcher,
-		Engine:         gin.Default(),
+		GetAlertsUseCase: getAlertsUseCase,
+		Engine:           gin.Default(),
 	}
 
 	api.MapAlertsURL()

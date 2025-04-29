@@ -1,17 +1,17 @@
-package usecase_test
+package alert_test
 
 import (
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
-var expected = []domains.Alert{
+var expected = []alert.Alert{
 	{
 		Name:     "test1",
 		Family:   "flow",
 		Time:     "10/10/10 11:11:11",
 		Severity: "Advertencia",
-		AlertFlow: domains.AlertFlow{
+		AlertFlow: alert.AlertFlow{
 			Client: flow.Client{
 				Name: "test1",
 				Port: 33566,
@@ -35,7 +35,7 @@ var expected = []domains.Alert{
 		Family:   "flow",
 		Time:     "10/10/10 11:11:11",
 		Severity: "Error",
-		AlertFlow: domains.AlertFlow{
+		AlertFlow: alert.AlertFlow{
 			Client: flow.Client{
 				Name: "test2",
 				Port: 33566,
@@ -59,7 +59,7 @@ var expected = []domains.Alert{
 		Family:   "flow",
 		Time:     "10/10/10 11:11:11",
 		Severity: "Error",
-		AlertFlow: domains.AlertFlow{
+		AlertFlow: alert.AlertFlow{
 			Client: flow.Client{
 				Name: "test3",
 				Port: 33566,

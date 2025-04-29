@@ -1,8 +1,8 @@
 package services
 
 import (
-	alerts_domains "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
-	"github.com/PaoGRodrigues/tfi-backend/app/domain/host"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
+	host "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
@@ -10,7 +10,7 @@ type Tool interface {
 	SetInterfaceID() error
 	GetAllHosts() ([]host.Host, error)
 	GetAllActiveTraffic() ([]traffic_domains.ActiveFlow, error)
-	GetAllAlerts(epoch_begin, epoch_end int) ([]alerts_domains.Alert, error)
+	GetAllAlerts(epoch_begin, epoch_end int) ([]alert.Alert, error)
 	EnableChecks()
 }
 

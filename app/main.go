@@ -4,15 +4,16 @@ import (
 	"database/sql"
 	"flag"
 
-	alerts_domains "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
-	alerts_useCases "github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
+	alertsPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/alert"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	traffic_useCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
-	usecase_hosts "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
+	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
+	hostUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
+	notificationChannelUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/notificationchannel"
 
 	"github.com/coreos/go-iptables/iptables"
 	"github.com/gin-gonic/gin"
@@ -24,21 +25,23 @@ func main() {
 	// *********** Services ***********
 	var tool services.Tool
 	var console services.Terminal
-	var channel services.NotificationChannel
 	var database services.Database
+	var channel services.NotificationChannel
 	// ********************************
 	// *********** UseCases ***********
 
-	var getLocalhostsUseCase *usecase_hosts.GetLocalhostsUseCase
-	var hostBlocker *usecase_hosts.BlockHostUseCase
-	var hostsStorage *usecase_hosts.StoreHostUseCase
+	var getLocalhostsUseCase *hostUseCases.GetLocalhostsUseCase
+	var hostBlocker *hostUseCases.BlockHostUseCase
+	var storeHostsUseCase *hostUseCases.StoreHostUseCase
 
 	var trafficSearcher traffic_domains.TrafficUseCase
 	var trafficBytesParser traffic_domains.TrafficBytesParser
 	var trafficStorage traffic_domains.TrafficStorage
 
-	var alertsSearcher alerts_domains.AlertUseCase
-	var alertSender alerts_domains.AlertsSender
+	var getAlertsUseCase *alertUsecases.GetAlertsUseCase
+	var notifyAlertsUseCase *alertUsecases.NotifyAlertsUseCase
+
+	var configureNotificationChannelUseCase *notificationChannelUseCases.ConfigureChannelUseCase
 	// ********************************
 	// *********** Repository ***********
 	var trafficRepo traffic_domains.TrafficRepository
@@ -74,7 +77,7 @@ func main() {
 			if err != nil {
 				panic(err.Error())
 			}
-			channel = initializedNotifChannel()
+			channel = initializedNotificationChannel()
 			database, err = newDB(*db)
 			if err != nil {
 				panic(err.Error())
@@ -87,30 +90,31 @@ func main() {
 	}
 
 	// *********** Repo & Usecases ***********
-	getLocalhostsUseCase, hostsStorage = initializeHostDependencies(tool, database)
+	getLocalhostsUseCase, storeHostsUseCase = initializeHostUseCases(tool, database)
 
 	trafficRepo = initializeTrafficRepository(database)
 	trafficSearcher, trafficBytesParser, trafficStorage = initializeTrafficUseCases(tool, trafficRepo, database)
 
-	hostBlocker = initializeHostBlockerUseCase(console)
+	hostBlocker = initializeHostBlockerUseCases(console)
 
-	alertsSearcher = initializeAlertsDependencies(tool)
-	alertSender = initializeAlertSender(channel, alertsSearcher)
+	configureNotificationChannelUseCase = initializeConfigureNotificationChannelUseCase(channel)
+
+	getAlertsUseCase = initializeGetAlertsUseCases(tool)
+	notifyAlertsUseCase = initializeNotifyAlertsUseCases(channel, tool)
 	// ****************************************
 
 	api := &api.Api{
-		Tool: tool,
 
-		GetLocalhostsUseCase: getLocalhostsUseCase,
-		BlockHostUseCase:     hostBlocker,
-		HostsStorage:         hostsStorage,
-		TrafficSearcher:      trafficSearcher,
-		TrafficBytesParser:   trafficBytesParser,
-		ActiveFlowsStorage:   trafficStorage,
-		AlertsSearcher:       alertsSearcher,
-		AlertsSender:         alertSender,
-		NotifChannel:         channel,
-		Engine:               gin.Default(),
+		GetLocalhostsUseCase:                getLocalhostsUseCase,
+		BlockHostUseCase:                    hostBlocker,
+		StoreHostsUseCase:                   storeHostsUseCase,
+		TrafficSearcher:                     trafficSearcher,
+		TrafficBytesParser:                  trafficBytesParser,
+		ActiveFlowsStorage:                  trafficStorage,
+		GetAlertsUseCase:                    getAlertsUseCase,
+		NotifyAlertsUseCase:                 notifyAlertsUseCase,
+		ConfigureNotificationChannelUseCase: configureNotificationChannelUseCase,
+		Engine:                              gin.Default(),
 	}
 
 	api.MapURLToPing()
@@ -129,15 +133,15 @@ func main() {
 }
 
 // *********** Hosts ***********
-func initializeHostDependencies(tool services.Tool, hostDBRepository hostPorts.HostDBRepository) (*usecase_hosts.GetLocalhostsUseCase, *usecase_hosts.StoreHostUseCase) {
+func initializeHostUseCases(tool services.Tool, hostDBRepository hostPorts.HostDBRepository) (*hostUseCases.GetLocalhostsUseCase, *hostUseCases.StoreHostUseCase) {
 
-	getLocalhostsUseCase := usecase_hosts.NewGetLocalhostsUseCase(tool)
-	hostStorage := usecase_hosts.NewHostsStorage(tool, hostDBRepository)
+	getLocalhostsUseCase := hostUseCases.NewGetLocalhostsUseCase(tool)
+	hostStorage := hostUseCases.NewHostsStorage(tool, hostDBRepository)
 	return getLocalhostsUseCase, hostStorage
 }
 
-func initializeHostBlockerUseCase(console services.Terminal) *usecase_hosts.BlockHostUseCase {
-	hostBlocker := usecase_hosts.NewBlockHostUseCase(console)
+func initializeHostBlockerUseCases(console services.Terminal) *hostUseCases.BlockHostUseCase {
+	hostBlocker := hostUseCases.NewBlockHostUseCase(console)
 	return hostBlocker
 }
 
@@ -162,20 +166,28 @@ func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficR
 // *******************************
 
 // *********** Alerts ***********
-func initializeAlertsDependencies(tool services.Tool) alerts_domains.AlertUseCase {
-	alertsSearcher := alerts_useCases.NewAlertSearcher(tool)
-	return alertsSearcher
+func initializeGetAlertsUseCases(tool services.Tool) *alertUsecases.GetAlertsUseCase {
+	getAlertsUseCase := alertUsecases.NewGetAlertsUseCase(tool)
+	return getAlertsUseCase
 }
 
-func initializeAlertSender(notifier services.NotificationChannel, searcher alerts_domains.AlertUseCase) alerts_domains.AlertsSender {
-	alertsSender := alerts_useCases.NewAlertNotifier(notifier, searcher)
-	return alertsSender
+func initializeNotifyAlertsUseCases(notifier alertsPorts.Notifier, tool services.Tool) *alertUsecases.NotifyAlertsUseCase {
+	notifyAlertsUseCase := alertUsecases.NewNotifyAlertsUseCase(notifier, tool)
+	return notifyAlertsUseCase
+}
+
+// ******************************
+
+// *********** Notification Channel ***********
+func initializeConfigureNotificationChannelUseCase(channel services.NotificationChannel) *notificationChannelUseCases.ConfigureChannelUseCase {
+	configureChannelUseCase := notificationChannelUseCases.NewConfigureChannelUseCase(channel)
+	return configureChannelUseCase
 }
 
 // ******************************
 
 // *********** Services ***********
-func initializedNotifChannel() services.NotificationChannel {
+func initializedNotificationChannel() services.NotificationChannel {
 	telegram := services.NewTelegramInterface()
 	return telegram
 }

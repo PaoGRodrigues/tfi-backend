@@ -12,9 +12,9 @@ package mock_services
 import (
 	reflect "reflect"
 
-	domains "github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	host "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	domains0 "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -55,10 +55,10 @@ func (mr *MockToolMockRecorder) EnableChecks() *gomock.Call {
 }
 
 // GetAllActiveTraffic mocks base method.
-func (m *MockTool) GetAllActiveTraffic() ([]domains0.ActiveFlow, error) {
+func (m *MockTool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllActiveTraffic")
-	ret0, _ := ret[0].([]domains0.ActiveFlow)
+	ret0, _ := ret[0].([]domains.ActiveFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -70,10 +70,10 @@ func (mr *MockToolMockRecorder) GetAllActiveTraffic() *gomock.Call {
 }
 
 // GetAllAlerts mocks base method.
-func (m *MockTool) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
+func (m *MockTool) GetAllAlerts(epoch_begin, epoch_end int) ([]alert.Alert, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllAlerts", epoch_begin, epoch_end)
-	ret0, _ := ret[0].([]domains.Alert)
+	ret0, _ := ret[0].([]alert.Alert)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -229,7 +229,7 @@ func (m *MockDatabase) EXPECT() *MockDatabaseMockRecorder {
 }
 
 // AddActiveFlows mocks base method.
-func (m *MockDatabase) AddActiveFlows(arg0 []domains0.ActiveFlow) error {
+func (m *MockDatabase) AddActiveFlows(arg0 []domains.ActiveFlow) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddActiveFlows", arg0)
 	ret0, _ := ret[0].(error)
@@ -243,10 +243,10 @@ func (mr *MockDatabaseMockRecorder) AddActiveFlows(arg0 any) *gomock.Call {
 }
 
 // GetClients mocks base method.
-func (m *MockDatabase) GetClients() ([]domains0.Client, error) {
+func (m *MockDatabase) GetClients() ([]domains.Client, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetClients")
-	ret0, _ := ret[0].([]domains0.Client)
+	ret0, _ := ret[0].([]domains.Client)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -258,10 +258,10 @@ func (mr *MockDatabaseMockRecorder) GetClients() *gomock.Call {
 }
 
 // GetFlowByKey mocks base method.
-func (m *MockDatabase) GetFlowByKey(key string) (domains0.ActiveFlow, error) {
+func (m *MockDatabase) GetFlowByKey(key string) (domains.ActiveFlow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetFlowByKey", key)
-	ret0, _ := ret[0].(domains0.ActiveFlow)
+	ret0, _ := ret[0].(domains.ActiveFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -288,10 +288,10 @@ func (mr *MockDatabaseMockRecorder) GetHostByIp(arg0 any) *gomock.Call {
 }
 
 // GetServerByAttr mocks base method.
-func (m *MockDatabase) GetServerByAttr(attr string) (domains0.Server, error) {
+func (m *MockDatabase) GetServerByAttr(attr string) (domains.Server, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetServerByAttr", attr)
-	ret0, _ := ret[0].(domains0.Server)
+	ret0, _ := ret[0].(domains.Server)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -303,10 +303,10 @@ func (mr *MockDatabaseMockRecorder) GetServerByAttr(attr any) *gomock.Call {
 }
 
 // GetServers mocks base method.
-func (m *MockDatabase) GetServers() ([]domains0.Server, error) {
+func (m *MockDatabase) GetServers() ([]domains.Server, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetServers")
-	ret0, _ := ret[0].([]domains0.Server)
+	ret0, _ := ret[0].([]domains.Server)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

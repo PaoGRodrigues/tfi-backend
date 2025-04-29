@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/alerts/domains"
+	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
@@ -80,13 +80,13 @@ var severityScore = map[int]string{
 	8: "Emergencia",
 }
 
-func (t *NtopNG) GetAllAlerts(epoch_begin, epoch_end int) ([]domains.Alert, error) {
+func (t *NtopNG) GetAllAlerts(epoch_begin, epoch_end int) ([]alert.Alert, error) {
 	alertsListResponse, err := t.getAlertsList(epoch_begin, epoch_end)
 	if err != nil {
 		return nil, err
 	}
 
-	alerts := []domains.Alert{}
+	alerts := []alert.Alert{}
 	if alertsListResponse.Rsp.Alerts != nil {
 		parsedAlerts, err := parseAlertsFromTool(alertsListResponse.Rsp.Alerts)
 		if err != nil {
@@ -136,41 +136,41 @@ func (t *NtopNG) getAlertsList(epoch_begin, epoch_end int) (HttpAlertResponse, e
 	return resp, nil
 }
 
-func parseAlertsFromTool(rawAlerts []Alert) ([]domains.Alert, error) {
+func parseAlertsFromTool(rawAlerts []Alert) ([]alert.Alert, error) {
 
-	formattedAlerts := []domains.Alert{}
-	for _, alert := range rawAlerts {
-		cliPort, err := strconv.Atoi(alert.AlertFlow.CliPort)
+	formattedAlerts := []alert.Alert{}
+	for _, anAlert := range rawAlerts {
+		cliPort, err := strconv.Atoi(anAlert.AlertFlow.CliPort)
 		if err != nil {
 			return formattedAlerts, err
 		}
-		srvPort, err := strconv.Atoi(alert.AlertFlow.SrvPort)
+		srvPort, err := strconv.Atoi(anAlert.AlertFlow.SrvPort)
 		if err != nil {
 			return formattedAlerts, err
 		}
 
-		newAlert := domains.Alert{
-			Name:     alert.Name.Name,
-			Family:   alert.Family,
-			Category: alert.Category.Label,
-			Time:     alert.Time.Label,
-			Severity: severityScore[alert.Severity.Value],
-			AlertFlow: domains.AlertFlow{
+		newAlert := alert.Alert{
+			Name:     anAlert.Name.Name,
+			Family:   anAlert.Family,
+			Category: anAlert.Category.Label,
+			Time:     anAlert.Time.Label,
+			Severity: severityScore[anAlert.Severity.Value],
+			AlertFlow: alert.AlertFlow{
 				Client: flow.Client{
-					Name: alert.AlertFlow.Client.Value,
-					IP:   alert.AlertFlow.Client.Value,
+					Name: anAlert.AlertFlow.Client.Value,
+					IP:   anAlert.AlertFlow.Client.Value,
 					Port: cliPort,
 				},
 				Server: flow.Server{
-					Name: alert.AlertFlow.Server.Name,
-					IP:   alert.AlertFlow.Server.Value,
+					Name: anAlert.AlertFlow.Server.Name,
+					IP:   anAlert.AlertFlow.Server.Value,
 					Port: srvPort,
 				},
 			},
 			AlertProtocol: flow.Protocol{
-				L4:    alert.AlertProtocol.Protocol.L4,
-				L7:    alert.AlertProtocol.Protocol.L7,
-				Label: alert.AlertProtocol.Protocol.Label,
+				L4:    anAlert.AlertProtocol.Protocol.L4,
+				L7:    anAlert.AlertProtocol.Protocol.L7,
+				Label: anAlert.AlertProtocol.Protocol.Label,
 			},
 		}
 
