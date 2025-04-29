@@ -8,8 +8,8 @@ import (
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
-	notificationChannelUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/channel"
 	hostUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
+	notificationChannelUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/notificationchannel"
 
 	"github.com/gin-gonic/gin"
 )
@@ -25,7 +25,7 @@ type Api struct {
 	BlockHostUseCase                    *hostUsecases.BlockHostUseCase
 	ConfigureNotificationChannelUseCase *notificationChannelUseCases.ConfigureChannelUseCase
 	NotifyAlertsUseCase                 *alertUsecases.NotifyAlertsUseCase
-	HostsStorage                        *hostUsecases.StoreHostUseCase
+	StoreHostsUseCase                   *hostUsecases.StoreHostUseCase
 	*gin.Engine
 }
 

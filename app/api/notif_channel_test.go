@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	notificationChannelUseCase "github.com/PaoGRodrigues/tfi-backend/app/usecase/channel"
+	notificationChannelUseCase "github.com/PaoGRodrigues/tfi-backend/app/usecase/notificationchannel"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/services"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

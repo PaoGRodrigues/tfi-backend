@@ -45,8 +45,8 @@ func TestStoreHostSuccessfullyReturn200(t *testing.T) {
 	mockHostDBRepository.EXPECT().StoreHosts([]host.Host{host1, host2}).Return(nil)
 
 	api := &api.Api{
-		HostsStorage: storeHostUsecase,
-		Engine:       gin.Default(),
+		StoreHostsUseCase: storeHostUsecase,
+		Engine:            gin.Default(),
 	}
 
 	api.MapStoreHostsURL()
@@ -73,8 +73,8 @@ func TestStoreHostsFailedAndReturn500(t *testing.T) {
 	mockHostDBRepository.EXPECT().StoreHosts([]host.Host{host1, host2}).Return(fmt.Errorf("Testing error case"))
 
 	api := &api.Api{
-		HostsStorage: storeHostUsecase,
-		Engine:       gin.Default(),
+		StoreHostsUseCase: storeHostUsecase,
+		Engine:            gin.Default(),
 	}
 
 	api.MapStoreHostsURL()
