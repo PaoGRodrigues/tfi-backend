@@ -47,13 +47,41 @@ func TestSendMessageReturn200(t *testing.T) {
 	assert.Equal(t, http.StatusOK, response.Code)
 }
 
-func TestSendMessageReturn500Error(t *testing.T) {
+func TestSendMessageReturn500ErrorWhenGetAllAlertsReturnError(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	mockRepository := alertPortsMock.NewMockAlertReader(ctrl)
 	mockRepository.EXPECT().GetAllAlerts(gomock.Any(), gomock.Any()).Return(nil, fmt.Errorf("Error test"))
+	mockNotifier := alertPortsMock.NewMockNotifier(ctrl)
+
+	notifyAlertsUseCase := alertUseCase.NewNotifyAlertsUseCase(mockNotifier, mockRepository)
+
+	api := &api.Api{
+		NotifyAlertsUseCase: notifyAlertsUseCase,
+		Engine:              gin.Default(),
+	}
+
+	api.MapNotificationsURL()
+
+	response := httptest.NewRecorder()
+
+	requestURL := "/alertnotification"
+	httpRequest, _ := http.NewRequest("POST", requestURL, strings.NewReader(string("")))
+
+	api.Engine.ServeHTTP(response, httpRequest)
+
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
+}
+
+func TestSendMessageReturn500ErrorWhenGetAllAlertsReturnEmptySlice(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockRepository := alertPortsMock.NewMockAlertReader(ctrl)
+	mockRepository.EXPECT().GetAllAlerts(gomock.Any(), gomock.Any()).Return([]alert.Alert{}, nil)
 	mockNotifier := alertPortsMock.NewMockNotifier(ctrl)
 
 	notifyAlertsUseCase := alertUseCase.NewNotifyAlertsUseCase(mockNotifier, mockRepository)
