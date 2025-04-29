@@ -10,26 +10,25 @@ import (
 )
 
 const seconds = 300
-const cybersecurity = "Cybersecurity"
 
 type NotifyAlertsUseCase struct {
-	repository   alertPort.AlertReader
-	notifService alertPort.Notifier
+	repository           alertPort.AlertReader
+	notificationsService alertPort.Notifier
 }
 
 func NewNotifyAlertsUseCase(service alertPort.Notifier, repository alertPort.AlertReader) *NotifyAlertsUseCase {
 	return &NotifyAlertsUseCase{
-		repository:   repository,
-		notifService: service,
+		repository:           repository,
+		notificationsService: service,
 	}
 }
 
-func (an *NotifyAlertsUseCase) SendLastAlertMessages() error {
+func (usecase *NotifyAlertsUseCase) SendAlertMessages() error {
 	now := time.Now()
 	epoch_end := int(now.Unix())
 	epoch_begin := epoch_end - seconds
 
-	lastAlerts, err := an.repository.GetAllAlerts(epoch_begin, epoch_end)
+	lastAlerts, err := usecase.repository.GetAllAlerts(epoch_begin, epoch_end)
 	if err != nil {
 		return err
 	}
@@ -39,7 +38,7 @@ func (an *NotifyAlertsUseCase) SendLastAlertMessages() error {
 	parsedAlerts := alert.ParseAlerts(lastAlerts)
 
 	for _, alert := range parsedAlerts {
-		err := an.notifService.SendMessage(alert)
+		err := usecase.notificationsService.SendMessage(alert)
 		if err != nil {
 			//It won't stop if a message can't be sent
 			fmt.Printf("Cannot send message")

@@ -30,7 +30,7 @@ func TestSendMessageSuccessfully(t *testing.T) {
 	mockService.EXPECT().SendMessage(alerts[1]).Return(nil)
 
 	alertNotif := usecase.NewNotifyAlertsUseCase(mockService, mockRepository)
-	err := alertNotif.SendLastAlertMessages()
+	err := alertNotif.SendAlertMessages()
 	if err != nil {
 		t.Error("Testing error")
 	}
@@ -49,7 +49,7 @@ func TestSendMessageReturnErrorWhenCallGetAllAlertsByTime(t *testing.T) {
 	mockRepository.EXPECT().GetAllAlerts(epoch_begin, epoch_end).Return(nil, errors.New("No alerts available"))
 
 	alertNotif := usecase.NewNotifyAlertsUseCase(mockService, mockRepository)
-	err := alertNotif.SendLastAlertMessages()
+	err := alertNotif.SendAlertMessages()
 	if err == nil {
 		t.Error("It's an error!")
 	}
@@ -71,7 +71,7 @@ func TestSendMessageReturnErrorSendingAMessageButContinueAnyway(t *testing.T) {
 	mockService.EXPECT().SendMessage(alerts[1]).Return(nil)
 
 	alertNotif := usecase.NewNotifyAlertsUseCase(mockService, mockRepository)
-	err := alertNotif.SendLastAlertMessages()
+	err := alertNotif.SendAlertMessages()
 	if err != nil {
 		t.Error("Testing error")
 	}
@@ -86,7 +86,7 @@ func TestSendMessageReturnErrorWhenGetAllAlertsByTimeReturnZeroAlerts(t *testing
 	mockRepository.EXPECT().GetAllAlerts(gomock.Any(), gomock.Any()).Return(nil, nil)
 
 	alertNotif := usecase.NewNotifyAlertsUseCase(mockService, mockRepository)
-	err := alertNotif.SendLastAlertMessages()
+	err := alertNotif.SendAlertMessages()
 	if err == nil {
 		t.Error("Testing error")
 	}

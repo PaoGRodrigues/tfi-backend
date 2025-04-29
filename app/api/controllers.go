@@ -68,7 +68,7 @@ func (api *Api) StoreActiveTraffic(c *gin.Context) {
 }
 
 func (api *Api) SendAlertNotification(c *gin.Context) {
-	err := api.NotifyAlertsUseCase.SendLastAlertMessages()
+	err := api.NotifyAlertsUseCase.SendAlertMessages()
 	if err != nil {
 		c.JSON(500, gin.H{"data": "error getting last alerts"})
 		c.AbortWithStatus(http.StatusInternalServerError)
