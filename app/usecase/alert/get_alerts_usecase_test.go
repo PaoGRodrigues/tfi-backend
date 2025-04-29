@@ -1,4 +1,4 @@
-package usecase_test
+package alert_test
 
 import (
 	"fmt"
