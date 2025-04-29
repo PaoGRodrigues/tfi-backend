@@ -12,7 +12,7 @@ package mock_domains
 import (
 	reflect "reflect"
 
-	domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	gomock "go.uber.org/mock/gomock"
 )
 

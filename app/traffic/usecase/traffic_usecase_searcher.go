@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
 type TrafficSearcher struct {

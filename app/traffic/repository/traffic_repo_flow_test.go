@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	host_domains "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	services_mocks "github.com/PaoGRodrigues/tfi-backend/mocks/services"
 	"github.com/go-playground/assert/v2"

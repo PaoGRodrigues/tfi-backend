@@ -1,8 +1,8 @@
 package repository
 
 import (
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	"github.com/PaoGRodrigues/tfi-backend/app/services"
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
 type FlowsRepo struct {

@@ -2,7 +2,7 @@ package alert_test
 
 import (
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
-	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	flow "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
 var expected = []alert.Alert{

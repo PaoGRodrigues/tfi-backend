@@ -2,10 +2,10 @@ package usecase_test
 
 import (
 	hosts "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
-var server1 = domains.Server{
+var server1 = traffic.Server{
 	IP:                "8.8.8.8",
 	IsBroadcastDomain: false,
 	IsDHCP:            false,
@@ -15,7 +15,7 @@ var server1 = domains.Server{
 	Key:               "12344567",
 }
 
-var server2 = domains.Server{
+var server2 = traffic.Server{
 	IP:                "8.8.8.8",
 	IsBroadcastDomain: false,
 	IsDHCP:            false,
@@ -25,7 +25,7 @@ var server2 = domains.Server{
 	Key:               "12344568",
 }
 
-var server3 = domains.Server{
+var server3 = traffic.Server{
 	IP:                "8.8.10.8",
 	IsBroadcastDomain: false,
 	IsDHCP:            false,
@@ -35,7 +35,7 @@ var server3 = domains.Server{
 	Key:               "12344569",
 }
 
-var noNameServer = domains.Server{
+var noNameServer = traffic.Server{
 	IP:                "8.8.10.10",
 	IsBroadcastDomain: false,
 	IsDHCP:            false,
@@ -45,14 +45,14 @@ var noNameServer = domains.Server{
 	Key:               "12344570",
 }
 
-var expectedFlowFromSearcher = []domains.ActiveFlow{
+var expectedFlowFromSearcher = []traffic.ActiveFlow{
 	{
-		Client: domains.Client{
+		Client: traffic.Client{
 			Name: "Local",
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
-		Server: domains.Server{
+		Server: traffic.Server{
 			IP:                "8.8.8.8",
 			IsBroadcastDomain: false,
 			IsDHCP:            false,
@@ -61,7 +61,7 @@ var expectedFlowFromSearcher = []domains.ActiveFlow{
 			Key:               "12344567",
 			Country:           "US",
 		},
-		Protocol: domains.Protocol{
+		Protocol: traffic.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
 		},
@@ -69,15 +69,15 @@ var expectedFlowFromSearcher = []domains.ActiveFlow{
 	},
 }
 
-var expectedFlowFromSearcherWithoutName = []domains.ActiveFlow{
+var expectedFlowFromSearcherWithoutName = []traffic.ActiveFlow{
 	{
-		Client: domains.Client{
+		Client: traffic.Client{
 			Name: "Local",
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
 		Server: noNameServer,
-		Protocol: domains.Protocol{
+		Protocol: traffic.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
 		},
@@ -113,28 +113,28 @@ var expectedHosts = []hosts.Host{
 	},
 }
 
-var secondExpectedFlowFromSearcher = []domains.ActiveFlow{
+var secondExpectedFlowFromSearcher = []traffic.ActiveFlow{
 	{
-		Client: domains.Client{
+		Client: traffic.Client{
 			Name: "Local",
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
 		Server: server1,
-		Protocol: domains.Protocol{
+		Protocol: traffic.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
 		},
 		Bytes: 5566778,
 	},
 	{
-		Client: domains.Client{
+		Client: traffic.Client{
 			Name: "Local",
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
 		Server: server2,
-		Protocol: domains.Protocol{
+		Protocol: traffic.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
 		},
@@ -142,47 +142,47 @@ var secondExpectedFlowFromSearcher = []domains.ActiveFlow{
 	},
 }
 
-var expectedPerCountrySearcher = []domains.ActiveFlow{
+var expectedPerCountrySearcher = []traffic.ActiveFlow{
 	{
-		Client: domains.Client{
+		Client: traffic.Client{
 			Name: "Local",
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
 		Server: server1,
-		Protocol: domains.Protocol{
+		Protocol: traffic.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
 		},
 		Bytes: 5566778,
 	},
 	{
-		Client: domains.Client{
+		Client: traffic.Client{
 			Name: "Local",
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
 		Server: server3,
-		Protocol: domains.Protocol{
+		Protocol: traffic.Protocol{
 			L4: "TCP",
 			L7: "TLS.Telegram",
 		},
 		Bytes: 5566778,
 	},
 	{
-		Client: domains.Client{
+		Client: traffic.Client{
 			Name: "Local",
 			Port: 12345,
 			IP:   "192.168.4.1",
 		},
-		Server: domains.Server{
+		Server: traffic.Server{
 			IP:                "8.8.10.82",
 			IsBroadcastDomain: false,
 			IsDHCP:            false,
 			Port:              443,
 			Name:              "telegram.com",
 		},
-		Protocol: domains.Protocol{
+		Protocol: traffic.Protocol{
 			L4: "TCP",
 			L7: "TLS.Google",
 		},

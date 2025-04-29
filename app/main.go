@@ -5,10 +5,10 @@ import (
 	"flag"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
+	trafficDomains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	alertsPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/alert"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
-	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	traffic_useCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
@@ -34,9 +34,9 @@ func main() {
 	var hostBlocker *hostUseCases.BlockHostUseCase
 	var storeHostsUseCase *hostUseCases.StoreHostUseCase
 
-	var trafficSearcher traffic_domains.TrafficUseCase
-	var trafficBytesParser traffic_domains.TrafficBytesParser
-	var trafficStorage traffic_domains.TrafficStorage
+	var trafficSearcher trafficDomains.TrafficUseCase
+	var trafficBytesParser trafficDomains.TrafficBytesParser
+	var trafficStorage trafficDomains.TrafficStorage
 
 	var getAlertsUseCase *alertUsecases.GetAlertsUseCase
 	var notifyAlertsUseCase *alertUsecases.NotifyAlertsUseCase
@@ -44,7 +44,7 @@ func main() {
 	var configureNotificationChannelUseCase *notificationChannelUseCases.ConfigureChannelUseCase
 	// ********************************
 	// *********** Repository ***********
-	var trafficRepo traffic_domains.TrafficRepository
+	var trafficRepo trafficDomains.TrafficRepository
 	// *******************************
 
 	// *********** Flags *************
@@ -148,13 +148,13 @@ func initializeHostBlockerUseCases(console services.Terminal) *hostUseCases.Bloc
 // *****************************
 
 // *********** Traffic ***********
-func initializeTrafficRepository(db services.Database) traffic_domains.TrafficRepository {
+func initializeTrafficRepository(db services.Database) trafficDomains.TrafficRepository {
 	trafficRepo := traffic_repository.NewFlowsRepo(db)
 	return trafficRepo
 }
 
-func initializeTrafficUseCases(tool services.Tool, repo traffic_domains.TrafficRepository, hostStorage hostPorts.HostDBRepository) (traffic_domains.TrafficUseCase,
-	traffic_domains.TrafficBytesParser, traffic_domains.TrafficStorage) {
+func initializeTrafficUseCases(tool services.Tool, repo trafficDomains.TrafficRepository, hostStorage hostPorts.HostDBRepository) (trafficDomains.TrafficUseCase,
+	trafficDomains.TrafficBytesParser, trafficDomains.TrafficStorage) {
 
 	trafficSearcher := traffic_useCases.NewTrafficSearcher(tool)
 	trafficBytesParser := traffic_useCases.NewBytesParser(repo)

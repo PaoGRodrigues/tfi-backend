@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"github.com/stretchr/testify/assert"

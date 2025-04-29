@@ -7,7 +7,7 @@ package mock_services
 import (
 	reflect "reflect"
 
-	domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	gomock "github.com/golang/mock/gomock"
 )
 

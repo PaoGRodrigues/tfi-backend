@@ -8,7 +8,7 @@ import (
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -17,19 +17,19 @@ import (
 
 func TestCreateTrafficUseCaseAndGetAllTraffic(t *testing.T) {
 
-	client := domains.Client{
+	client := traffic.Client{
 		Name: "test",
 		Port: 55672,
 		IP:   "192.168.4.9",
 	}
-	server := domains.Server{
+	server := traffic.Server{
 		IP:                "123.123.123.123",
 		IsBroadcastDomain: false,
 		IsDHCP:            false,
 		Port:              443,
 		Name:              "lib.gen.rus",
 	}
-	protocols := domains.Protocol{
+	protocols := traffic.Protocol{
 		L4: "UDP.Youtube",
 		L7: "TLS.GoogleServices",
 	}
@@ -38,8 +38,8 @@ func TestCreateTrafficUseCaseAndGetAllTraffic(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	createdTraffic := []domains.ActiveFlow{
-		domains.ActiveFlow{
+	createdTraffic := []traffic.ActiveFlow{
+		traffic.ActiveFlow{
 			Client:   client,
 			Server:   server,
 			Bytes:    345,
@@ -101,8 +101,8 @@ func TestCreateTrafficActiveFlowsAndGetBytesPerDest(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	expected := []domains.BytesPerDestination{
-		domains.BytesPerDestination{
+	expected := []traffic.BytesPerDestination{
+		traffic.BytesPerDestination{
 			Bytes:       3454567,
 			Destination: "google.com.ar",
 		},
@@ -160,8 +160,8 @@ func TestGetBytesPerCountryAndReturn200(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	expected := []domains.BytesPerCountry{
-		domains.BytesPerCountry{
+	expected := []traffic.BytesPerCountry{
+		traffic.BytesPerCountry{
 			Bytes:   3454567,
 			Country: "US",
 		},

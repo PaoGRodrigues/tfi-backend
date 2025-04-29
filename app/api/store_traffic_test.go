@@ -8,32 +8,32 @@ import (
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
 
-var client = domains.Client{
+var client = traffic.Client{
 	Name: "test",
 	Port: 55672,
 	IP:   "192.168.4.9",
 }
-var server = domains.Server{
+var server = traffic.Server{
 	IP:                "123.123.123.123",
 	IsBroadcastDomain: false,
 	IsDHCP:            false,
 	Port:              443,
 	Name:              "lib.gen.rus",
 }
-var protocols = domains.Protocol{
+var protocols = traffic.Protocol{
 	L4: "UDP.Youtube",
 	L7: "TLS.GoogleServices",
 }
 
-var expected = []domains.ActiveFlow{
-	domains.ActiveFlow{
+var expected = []traffic.ActiveFlow{
+	traffic.ActiveFlow{
 		Client:   client,
 		Server:   server,
 		Bytes:    1000,

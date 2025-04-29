@@ -1,24 +1,24 @@
 package services
 
 import (
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
-func (trff *FakeTool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
-	client := domains.Client{
+func (trff *FakeTool) GetAllActiveTraffic() ([]traffic.ActiveFlow, error) {
+	client := traffic.Client{
 		Name: "test",
 		Port: 55672,
 		IP:   "192.168.4.9",
 	}
-	protocols := domains.Protocol{
+	protocols := traffic.Protocol{
 		L4: "UDP.Youtube",
 		L7: "TLS.GoogleServices",
 	}
-	activeFlowStruct := []domains.ActiveFlow{
+	activeFlowStruct := []traffic.ActiveFlow{
 		{
 			Key:    "345",
 			Client: client,
-			Server: domains.Server{
+			Server: traffic.Server{
 				IP:                "123.1.5.1",
 				IsBroadcastDomain: false,
 				IsDHCP:            false,
@@ -35,7 +35,7 @@ func (trff *FakeTool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 		{
 			Key:    "346",
 			Client: client,
-			Server: domains.Server{
+			Server: traffic.Server{
 				IP:                "123.123.123.123",
 				IsBroadcastDomain: false,
 				IsDHCP:            false,
@@ -52,7 +52,7 @@ func (trff *FakeTool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 		{
 			Key:    "347",
 			Client: client,
-			Server: domains.Server{
+			Server: traffic.Server{
 				IP:                "172.98.98.109",
 				IsBroadcastDomain: false,
 				IsDHCP:            false,

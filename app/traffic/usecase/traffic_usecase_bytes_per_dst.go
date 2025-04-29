@@ -3,7 +3,7 @@ package usecase
 import (
 	"net"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
 type BytesAggregatorParser struct {

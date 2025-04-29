@@ -14,7 +14,7 @@ import (
 
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	host "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	gomock "go.uber.org/mock/gomock"
 )
 

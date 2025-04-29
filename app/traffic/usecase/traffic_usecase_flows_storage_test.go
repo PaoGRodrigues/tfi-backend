@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	host_domains "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	hostPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/host"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"

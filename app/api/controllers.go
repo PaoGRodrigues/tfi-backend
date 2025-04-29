@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
 	hostUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 	notificationChannelUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/notificationchannel"

@@ -1,8 +1,8 @@
 package usecase
 
 import (
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 )
 
 type FlowsStorage struct {
