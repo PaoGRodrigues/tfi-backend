@@ -8,12 +8,13 @@ import (
 	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
 	hostUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 	notificationChannelUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/notificationchannel"
+	trafficUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/traffic"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Api struct {
-	TrafficSearcher                     traffic.TrafficUseCase
+	TrafficSearcher                     *trafficUsecases.GetTrafficFlowsUseCase
 	GetLocalhostsUseCase                *hostUsecases.GetLocalhostsUseCase
 	TrafficBytesParser                  traffic.TrafficBytesParser
 	ActiveFlowsStorage                  traffic.TrafficStorage
@@ -26,7 +27,7 @@ type Api struct {
 }
 
 func (api *Api) GetTraffic(c *gin.Context) {
-	traffic, err := api.TrafficSearcher.GetAllActiveTraffic()
+	traffic, err := api.TrafficSearcher.GetTrafficFlows()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})

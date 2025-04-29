@@ -3,37 +3,38 @@ package usecase
 import (
 	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
+	trafficPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/traffic"
 )
 
 type FlowsStorage struct {
-	trafficSearcher domains.TrafficUseCase
-	trafficRepo     domains.TrafficRepository
-	hostStorage     hostPorts.HostDBRepository
+	trafficReader trafficPorts.TrafficReader
+	trafficRepo   domains.TrafficRepository
+	hostStorage   hostPorts.HostDBRepository
 }
 
-func NewFlowsStorage(trafSearcher domains.TrafficUseCase, trafRepo domains.TrafficRepository, hostStorage hostPorts.HostDBRepository) *FlowsStorage {
+func NewFlowsStorage(trafSearcher trafficPorts.TrafficReader, trafRepo domains.TrafficRepository, hostStorage hostPorts.HostDBRepository) *FlowsStorage {
 	return &FlowsStorage{
-		trafficSearcher: trafSearcher,
-		trafficRepo:     trafRepo,
-		hostStorage:     hostStorage,
+		trafficReader: trafSearcher,
+		trafficRepo:   trafRepo,
+		hostStorage:   hostStorage,
 	}
 }
 
 func (fs *FlowsStorage) StoreFlows() error {
-	activeFlows := fs.trafficSearcher.GetActiveFlows()
-	if len(activeFlows) == 0 {
-		current, err := fs.trafficSearcher.GetAllActiveTraffic()
-		if err != nil {
-			return err
-		}
-		activeFlows = current
-	}
-
-	flows, err := fs.enrichData(activeFlows)
+	current, err := fs.trafficReader.GetTrafficFlows()
 	if err != nil {
 		return err
 	}
-	err = fs.trafficRepo.StoreFlows(flows)
+	if len(current) != 0 {
+		flows, err := fs.enrichData(current)
+		if err != nil {
+			return err
+		}
+		err = fs.trafficRepo.StoreFlows(flows)
+		if err != nil {
+			return err
+		}
+	}
 	return err
 }
 

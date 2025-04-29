@@ -7,7 +7,8 @@ import (
 
 	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	usecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/traffic"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
+	trafficPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/traffic"
+
 	"go.uber.org/mock/gomock"
 )
 
@@ -42,11 +43,11 @@ func TestGetAllTrafficReturnAListOfTrafficJsons(t *testing.T) {
 		},
 	}
 
-	mockTrafficService := mocks.NewMockTrafficService(ctrl)
-	mockTrafficService.EXPECT().GetAllActiveTraffic().Return(expected, nil)
+	mockRepository := trafficPortsMock.NewMockTrafficReader(ctrl)
+	mockRepository.EXPECT().GetTrafficFlows().Return(expected, nil)
 
-	trafficSearcher := usecase.NewTrafficSearcher(mockTrafficService)
-	got, err := trafficSearcher.GetAllActiveTraffic()
+	usecase := usecase.NewTrafficFlowsUseCase(mockRepository)
+	got, err := usecase.GetTrafficFlows()
 
 	if err != nil {
 		t.Fail()
@@ -61,11 +62,11 @@ func TestGetAllTrafficReturnAnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockTrafficService := mocks.NewMockTrafficService(ctrl)
-	mockTrafficService.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Testing Error"))
+	mockRepository := trafficPortsMock.NewMockTrafficReader(ctrl)
+	mockRepository.EXPECT().GetTrafficFlows().Return(nil, fmt.Errorf("Testing Error"))
 
-	trafficSearcher := usecase.NewTrafficSearcher(mockTrafficService)
-	_, err := trafficSearcher.GetAllActiveTraffic()
+	usecase := usecase.NewTrafficFlowsUseCase(mockRepository)
+	_, err := usecase.GetTrafficFlows()
 
 	if err == nil {
 		t.Errorf("We expected an error, but didn't get one.")

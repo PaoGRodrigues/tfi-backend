@@ -4,7 +4,7 @@ import (
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
-func (trff *FakeTool) GetAllActiveTraffic() ([]traffic.TrafficFlow, error) {
+func (trff *FakeTool) GetTrafficFlows() ([]traffic.TrafficFlow, error) {
 	client := traffic.Client{
 		Name: "test",
 		Port: 55672,

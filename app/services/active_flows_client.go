@@ -21,7 +21,7 @@ type RspData struct {
 	PerPage     int
 }
 
-func (t *NtopNG) GetAllActiveTraffic() ([]traffic.TrafficFlow, error) {
+func (t *NtopNG) GetTrafficFlows() ([]traffic.TrafficFlow, error) {
 	activeFlows, err := t.getActiveFlows()
 	if err != nil {
 		return nil, err

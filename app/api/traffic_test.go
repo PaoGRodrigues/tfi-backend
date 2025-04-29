@@ -9,7 +9,10 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
+	usecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/traffic"
+	trafficPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/traffic"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
+
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -47,11 +50,13 @@ func TestCreateTrafficUseCaseAndGetAllTraffic(t *testing.T) {
 		},
 	}
 
-	mockTrafficSearcherUseCase := mocks.NewMockTrafficUseCase(ctrl)
-	mockTrafficSearcherUseCase.EXPECT().GetAllActiveTraffic().Return(createdTraffic, nil)
+	mockReader := trafficPortsMock.NewMockTrafficReader(ctrl)
+	mockReader.EXPECT().GetTrafficFlows().Return(createdTraffic, nil)
+
+	getTrafficFlowsUseCase := usecase.NewTrafficFlowsUseCase(mockReader)
 
 	api := &api.Api{
-		TrafficSearcher: mockTrafficSearcherUseCase,
+		TrafficSearcher: getTrafficFlowsUseCase,
 		Engine:          gin.Default(),
 	}
 
@@ -74,11 +79,13 @@ func TestCreateATrafficUsecaseAndGetTrafficReturnAnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockTrafficSearcherUseCase := mocks.NewMockTrafficUseCase(ctrl)
-	mockTrafficSearcherUseCase.EXPECT().GetAllActiveTraffic().Return(nil, fmt.Errorf("Testing error case"))
+	mockTrafficRepository := trafficPortsMock.NewMockTrafficReader(ctrl)
+	mockTrafficRepository.EXPECT().GetTrafficFlows().Return(nil, fmt.Errorf("Testing error case"))
+
+	GetTrafficFlowsUseCase := usecase.NewTrafficFlowsUseCase(mockTrafficRepository)
 
 	api := &api.Api{
-		TrafficSearcher: mockTrafficSearcherUseCase,
+		TrafficSearcher: GetTrafficFlowsUseCase,
 		Engine:          gin.Default(),
 	}
 

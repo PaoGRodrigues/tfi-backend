@@ -35,7 +35,7 @@ func main() {
 	var hostBlocker *hostUseCases.BlockHostUseCase
 	var storeHostsUseCase *hostUseCases.StoreHostUseCase
 
-	var trafficSearcher trafficDomains.TrafficUseCase
+	var trafficSearcher *trafficUseCases.GetTrafficFlowsUseCase
 	var trafficBytesParser trafficDomains.TrafficBytesParser
 	var trafficStorage trafficDomains.TrafficStorage
 
@@ -154,14 +154,14 @@ func initializeTrafficRepository(db services.Database) trafficDomains.TrafficRep
 	return trafficRepo
 }
 
-func initializeTrafficUseCases(tool services.Tool, repo trafficDomains.TrafficRepository, hostStorage hostPorts.HostDBRepository) (trafficDomains.TrafficUseCase,
+func initializeTrafficUseCases(tool services.Tool, repo trafficDomains.TrafficRepository, hostStorage hostPorts.HostDBRepository) (*trafficUseCases.GetTrafficFlowsUseCase,
 	trafficDomains.TrafficBytesParser, trafficDomains.TrafficStorage) {
 
-	trafficSearcher := trafficUseCases.NewTrafficSearcher(tool)
+	getTrafficFlowsUseCase := trafficUseCases.NewTrafficFlowsUseCase(tool)
 	trafficBytesParser := traffic_useCases.NewBytesParser(repo)
-	trafficStorage := traffic_useCases.NewFlowsStorage(trafficSearcher, repo, hostStorage)
+	trafficStorage := traffic_useCases.NewFlowsStorage(getTrafficFlowsUseCase, repo, hostStorage)
 
-	return trafficSearcher, trafficBytesParser, trafficStorage
+	return getTrafficFlowsUseCase, trafficBytesParser, trafficStorage
 }
 
 // *******************************

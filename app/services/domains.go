@@ -9,7 +9,7 @@ import (
 type Tool interface {
 	SetInterfaceID() error
 	GetAllHosts() ([]host.Host, error)
-	GetAllActiveTraffic() ([]traffic.TrafficFlow, error)
+	GetTrafficFlows() ([]traffic.TrafficFlow, error)
 	GetAllAlerts(epoch_begin, epoch_end int) ([]alert.Alert, error)
 	EnableChecks()
 }

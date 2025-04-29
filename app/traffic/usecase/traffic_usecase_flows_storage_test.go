@@ -8,6 +8,8 @@ import (
 	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	hostPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/host"
+	trafficPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/traffic"
+
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 
 	"go.uber.org/mock/gomock"
@@ -82,8 +84,8 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromSearcher(t *testing.T) {
 		},
 	}
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(activeFlowToStore)
+	mockTrafficRepository := trafficPortsMock.NewMockTrafficReader(ctrl)
+	mockTrafficRepository.EXPECT().GetTrafficFlows().Return(activeFlowToStore, nil)
 
 	mockHostsStorage := hostPortsMock.NewMockHostDBRepository(ctrl)
 	mockHostsStorage.EXPECT().GetHostByIp(server.IP).Return(host, nil)
@@ -91,7 +93,7 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromSearcher(t *testing.T) {
 	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
 	mockTrafficRepoStorage.EXPECT().StoreFlows(activeFlowToStore).Return(nil)
 
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostsStorage)
+	trafficStorage := usecase.NewFlowsStorage(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
 	err := trafficStorage.StoreFlows()
 
 	if err != nil {
@@ -112,15 +114,15 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromEmptySearcherFirstly(t *testi
 		},
 	}
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.TrafficFlow{})
-	mockSearcher.EXPECT().GetAllActiveTraffic().Return(activeFlowToStore, nil)
+	mockTrafficRepository := trafficPortsMock.NewMockTrafficReader(ctrl)
+	mockTrafficRepository.EXPECT().GetTrafficFlows().Return(activeFlowToStore, nil)
+
 	mockHostsStorage := hostPortsMock.NewMockHostDBRepository(ctrl)
 	mockHostsStorage.EXPECT().GetHostByIp(server.IP).Return(host, nil)
 	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
 	mockTrafficRepoStorage.EXPECT().StoreFlows(activeFlowToStore).Return(nil)
 
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostsStorage)
+	trafficStorage := usecase.NewFlowsStorage(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
 	err := trafficStorage.StoreFlows()
 
 	if err != nil {
@@ -141,14 +143,14 @@ func TestStoreTrafficWithError(t *testing.T) {
 		},
 	}
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(activeFlowToStore)
+	mockTrafficRepository := trafficPortsMock.NewMockTrafficReader(ctrl)
+	mockTrafficRepository.EXPECT().GetTrafficFlows().Return(activeFlowToStore, nil)
 	mockHostsStorage := hostPortsMock.NewMockHostDBRepository(ctrl)
 	mockHostsStorage.EXPECT().GetHostByIp(server.IP).Return(host, nil)
 	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
 	mockTrafficRepoStorage.EXPECT().StoreFlows(activeFlowToStore).Return(fmt.Errorf("Testing Error"))
 
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostsStorage)
+	trafficStorage := usecase.NewFlowsStorage(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
 	err := trafficStorage.StoreFlows()
 
 	if err == nil {
@@ -160,13 +162,12 @@ func TestStoreTrafficWithGetTrafficReturningError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.TrafficFlow{})
-	mockSearcher.EXPECT().GetAllActiveTraffic().Return([]domains.TrafficFlow{}, fmt.Errorf("Test error"))
+	mockTrafficRepository := trafficPortsMock.NewMockTrafficReader(ctrl)
+	mockTrafficRepository.EXPECT().GetTrafficFlows().Return([]domains.TrafficFlow{}, fmt.Errorf("Test error"))
 	mockHostsStorage := hostPortsMock.NewMockHostDBRepository(ctrl)
 	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
 
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostsStorage)
+	trafficStorage := usecase.NewFlowsStorage(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
 	err := trafficStorage.StoreFlows()
 
 	if err == nil {
@@ -187,13 +188,13 @@ func TestStoreTrafficWithErrorInEnrichData(t *testing.T) {
 		},
 	}
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(activeFlowToStore)
+	mockTrafficRepository := trafficPortsMock.NewMockTrafficReader(ctrl)
+	mockTrafficRepository.EXPECT().GetTrafficFlows().Return(activeFlowToStore, nil)
 	mockHostsStorage := hostPortsMock.NewMockHostDBRepository(ctrl)
 	mockHostsStorage.EXPECT().GetHostByIp(server.IP).Return(host_domains.Host{}, fmt.Errorf("Test error"))
 	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
 
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostsStorage)
+	trafficStorage := usecase.NewFlowsStorage(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
 	err := trafficStorage.StoreFlows()
 
 	if err == nil {
@@ -223,14 +224,14 @@ func TestStoreBroadcastServerSuccessfully(t *testing.T) {
 		},
 	}
 
-	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return(got)
+	mockTrafficRepository := trafficPortsMock.NewMockTrafficReader(ctrl)
+	mockTrafficRepository.EXPECT().GetTrafficFlows().Return(got, nil)
 	mockHostsStorage := hostPortsMock.NewMockHostDBRepository(ctrl)
 	mockHostsStorage.EXPECT().GetHostByIp(broadcastserver.IP).Return(publichost, nil)
 	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
 	mockTrafficRepoStorage.EXPECT().StoreFlows(expected).Return(nil)
 
-	trafficStorage := usecase.NewFlowsStorage(mockSearcher, mockTrafficRepoStorage, mockHostsStorage)
+	trafficStorage := usecase.NewFlowsStorage(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
 	err := trafficStorage.StoreFlows()
 
 	if err != nil {

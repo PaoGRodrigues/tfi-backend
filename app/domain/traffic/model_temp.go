@@ -9,12 +9,6 @@ type BytesPerCountry struct {
 	Country string `json:"country"`
 }
 
-// *********** Use Cases
-type TrafficUseCase interface {
-	GetAllActiveTraffic() ([]TrafficFlow, error)
-	GetActiveFlows() []TrafficFlow
-}
-
 type TrafficBytesParser interface {
 	GetBytesPerDestination() ([]BytesPerDestination, error)
 	GetBytesPerCountry() ([]BytesPerCountry, error)
@@ -31,9 +25,4 @@ type TrafficRepository interface {
 	GetClients() ([]Client, error)
 	GetServers() ([]Server, error)
 	GetFlowByKey(string) (TrafficFlow, error)
-}
-
-// *********** Services
-type TrafficService interface {
-	GetAllActiveTraffic() ([]TrafficFlow, error)
 }
