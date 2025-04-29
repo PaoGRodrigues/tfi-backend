@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
+	notificationChannelUseCase "github.com/PaoGRodrigues/tfi-backend/app/usecase/channel"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/services"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
@@ -33,8 +34,10 @@ func TestConfigureReturn200(t *testing.T) {
 	mockNotiChannel := mocks.NewMockNotificationChannel(ctrl)
 	mockNotiChannel.EXPECT().Configure(config.Token, config.Username).Return(nil)
 
+	configureNotificationChannelUseCase := notificationChannelUseCase.NewConfigureChannelUseCase(mockNotiChannel)
+
 	api := &api.Api{
-		ConfigureNotificationChannelUseCase: mockNotiChannel,
+		ConfigureNotificationChannelUseCase: configureNotificationChannelUseCase,
 		Engine:                              gin.Default(),
 	}
 
@@ -64,8 +67,10 @@ func TestConfigurePostRequestWithWrongBodyReturn400(t *testing.T) {
 
 	mockNotiChannel := mocks.NewMockNotificationChannel(ctrl)
 
+	configureNotificationChannelUseCase := notificationChannelUseCase.NewConfigureChannelUseCase(mockNotiChannel)
+
 	api := &api.Api{
-		ConfigureNotificationChannelUseCase: mockNotiChannel,
+		ConfigureNotificationChannelUseCase: configureNotificationChannelUseCase,
 		Engine:                              gin.Default(),
 	}
 
@@ -96,8 +101,10 @@ func TestConfigurePostRequestReturnErrorInConfigureFunctionAndReturn500(t *testi
 	mockNotiChannel := mocks.NewMockNotificationChannel(ctrl)
 	mockNotiChannel.EXPECT().Configure(config.Token, config.Username).Return(fmt.Errorf("Testing error"))
 
+	configureNotificationChannelUseCase := notificationChannelUseCase.NewConfigureChannelUseCase(mockNotiChannel)
+
 	api := &api.Api{
-		ConfigureNotificationChannelUseCase: mockNotiChannel,
+		ConfigureNotificationChannelUseCase: configureNotificationChannelUseCase,
 		Engine:                              gin.Default(),
 	}
 

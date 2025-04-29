@@ -12,7 +12,7 @@ import (
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	traffic_useCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	alertUsecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
-	notificationChannelUsecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/notificationchannel"
+	notificationChannelUsecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/channel"
 
 	usecase_hosts "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 
@@ -42,7 +42,7 @@ func main() {
 	var getAlertsUseCase *alertUsecase.GetAlertsUseCase
 	var notifyAlertsUseCase *alertUsecase.NotifyAlertsUseCase
 
-	var configureNotificationChannelUseCase *notificationChannelUsecase.NotificationChannel
+	var configureNotificationChannelUseCase *notificationChannelUsecase.ConfigureChannelUseCase
 	// ********************************
 	// *********** Repository ***********
 	var trafficRepo traffic_domains.TrafficRepository
