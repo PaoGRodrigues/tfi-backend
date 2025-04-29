@@ -4,9 +4,7 @@ import (
 	"database/sql"
 	"flag"
 
-	usecase_alerts "github.com/PaoGRodrigues/tfi-backend/app/alerts/usecase"
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
@@ -39,7 +37,7 @@ func main() {
 	var trafficStorage traffic_domains.TrafficStorage
 
 	var getAlertsUseCase *alertUsecase.GetAlertsUseCase
-	var alertSender alert.AlertsSender
+	var notifyAlertsUseCase *alertUsecase.NotifyAlertsUseCase
 	// ********************************
 	// *********** Repository ***********
 	var trafficRepo traffic_domains.TrafficRepository
@@ -96,7 +94,7 @@ func main() {
 	hostBlocker = initializeHostBlockerUseCase(console)
 
 	getAlertsUseCase = initializeAlertsDependencies(tool)
-	alertSender = initializeAlertSender(channel, tool)
+	notifyAlertsUseCase = initializeAlertSender(channel, tool)
 	// ****************************************
 
 	api := &api.Api{
@@ -109,7 +107,7 @@ func main() {
 		TrafficBytesParser:   trafficBytesParser,
 		ActiveFlowsStorage:   trafficStorage,
 		GetAlertsUseCase:     getAlertsUseCase,
-		AlertsSender:         alertSender,
+		NotifyAlertsUseCase:  notifyAlertsUseCase,
 		NotifChannel:         channel,
 		Engine:               gin.Default(),
 	}
@@ -168,9 +166,9 @@ func initializeAlertsDependencies(tool services.Tool) *alertUsecase.GetAlertsUse
 	return getAlertsUseCase
 }
 
-func initializeAlertSender(notifier services.NotificationChannel, tool services.Tool) alert.AlertsSender {
-	alertsSender := usecase_alerts.NewAlertNotifier(notifier, tool)
-	return alertsSender
+func initializeAlertSender(notifier services.NotificationChannel, tool services.Tool) *alertUsecase.NotifyAlertsUseCase {
+	notifyAlertsUseCase := alertUsecase.NewNotifyAlertsUseCase(notifier, tool)
+	return notifyAlertsUseCase
 }
 
 // ******************************

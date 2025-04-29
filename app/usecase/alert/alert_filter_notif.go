@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"time"
@@ -13,19 +12,19 @@ import (
 const seconds = 300
 const cybersecurity = "Cybersecurity"
 
-type AlertNotifier struct {
+type NotifyAlertsUseCase struct {
 	repository   alertPort.AlertReader
-	notifService alert.Notifier
+	notifService alertPort.Notifier
 }
 
-func NewAlertNotifier(service alert.Notifier, repository alertPort.AlertReader) *AlertNotifier {
-	return &AlertNotifier{
+func NewNotifyAlertsUseCase(service alertPort.Notifier, repository alertPort.AlertReader) *NotifyAlertsUseCase {
+	return &NotifyAlertsUseCase{
 		repository:   repository,
 		notifService: service,
 	}
 }
 
-func (an *AlertNotifier) SendLastAlertMessages() error {
+func (an *NotifyAlertsUseCase) SendLastAlertMessages() error {
 	now := time.Now()
 	epoch_end := int(now.Unix())
 	epoch_begin := epoch_end - seconds
@@ -37,7 +36,7 @@ func (an *AlertNotifier) SendLastAlertMessages() error {
 	if lastAlerts == nil {
 		return errors.New("No alerts available")
 	}
-	parsedAlerts := ParseAlerts(lastAlerts)
+	parsedAlerts := alert.ParseAlerts(lastAlerts)
 
 	for _, alert := range parsedAlerts {
 		err := an.notifService.SendMessage(alert)
@@ -47,20 +46,4 @@ func (an *AlertNotifier) SendLastAlertMessages() error {
 		}
 	}
 	return nil
-}
-
-func ParseAlerts(alerts []alert.Alert) []string {
-	messages := []string{}
-
-	for _, alert := range alerts {
-		if alert.Category == cybersecurity {
-			b, err := json.Marshal(alert)
-			if err != nil {
-				fmt.Println(err)
-			}
-			messages = append(messages, string(b))
-		}
-	}
-	return messages
-
 }

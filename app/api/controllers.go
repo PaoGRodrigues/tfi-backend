@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
@@ -24,7 +23,7 @@ type Api struct {
 	GetAlertsUseCase     *alertUsecases.GetAlertsUseCase
 	BlockHostUseCase     *hostUsecases.BlockHostUseCase
 	NotifChannel         services.NotificationChannel
-	AlertsSender         alert.AlertsSender
+	NotifyAlertsUseCase  *alertUsecases.NotifyAlertsUseCase
 	HostsStorage         *hostUsecases.StoreHostUseCase
 	*gin.Engine
 }
@@ -69,7 +68,7 @@ func (api *Api) StoreActiveTraffic(c *gin.Context) {
 }
 
 func (api *Api) SendAlertNotification(c *gin.Context) {
-	err := api.AlertsSender.SendLastAlertMessages()
+	err := api.NotifyAlertsUseCase.SendLastAlertMessages()
 	if err != nil {
 		c.JSON(500, gin.H{"data": "error getting last alerts"})
 		c.AbortWithStatus(http.StatusInternalServerError)
