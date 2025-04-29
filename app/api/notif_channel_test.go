@@ -34,8 +34,8 @@ func TestConfigureReturn200(t *testing.T) {
 	mockNotiChannel.EXPECT().Configure(config.Token, config.Username).Return(nil)
 
 	api := &api.Api{
-		NotifChannel: mockNotiChannel,
-		Engine:       gin.Default(),
+		ConfigureNotificationChannelUseCase: mockNotiChannel,
+		Engine:                              gin.Default(),
 	}
 
 	api.MapConfigureNotifChannelURL()
@@ -65,8 +65,8 @@ func TestConfigurePostRequestWithWrongBodyReturn400(t *testing.T) {
 	mockNotiChannel := mocks.NewMockNotificationChannel(ctrl)
 
 	api := &api.Api{
-		NotifChannel: mockNotiChannel,
-		Engine:       gin.Default(),
+		ConfigureNotificationChannelUseCase: mockNotiChannel,
+		Engine:                              gin.Default(),
 	}
 
 	api.MapConfigureNotifChannelURL()
@@ -97,8 +97,8 @@ func TestConfigurePostRequestReturnErrorInConfigureFunctionAndReturn500(t *testi
 	mockNotiChannel.EXPECT().Configure(config.Token, config.Username).Return(fmt.Errorf("Testing error"))
 
 	api := &api.Api{
-		NotifChannel: mockNotiChannel,
-		Engine:       gin.Default(),
+		ConfigureNotificationChannelUseCase: mockNotiChannel,
+		Engine:                              gin.Default(),
 	}
 
 	api.MapConfigureNotifChannelURL()

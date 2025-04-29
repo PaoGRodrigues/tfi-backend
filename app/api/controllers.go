@@ -8,23 +8,24 @@ import (
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
+	notificationChannelUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/channel"
 	hostUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Api struct {
-	Tool                 services.Tool
-	HostUseCase          hostPorts.HostReader
-	TrafficSearcher      traffic.TrafficUseCase
-	GetLocalhostsUseCase *hostUsecases.GetLocalhostsUseCase
-	TrafficBytesParser   traffic.TrafficBytesParser
-	ActiveFlowsStorage   traffic.TrafficStorage
-	GetAlertsUseCase     *alertUsecases.GetAlertsUseCase
-	BlockHostUseCase     *hostUsecases.BlockHostUseCase
-	NotifChannel         services.NotificationChannel
-	NotifyAlertsUseCase  *alertUsecases.NotifyAlertsUseCase
-	HostsStorage         *hostUsecases.StoreHostUseCase
+	Tool                                services.Tool
+	HostUseCase                         hostPorts.HostReader
+	TrafficSearcher                     traffic.TrafficUseCase
+	GetLocalhostsUseCase                *hostUsecases.GetLocalhostsUseCase
+	TrafficBytesParser                  traffic.TrafficBytesParser
+	ActiveFlowsStorage                  traffic.TrafficStorage
+	GetAlertsUseCase                    *alertUsecases.GetAlertsUseCase
+	BlockHostUseCase                    *hostUsecases.BlockHostUseCase
+	ConfigureNotificationChannelUseCase *notificationChannelUseCases.ConfigureChannelUseCase
+	NotifyAlertsUseCase                 *alertUsecases.NotifyAlertsUseCase
+	HostsStorage                        *hostUsecases.StoreHostUseCase
 	*gin.Engine
 }
 
@@ -80,7 +81,7 @@ func (api *Api) ConfigNotificationChannel(c *gin.Context) {
 		return
 	}
 
-	err := api.NotifChannel.Configure(config.Token, config.Username)
+	err := api.ConfigureNotificationChannelUseCase.Configure(config.Token, config.Username)
 	if err != nil {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		c.JSON(http.StatusInternalServerError, err)

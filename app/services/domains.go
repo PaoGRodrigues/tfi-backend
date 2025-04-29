@@ -20,7 +20,6 @@ type Terminal interface {
 
 type NotificationChannel interface {
 	Configure(string, string) error
-	SendMessage(string) error
 }
 
 type Database interface {

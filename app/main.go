@@ -5,12 +5,15 @@ import (
 	"flag"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
+	alertsPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/alert"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	traffic_useCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	alertUsecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
+	notificationChannelUsecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/notificationchannel"
+
 	usecase_hosts "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 
 	"github.com/coreos/go-iptables/iptables"
@@ -23,8 +26,8 @@ func main() {
 	// *********** Services ***********
 	var tool services.Tool
 	var console services.Terminal
-	var channel services.NotificationChannel
 	var database services.Database
+	var channel services.NotificationChannel
 	// ********************************
 	// *********** UseCases ***********
 
@@ -38,6 +41,8 @@ func main() {
 
 	var getAlertsUseCase *alertUsecase.GetAlertsUseCase
 	var notifyAlertsUseCase *alertUsecase.NotifyAlertsUseCase
+
+	var configureNotificationChannelUseCase *notificationChannelUsecase.NotificationChannel
 	// ********************************
 	// *********** Repository ***********
 	var trafficRepo traffic_domains.TrafficRepository
@@ -93,6 +98,8 @@ func main() {
 
 	hostBlocker = initializeHostBlockerUseCase(console)
 
+	configureNotificationChannelUseCase = initializeNotificationChannel(channel)
+
 	getAlertsUseCase = initializeAlertsDependencies(tool)
 	notifyAlertsUseCase = initializeAlertSender(channel, tool)
 	// ****************************************
@@ -100,16 +107,16 @@ func main() {
 	api := &api.Api{
 		Tool: tool,
 
-		GetLocalhostsUseCase: getLocalhostsUseCase,
-		BlockHostUseCase:     hostBlocker,
-		HostsStorage:         hostsStorage,
-		TrafficSearcher:      trafficSearcher,
-		TrafficBytesParser:   trafficBytesParser,
-		ActiveFlowsStorage:   trafficStorage,
-		GetAlertsUseCase:     getAlertsUseCase,
-		NotifyAlertsUseCase:  notifyAlertsUseCase,
-		NotifChannel:         channel,
-		Engine:               gin.Default(),
+		GetLocalhostsUseCase:                getLocalhostsUseCase,
+		BlockHostUseCase:                    hostBlocker,
+		HostsStorage:                        hostsStorage,
+		TrafficSearcher:                     trafficSearcher,
+		TrafficBytesParser:                  trafficBytesParser,
+		ActiveFlowsStorage:                  trafficStorage,
+		GetAlertsUseCase:                    getAlertsUseCase,
+		NotifyAlertsUseCase:                 notifyAlertsUseCase,
+		ConfigureNotificationChannelUseCase: configureNotificationChannelUseCase,
+		Engine:                              gin.Default(),
 	}
 
 	api.MapURLToPing()
@@ -166,9 +173,17 @@ func initializeAlertsDependencies(tool services.Tool) *alertUsecase.GetAlertsUse
 	return getAlertsUseCase
 }
 
-func initializeAlertSender(notifier services.NotificationChannel, tool services.Tool) *alertUsecase.NotifyAlertsUseCase {
+func initializeAlertSender(notifier alertsPorts.Notifier, tool services.Tool) *alertUsecase.NotifyAlertsUseCase {
 	notifyAlertsUseCase := alertUsecase.NewNotifyAlertsUseCase(notifier, tool)
 	return notifyAlertsUseCase
+}
+
+// ******************************
+
+// *********** Notification Channel ***********
+func initializeNotificationChannel(channel services.NotificationChannel) *notificationChannelUsecase.ConfigureChannelUseCase {
+	configureChannelUseCase := notificationChannelUsecase.NewConfigureChannelUseCase(channel)
+	return configureChannelUseCase
 }
 
 // ******************************
