@@ -25,7 +25,7 @@ func (parser *BytesAggregatorParser) GetBytesPerDestination() ([]domains.BytesPe
 
 	servers := filterPublicServers(serversList)
 
-	flows := []domains.ActiveFlow{}
+	flows := []domains.TrafficFlow{}
 	for _, server := range servers {
 		flow, err := parser.flowsStorage.GetFlowByKey(server.Key)
 		if err != nil {
@@ -52,7 +52,7 @@ func filterPublicServers(flows []domains.Server) []domains.Server {
 	return servers
 }
 
-func parsePerDest(flows []domains.ActiveFlow) []domains.BytesPerDestination {
+func parsePerDest(flows []domains.TrafficFlow) []domains.BytesPerDestination {
 
 	bytesDst := []domains.BytesPerDestination{}
 
@@ -99,7 +99,7 @@ func (parser *BytesAggregatorParser) GetBytesPerCountry() ([]domains.BytesPerCou
 
 	servers := filterPublicServers(serversList)
 
-	flows := []domains.ActiveFlow{}
+	flows := []domains.TrafficFlow{}
 	for _, server := range servers {
 		flow, err := parser.flowsStorage.GetFlowByKey(server.Key)
 		if err != nil {
@@ -131,7 +131,7 @@ func sumCountries(bpc []domains.BytesPerCountry) []domains.BytesPerCountry {
 	return bsCountry
 }
 
-func parsePerCountry(flows []domains.ActiveFlow) []domains.BytesPerCountry {
+func parsePerCountry(flows []domains.TrafficFlow) []domains.BytesPerCountry {
 
 	bytesCn := []domains.BytesPerCountry{}
 

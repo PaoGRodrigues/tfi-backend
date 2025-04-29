@@ -1,4 +1,4 @@
-package usecase
+package traffic
 
 import (
 	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
@@ -6,7 +6,7 @@ import (
 
 type TrafficSearcher struct {
 	trafficService domains.TrafficService
-	activeFlows    []domains.ActiveFlow
+	activeFlows    []domains.TrafficFlow
 }
 
 func NewTrafficSearcher(trafSrv domains.TrafficService) *TrafficSearcher {
@@ -16,15 +16,15 @@ func NewTrafficSearcher(trafSrv domains.TrafficService) *TrafficSearcher {
 	}
 }
 
-func (gw *TrafficSearcher) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
+func (gw *TrafficSearcher) GetAllActiveTraffic() ([]domains.TrafficFlow, error) {
 	res, err := gw.trafficService.GetAllActiveTraffic()
 	if err != nil {
-		return []domains.ActiveFlow{}, err
+		return []domains.TrafficFlow{}, err
 	}
 	gw.activeFlows = res
 	return res, nil
 }
 
-func (gw *TrafficSearcher) GetActiveFlows() []domains.ActiveFlow {
+func (gw *TrafficSearcher) GetActiveFlows() []domains.TrafficFlow {
 	return gw.activeFlows
 }

@@ -16,12 +16,12 @@ type HttpResponse struct {
 }
 
 type RspData struct {
-	Data        []traffic.ActiveFlow
+	Data        []traffic.TrafficFlow
 	CurrentPage int
 	PerPage     int
 }
 
-func (t *NtopNG) GetAllActiveTraffic() ([]traffic.ActiveFlow, error) {
+func (t *NtopNG) GetAllActiveTraffic() ([]traffic.TrafficFlow, error) {
 	activeFlows, err := t.getActiveFlows()
 	if err != nil {
 		return nil, err
@@ -29,8 +29,8 @@ func (t *NtopNG) GetAllActiveTraffic() ([]traffic.ActiveFlow, error) {
 	return activeFlows, nil
 }
 
-func (t *NtopNG) getActiveFlows() ([]traffic.ActiveFlow, error) {
-	activeFlows := []traffic.ActiveFlow{}
+func (t *NtopNG) getActiveFlows() ([]traffic.TrafficFlow, error) {
+	activeFlows := []traffic.TrafficFlow{}
 	resp, err := t.getActiveFlowsSinglePage(1)
 	if err != nil {
 		return nil, err

@@ -38,8 +38,8 @@ func TestCreateTrafficUseCaseAndGetAllTraffic(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	createdTraffic := []traffic.ActiveFlow{
-		traffic.ActiveFlow{
+	createdTraffic := []traffic.TrafficFlow{
+		traffic.TrafficFlow{
 			Client:   client,
 			Server:   server,
 			Bytes:    345,

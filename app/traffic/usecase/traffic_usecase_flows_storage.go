@@ -37,12 +37,12 @@ func (fs *FlowsStorage) StoreFlows() error {
 	return err
 }
 
-func (fs *FlowsStorage) enrichData(activeFlows []domains.ActiveFlow) ([]domains.ActiveFlow, error) {
-	newFlows := []domains.ActiveFlow{}
+func (fs *FlowsStorage) enrichData(activeFlows []domains.TrafficFlow) ([]domains.TrafficFlow, error) {
+	newFlows := []domains.TrafficFlow{}
 	for _, flow := range activeFlows {
 		serv, err := fs.hostStorage.GetHostByIp(flow.Server.IP)
 		if err != nil {
-			return []domains.ActiveFlow{}, err
+			return []domains.TrafficFlow{}, err
 		}
 		flow.Server.Country = serv.Country
 		if flow.Server.IsBroadcastDomain {

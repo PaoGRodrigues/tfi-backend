@@ -171,7 +171,7 @@ func TestGetFlowByKeyReturnFlow(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	activeFlowExpected := domains.ActiveFlow{
+	activeFlowExpected := domains.TrafficFlow{
 		Key:      "12345",
 		Client:   client,
 		Server:   server,
@@ -193,7 +193,7 @@ func TestGetFlowByKeyReturnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDatabase := services_mocks.NewMockDatabase(ctrl)
-	mockDatabase.EXPECT().GetFlowByKey("1234").Return(domains.ActiveFlow{}, fmt.Errorf("Test error"))
+	mockDatabase.EXPECT().GetFlowByKey("1234").Return(domains.TrafficFlow{}, fmt.Errorf("Test error"))
 
 	trafficStorage := repository.NewFlowsRepo(mockDatabase)
 	_, err := trafficStorage.GetFlowByKey("1234")
@@ -207,7 +207,7 @@ func TestStoreFlowsSuccessfully(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	activeFlows := []domains.ActiveFlow{
+	activeFlows := []domains.TrafficFlow{
 		{
 			Key:      "12345",
 			Client:   client,
@@ -247,10 +247,10 @@ func TestStoreFlowsReturnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDatabase := services_mocks.NewMockDatabase(ctrl)
-	mockDatabase.EXPECT().AddActiveFlows([]domains.ActiveFlow{}).Return(fmt.Errorf("Error Test"))
+	mockDatabase.EXPECT().AddActiveFlows([]domains.TrafficFlow{}).Return(fmt.Errorf("Error Test"))
 
 	trafficStorage := repository.NewFlowsRepo(mockDatabase)
-	err := trafficStorage.StoreFlows([]domains.ActiveFlow{})
+	err := trafficStorage.StoreFlows([]domains.TrafficFlow{})
 
 	if err == nil {
 		t.Fail()

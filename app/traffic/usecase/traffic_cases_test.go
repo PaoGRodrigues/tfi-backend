@@ -45,7 +45,7 @@ var noNameServer = traffic.Server{
 	Key:               "12344570",
 }
 
-var expectedFlowFromSearcher = []traffic.ActiveFlow{
+var expectedFlowFromSearcher = []traffic.TrafficFlow{
 	{
 		Client: traffic.Client{
 			Name: "Local",
@@ -69,7 +69,7 @@ var expectedFlowFromSearcher = []traffic.ActiveFlow{
 	},
 }
 
-var expectedFlowFromSearcherWithoutName = []traffic.ActiveFlow{
+var expectedFlowFromSearcherWithoutName = []traffic.TrafficFlow{
 	{
 		Client: traffic.Client{
 			Name: "Local",
@@ -113,7 +113,7 @@ var expectedHosts = []hosts.Host{
 	},
 }
 
-var secondExpectedFlowFromSearcher = []traffic.ActiveFlow{
+var secondExpectedFlowFromSearcher = []traffic.TrafficFlow{
 	{
 		Client: traffic.Client{
 			Name: "Local",
@@ -142,7 +142,7 @@ var secondExpectedFlowFromSearcher = []traffic.ActiveFlow{
 	},
 }
 
-var expectedPerCountrySearcher = []traffic.ActiveFlow{
+var expectedPerCountrySearcher = []traffic.TrafficFlow{
 	{
 		Client: traffic.Client{
 			Name: "Local",

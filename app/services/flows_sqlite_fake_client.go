@@ -12,7 +12,7 @@ func NewFakeSQLClient() *FakeSQLClient {
 	return &FakeSQLClient{}
 }
 
-func (client *FakeSQLClient) AddActiveFlows(flows []traffic.ActiveFlow) error {
+func (client *FakeSQLClient) AddActiveFlows(flows []traffic.TrafficFlow) error {
 	return nil
 }
 
@@ -34,9 +34,9 @@ func (client *FakeSQLClient) GetServers() ([]traffic.Server, error) {
 	return servers, nil
 }
 
-func (client *FakeSQLClient) GetFlowByKey(key string) (traffic.ActiveFlow, error) {
+func (client *FakeSQLClient) GetFlowByKey(key string) (traffic.TrafficFlow, error) {
 
-	flow := traffic.ActiveFlow{}
+	flow := traffic.TrafficFlow{}
 	return flow, nil
 }
 

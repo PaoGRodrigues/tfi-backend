@@ -32,8 +32,8 @@ var protocols = traffic.Protocol{
 	L7: "TLS.GoogleServices",
 }
 
-var expected = []traffic.ActiveFlow{
-	traffic.ActiveFlow{
+var expected = []traffic.TrafficFlow{
+	traffic.TrafficFlow{
 		Client:   client,
 		Server:   server,
 		Bytes:    1000,

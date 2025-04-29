@@ -14,6 +14,7 @@ import (
 	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
 	hostUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 	notificationChannelUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/notificationchannel"
+	trafficUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/traffic"
 
 	"github.com/coreos/go-iptables/iptables"
 	"github.com/gin-gonic/gin"
@@ -156,7 +157,7 @@ func initializeTrafficRepository(db services.Database) trafficDomains.TrafficRep
 func initializeTrafficUseCases(tool services.Tool, repo trafficDomains.TrafficRepository, hostStorage hostPorts.HostDBRepository) (trafficDomains.TrafficUseCase,
 	trafficDomains.TrafficBytesParser, trafficDomains.TrafficStorage) {
 
-	trafficSearcher := traffic_useCases.NewTrafficSearcher(tool)
+	trafficSearcher := trafficUseCases.NewTrafficSearcher(tool)
 	trafficBytesParser := traffic_useCases.NewBytesParser(repo)
 	trafficStorage := traffic_useCases.NewFlowsStorage(trafficSearcher, repo, hostStorage)
 

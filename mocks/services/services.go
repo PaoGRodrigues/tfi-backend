@@ -55,10 +55,10 @@ func (mr *MockToolMockRecorder) EnableChecks() *gomock.Call {
 }
 
 // GetAllActiveTraffic mocks base method.
-func (m *MockTool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
+func (m *MockTool) GetAllActiveTraffic() ([]domains.TrafficFlow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllActiveTraffic")
-	ret0, _ := ret[0].([]domains.ActiveFlow)
+	ret0, _ := ret[0].([]domains.TrafficFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -229,7 +229,7 @@ func (m *MockDatabase) EXPECT() *MockDatabaseMockRecorder {
 }
 
 // AddActiveFlows mocks base method.
-func (m *MockDatabase) AddActiveFlows(arg0 []domains.ActiveFlow) error {
+func (m *MockDatabase) AddActiveFlows(arg0 []domains.TrafficFlow) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddActiveFlows", arg0)
 	ret0, _ := ret[0].(error)
@@ -258,10 +258,10 @@ func (mr *MockDatabaseMockRecorder) GetClients() *gomock.Call {
 }
 
 // GetFlowByKey mocks base method.
-func (m *MockDatabase) GetFlowByKey(key string) (domains.ActiveFlow, error) {
+func (m *MockDatabase) GetFlowByKey(key string) (domains.TrafficFlow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetFlowByKey", key)
-	ret0, _ := ret[0].(domains.ActiveFlow)
+	ret0, _ := ret[0].(domains.TrafficFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

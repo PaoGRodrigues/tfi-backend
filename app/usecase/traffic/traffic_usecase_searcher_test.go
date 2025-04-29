@@ -1,4 +1,4 @@
-package usecase_test
+package traffic_test
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
+	usecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/traffic"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 	"go.uber.org/mock/gomock"
 )
@@ -33,8 +33,8 @@ func TestGetAllTrafficReturnAListOfTrafficJsons(t *testing.T) {
 		L7: "TLS.GoogleServices",
 	}
 
-	expected := []domains.ActiveFlow{
-		domains.ActiveFlow{
+	expected := []domains.TrafficFlow{
+		domains.TrafficFlow{
 			Client:   client,
 			Server:   server,
 			Bytes:    1000,

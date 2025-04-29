@@ -92,7 +92,7 @@ func TestGetBytesPerDestReturnsErrorWhenThereIsAnErrorInGetFlowByKey(t *testing.
 
 	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server}, nil)
-	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(domains.ActiveFlow{}, fmt.Errorf("Test error"))
+	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(domains.TrafficFlow{}, fmt.Errorf("Test error"))
 
 	parser := usecase.NewBytesParser(mockFlowStorage)
 	_, err := parser.GetBytesPerDestination()
@@ -183,7 +183,7 @@ func TestGetBytesPerCountryReturnsErrorWhenThereIsAnErrorInGetFlowByKey(t *testi
 
 	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server}, nil)
-	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(domains.ActiveFlow{}, fmt.Errorf("Test error"))
+	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(domains.TrafficFlow{}, fmt.Errorf("Test error"))
 
 	parser := usecase.NewBytesParser(mockFlowStorage)
 	_, err := parser.GetBytesPerCountry()

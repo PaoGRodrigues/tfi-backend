@@ -39,15 +39,15 @@ func (fs *FlowsRepo) GetServers() ([]domains.Server, error) {
 	return servers, nil
 }
 
-func (fs *FlowsRepo) GetFlowByKey(key string) (domains.ActiveFlow, error) {
+func (fs *FlowsRepo) GetFlowByKey(key string) (domains.TrafficFlow, error) {
 	flow, err := fs.Database.GetFlowByKey(key)
 	if err != nil {
-		return domains.ActiveFlow{}, err
+		return domains.TrafficFlow{}, err
 	}
 	return flow, nil
 }
 
-func (fs *FlowsRepo) StoreFlows(flows []domains.ActiveFlow) error {
+func (fs *FlowsRepo) StoreFlows(flows []domains.TrafficFlow) error {
 	err := fs.Database.AddActiveFlows(flows)
 	if err != nil {
 		return err

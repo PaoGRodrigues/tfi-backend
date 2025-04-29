@@ -73,7 +73,7 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromSearcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	activeFlowToStore := []domains.ActiveFlow{
+	activeFlowToStore := []domains.TrafficFlow{
 		{
 			Client:   client,
 			Server:   server,
@@ -103,7 +103,7 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromEmptySearcherFirstly(t *testi
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	activeFlowToStore := []domains.ActiveFlow{
+	activeFlowToStore := []domains.TrafficFlow{
 		{
 			Client:   client,
 			Server:   server,
@@ -113,7 +113,7 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromEmptySearcherFirstly(t *testi
 	}
 
 	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.ActiveFlow{})
+	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.TrafficFlow{})
 	mockSearcher.EXPECT().GetAllActiveTraffic().Return(activeFlowToStore, nil)
 	mockHostsStorage := hostPortsMock.NewMockHostDBRepository(ctrl)
 	mockHostsStorage.EXPECT().GetHostByIp(server.IP).Return(host, nil)
@@ -132,7 +132,7 @@ func TestStoreTrafficWithError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	activeFlowToStore := []domains.ActiveFlow{
+	activeFlowToStore := []domains.TrafficFlow{
 		{
 			Client:   client,
 			Server:   server,
@@ -161,8 +161,8 @@ func TestStoreTrafficWithGetTrafficReturningError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockSearcher := mocks.NewMockTrafficUseCase(ctrl)
-	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.ActiveFlow{})
-	mockSearcher.EXPECT().GetAllActiveTraffic().Return([]domains.ActiveFlow{}, fmt.Errorf("Test error"))
+	mockSearcher.EXPECT().GetActiveFlows().Return([]domains.TrafficFlow{})
+	mockSearcher.EXPECT().GetAllActiveTraffic().Return([]domains.TrafficFlow{}, fmt.Errorf("Test error"))
 	mockHostsStorage := hostPortsMock.NewMockHostDBRepository(ctrl)
 	mockTrafficRepoStorage := mocks.NewMockTrafficRepository(ctrl)
 
@@ -178,7 +178,7 @@ func TestStoreTrafficWithErrorInEnrichData(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	activeFlowToStore := []domains.ActiveFlow{
+	activeFlowToStore := []domains.TrafficFlow{
 		{
 			Client:   client,
 			Server:   server,
@@ -205,7 +205,7 @@ func TestStoreBroadcastServerSuccessfully(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	got := []domains.ActiveFlow{
+	got := []domains.TrafficFlow{
 		{
 			Client:   client,
 			Server:   broadcastserver,
@@ -214,7 +214,7 @@ func TestStoreBroadcastServerSuccessfully(t *testing.T) {
 		},
 	}
 
-	expected := []domains.ActiveFlow{
+	expected := []domains.TrafficFlow{
 		{
 			Client:   client,
 			Server:   broadcastserverchanged,

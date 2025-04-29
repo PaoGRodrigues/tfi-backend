@@ -4,7 +4,7 @@ import (
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
-func (trff *FakeTool) GetAllActiveTraffic() ([]traffic.ActiveFlow, error) {
+func (trff *FakeTool) GetAllActiveTraffic() ([]traffic.TrafficFlow, error) {
 	client := traffic.Client{
 		Name: "test",
 		Port: 55672,
@@ -14,7 +14,7 @@ func (trff *FakeTool) GetAllActiveTraffic() ([]traffic.ActiveFlow, error) {
 		L4: "UDP.Youtube",
 		L7: "TLS.GoogleServices",
 	}
-	activeFlowStruct := []traffic.ActiveFlow{
+	activeFlowStruct := []traffic.TrafficFlow{
 		{
 			Key:    "345",
 			Client: client,

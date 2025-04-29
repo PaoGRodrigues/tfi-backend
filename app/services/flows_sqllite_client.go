@@ -4,7 +4,7 @@ import (
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
-func (client *SQLClient) AddActiveFlows(flows []traffic.ActiveFlow) error {
+func (client *SQLClient) AddActiveFlows(flows []traffic.TrafficFlow) error {
 
 	for _, flow := range flows {
 		_, err := client.addActiveFlow(flow)
@@ -15,7 +15,7 @@ func (client *SQLClient) AddActiveFlows(flows []traffic.ActiveFlow) error {
 	return nil
 }
 
-func (client *SQLClient) addActiveFlow(currentFlow traffic.ActiveFlow) (string, error) {
+func (client *SQLClient) addActiveFlow(currentFlow traffic.TrafficFlow) (string, error) {
 	_, err := client.db.Exec("INSERT INTO traffic(key,first_seen,last_seen,bytes) VALUES(?,?,?,?) ON CONFLICT(key) DO UPDATE SET bytes=?;",
 		currentFlow.Key, currentFlow.FirstSeen, currentFlow.LastSeen, currentFlow.Bytes, currentFlow.Bytes)
 	if err != nil {
@@ -132,17 +132,17 @@ func (client *SQLClient) GetServers() ([]traffic.Server, error) {
 	return servers, nil
 }
 
-func (client *SQLClient) GetFlowByKey(key string) (traffic.ActiveFlow, error) {
-	flow := traffic.ActiveFlow{}
+func (client *SQLClient) GetFlowByKey(key string) (traffic.TrafficFlow, error) {
+	flow := traffic.TrafficFlow{}
 
 	rows, err := client.db.Query("SELECT key,first_seen,last_seen,bytes FROM traffic WHERE key LIKE ?", key)
 	if err != nil {
-		return traffic.ActiveFlow{}, err
+		return traffic.TrafficFlow{}, err
 	}
 	for rows.Next() {
 		err = rows.Scan(&flow.Key, &flow.FirstSeen, &flow.LastSeen, &flow.Bytes)
 		if err != nil {
-			return traffic.ActiveFlow{}, err
+			return traffic.TrafficFlow{}, err
 		}
 	}
 

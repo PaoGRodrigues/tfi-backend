@@ -41,10 +41,10 @@ func (m *MockTrafficUseCase) EXPECT() *MockTrafficUseCaseMockRecorder {
 }
 
 // GetActiveFlows mocks base method.
-func (m *MockTrafficUseCase) GetActiveFlows() []domains.ActiveFlow {
+func (m *MockTrafficUseCase) GetActiveFlows() []domains.TrafficFlow {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetActiveFlows")
-	ret0, _ := ret[0].([]domains.ActiveFlow)
+	ret0, _ := ret[0].([]domains.TrafficFlow)
 	return ret0
 }
 
@@ -55,10 +55,10 @@ func (mr *MockTrafficUseCaseMockRecorder) GetActiveFlows() *gomock.Call {
 }
 
 // GetAllActiveTraffic mocks base method.
-func (m *MockTrafficUseCase) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
+func (m *MockTrafficUseCase) GetAllActiveTraffic() ([]domains.TrafficFlow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllActiveTraffic")
-	ret0, _ := ret[0].([]domains.ActiveFlow)
+	ret0, _ := ret[0].([]domains.TrafficFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -201,10 +201,10 @@ func (mr *MockTrafficRepositoryMockRecorder) GetClients() *gomock.Call {
 }
 
 // GetFlowByKey mocks base method.
-func (m *MockTrafficRepository) GetFlowByKey(arg0 string) (domains.ActiveFlow, error) {
+func (m *MockTrafficRepository) GetFlowByKey(arg0 string) (domains.TrafficFlow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetFlowByKey", arg0)
-	ret0, _ := ret[0].(domains.ActiveFlow)
+	ret0, _ := ret[0].(domains.TrafficFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -246,7 +246,7 @@ func (mr *MockTrafficRepositoryMockRecorder) GetServers() *gomock.Call {
 }
 
 // StoreFlows mocks base method.
-func (m *MockTrafficRepository) StoreFlows(arg0 []domains.ActiveFlow) error {
+func (m *MockTrafficRepository) StoreFlows(arg0 []domains.TrafficFlow) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "StoreFlows", arg0)
 	ret0, _ := ret[0].(error)
@@ -284,10 +284,10 @@ func (m *MockTrafficService) EXPECT() *MockTrafficServiceMockRecorder {
 }
 
 // GetAllActiveTraffic mocks base method.
-func (m *MockTrafficService) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
+func (m *MockTrafficService) GetAllActiveTraffic() ([]domains.TrafficFlow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllActiveTraffic")
-	ret0, _ := ret[0].([]domains.ActiveFlow)
+	ret0, _ := ret[0].([]domains.TrafficFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
