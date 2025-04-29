@@ -104,7 +104,6 @@ func main() {
 	// ****************************************
 
 	api := &api.Api{
-		Tool: tool,
 
 		GetLocalhostsUseCase:                getLocalhostsUseCase,
 		BlockHostUseCase:                    hostBlocker,

@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"net/http"
 
-	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
-	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
 	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
 	hostUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
@@ -15,8 +13,6 @@ import (
 )
 
 type Api struct {
-	Tool                                services.Tool
-	HostUseCase                         hostPorts.HostReader
 	TrafficSearcher                     traffic.TrafficUseCase
 	GetLocalhostsUseCase                *hostUsecases.GetLocalhostsUseCase
 	TrafficBytesParser                  traffic.TrafficBytesParser
