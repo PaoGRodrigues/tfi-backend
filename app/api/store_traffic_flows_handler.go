@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (api *Api) StoreActiveTraffic(c *gin.Context) {
+func (api *Api) StoreTrafficFlows(c *gin.Context) {
 	err := api.StoreTrafficFlowsUseCase.StoreTrafficFlows()
 	if err != nil {
 		fmt.Println(err)
