@@ -1,7 +1,7 @@
 package alert
 
 import (
-	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	flow "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
 // *********** Entities

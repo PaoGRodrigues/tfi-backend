@@ -2,7 +2,7 @@ package services
 
 import (
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
-	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	flow "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
 func (d *FakeTool) GetAllAlerts(epoch_begin, epoch_end int) ([]alert.Alert, error) {

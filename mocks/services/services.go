@@ -14,7 +14,7 @@ import (
 
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	host "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -54,21 +54,6 @@ func (mr *MockToolMockRecorder) EnableChecks() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "EnableChecks", reflect.TypeOf((*MockTool)(nil).EnableChecks))
 }
 
-// GetAllActiveTraffic mocks base method.
-func (m *MockTool) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAllActiveTraffic")
-	ret0, _ := ret[0].([]domains.ActiveFlow)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetAllActiveTraffic indicates an expected call of GetAllActiveTraffic.
-func (mr *MockToolMockRecorder) GetAllActiveTraffic() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllActiveTraffic", reflect.TypeOf((*MockTool)(nil).GetAllActiveTraffic))
-}
-
 // GetAllAlerts mocks base method.
 func (m *MockTool) GetAllAlerts(epoch_begin, epoch_end int) ([]alert.Alert, error) {
 	m.ctrl.T.Helper()
@@ -97,6 +82,21 @@ func (m *MockTool) GetAllHosts() ([]host.Host, error) {
 func (mr *MockToolMockRecorder) GetAllHosts() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllHosts", reflect.TypeOf((*MockTool)(nil).GetAllHosts))
+}
+
+// GetTrafficFlows mocks base method.
+func (m *MockTool) GetTrafficFlows() ([]traffic.TrafficFlow, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTrafficFlows")
+	ret0, _ := ret[0].([]traffic.TrafficFlow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTrafficFlows indicates an expected call of GetTrafficFlows.
+func (mr *MockToolMockRecorder) GetTrafficFlows() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTrafficFlows", reflect.TypeOf((*MockTool)(nil).GetTrafficFlows))
 }
 
 // SetInterfaceID mocks base method.
@@ -228,25 +228,11 @@ func (m *MockDatabase) EXPECT() *MockDatabaseMockRecorder {
 	return m.recorder
 }
 
-// AddActiveFlows mocks base method.
-func (m *MockDatabase) AddActiveFlows(arg0 []domains.ActiveFlow) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddActiveFlows", arg0)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// AddActiveFlows indicates an expected call of AddActiveFlows.
-func (mr *MockDatabaseMockRecorder) AddActiveFlows(arg0 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddActiveFlows", reflect.TypeOf((*MockDatabase)(nil).AddActiveFlows), arg0)
-}
-
 // GetClients mocks base method.
-func (m *MockDatabase) GetClients() ([]domains.Client, error) {
+func (m *MockDatabase) GetClients() ([]traffic.Client, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetClients")
-	ret0, _ := ret[0].([]domains.Client)
+	ret0, _ := ret[0].([]traffic.Client)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -258,10 +244,10 @@ func (mr *MockDatabaseMockRecorder) GetClients() *gomock.Call {
 }
 
 // GetFlowByKey mocks base method.
-func (m *MockDatabase) GetFlowByKey(key string) (domains.ActiveFlow, error) {
+func (m *MockDatabase) GetFlowByKey(key string) (traffic.TrafficFlow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetFlowByKey", key)
-	ret0, _ := ret[0].(domains.ActiveFlow)
+	ret0, _ := ret[0].(traffic.TrafficFlow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -288,10 +274,10 @@ func (mr *MockDatabaseMockRecorder) GetHostByIp(arg0 any) *gomock.Call {
 }
 
 // GetServerByAttr mocks base method.
-func (m *MockDatabase) GetServerByAttr(attr string) (domains.Server, error) {
+func (m *MockDatabase) GetServerByAttr(attr string) (traffic.Server, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetServerByAttr", attr)
-	ret0, _ := ret[0].(domains.Server)
+	ret0, _ := ret[0].(traffic.Server)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -303,10 +289,10 @@ func (mr *MockDatabaseMockRecorder) GetServerByAttr(attr any) *gomock.Call {
 }
 
 // GetServers mocks base method.
-func (m *MockDatabase) GetServers() ([]domains.Server, error) {
+func (m *MockDatabase) GetServers() ([]traffic.Server, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetServers")
-	ret0, _ := ret[0].([]domains.Server)
+	ret0, _ := ret[0].([]traffic.Server)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -329,4 +315,18 @@ func (m *MockDatabase) StoreHosts(arg0 []host.Host) error {
 func (mr *MockDatabaseMockRecorder) StoreHosts(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreHosts", reflect.TypeOf((*MockDatabase)(nil).StoreHosts), arg0)
+}
+
+// StoreTrafficFlows mocks base method.
+func (m *MockDatabase) StoreTrafficFlows(arg0 []traffic.TrafficFlow) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "StoreTrafficFlows", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// StoreTrafficFlows indicates an expected call of StoreTrafficFlows.
+func (mr *MockDatabaseMockRecorder) StoreTrafficFlows(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "StoreTrafficFlows", reflect.TypeOf((*MockDatabase)(nil).StoreTrafficFlows), arg0)
 }

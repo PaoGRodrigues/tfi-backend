@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
 type HttpResponse struct {
@@ -16,12 +16,12 @@ type HttpResponse struct {
 }
 
 type RspData struct {
-	Data        []domains.ActiveFlow
+	Data        []traffic.TrafficFlow
 	CurrentPage int
 	PerPage     int
 }
 
-func (t *NtopNG) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
+func (t *NtopNG) GetTrafficFlows() ([]traffic.TrafficFlow, error) {
 	activeFlows, err := t.getActiveFlows()
 	if err != nil {
 		return nil, err
@@ -29,8 +29,8 @@ func (t *NtopNG) GetAllActiveTraffic() ([]domains.ActiveFlow, error) {
 	return activeFlows, nil
 }
 
-func (t *NtopNG) getActiveFlows() ([]domains.ActiveFlow, error) {
-	activeFlows := []domains.ActiveFlow{}
+func (t *NtopNG) getActiveFlows() ([]traffic.TrafficFlow, error) {
+	activeFlows := []traffic.TrafficFlow{}
 	resp, err := t.getActiveFlowsSinglePage(1)
 	if err != nil {
 		return nil, err

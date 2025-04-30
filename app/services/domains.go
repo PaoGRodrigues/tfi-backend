@@ -3,13 +3,13 @@ package services
 import (
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
 	host "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
-	traffic_domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
 type Tool interface {
 	SetInterfaceID() error
 	GetAllHosts() ([]host.Host, error)
-	GetAllActiveTraffic() ([]traffic_domains.ActiveFlow, error)
+	GetTrafficFlows() ([]traffic.TrafficFlow, error)
 	GetAllAlerts(epoch_begin, epoch_end int) ([]alert.Alert, error)
 	EnableChecks()
 }
@@ -24,11 +24,11 @@ type NotificationChannel interface {
 }
 
 type Database interface {
-	AddActiveFlows([]traffic_domains.ActiveFlow) error
-	GetServerByAttr(attr string) (traffic_domains.Server, error)
-	GetClients() ([]traffic_domains.Client, error)
-	GetServers() ([]traffic_domains.Server, error)
-	GetFlowByKey(key string) (traffic_domains.ActiveFlow, error)
+	StoreTrafficFlows([]traffic.TrafficFlow) error
+	GetServerByAttr(attr string) (traffic.Server, error)
+	GetClients() ([]traffic.Client, error)
+	GetServers() ([]traffic.Server, error)
+	GetFlowByKey(key string) (traffic.TrafficFlow, error)
 	StoreHosts([]host.Host) error
 	GetHostByIp(string) (host.Host, error)
 }

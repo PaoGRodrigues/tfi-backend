@@ -9,7 +9,7 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	alert "github.com/PaoGRodrigues/tfi-backend/app/domain/alert"
-	flow "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	flow "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	alertUseCase "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
 	alertPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/alert"
 

@@ -7,7 +7,7 @@ package mock_services
 import (
 	reflect "reflect"
 
-	domains "github.com/PaoGRodrigues/tfi-backend/app/traffic/domains"
+	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	gomock "github.com/golang/mock/gomock"
 )
 
@@ -49,7 +49,7 @@ func (mr *MockStorageMockRecorder) CreateTables() *gomock.Call {
 }
 
 // InsertActiveFlow mocks base method.
-func (m *MockStorage) InsertActiveFlow(arg0 domains.ActiveFlow) (int, error) {
+func (m *MockStorage) InsertActiveFlow(arg0 domains.TrafficFlow) (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "InsertActiveFlow", arg0)
 	ret0, _ := ret[0].(int)
