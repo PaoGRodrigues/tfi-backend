@@ -1,4 +1,4 @@
-package usecase
+package traffic
 
 import (
 	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"

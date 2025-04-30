@@ -189,3 +189,59 @@ var expectedPerCountrySearcher = []traffic.TrafficFlow{
 		Bytes: 5566778,
 	},
 }
+
+var host = hosts.Host{
+	Name:        "test",
+	PrivateHost: false,
+	IP:          "123.123.123.123",
+	City:        "",
+	Country:     "US",
+}
+
+var client = traffic.Client{
+	Name: "test",
+	Port: 55672,
+	IP:   "192.168.4.9",
+}
+
+var server = traffic.Server{
+	IP:                "123.123.123.123",
+	IsBroadcastDomain: false,
+	IsDHCP:            false,
+	Port:              443,
+	Name:              "lib.gen.rus",
+	Country:           "US",
+	Key:               "12344567",
+}
+
+var protocols = traffic.Protocol{
+	L4: "UDP.Youtube",
+	L7: "TLS.GoogleServices",
+}
+
+var broadcastserver = traffic.Server{
+	IP:                "1.1.1.1",
+	IsBroadcastDomain: true,
+	IsDHCP:            false,
+	Port:              443,
+	Name:              "SARASA",
+	Country:           "US",
+	Key:               "12344569",
+}
+
+var broadcastserverchanged = traffic.Server{
+	IP:                "1.1.1.1",
+	IsBroadcastDomain: true,
+	IsDHCP:            false,
+	Port:              443,
+	Name:              "1.1.1.1",
+	Country:           "US",
+	Key:               "12344569",
+}
+var publichost = hosts.Host{
+	Name:        "SARASA",
+	PrivateHost: false,
+	IP:          "1.1.1.1",
+	City:        "",
+	Country:     "US",
+}

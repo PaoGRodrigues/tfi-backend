@@ -159,7 +159,7 @@ func initializeTrafficUseCases(tool services.Tool, repo trafficDomains.TrafficRe
 
 	getTrafficFlowsUseCase := trafficUseCases.NewTrafficFlowsUseCase(tool)
 	trafficBytesParser := traffic_useCases.NewBytesParser(repo)
-	trafficStorage := traffic_useCases.NewFlowsStorage(getTrafficFlowsUseCase, repo, hostStorage)
+	trafficStorage := trafficUseCases.NewFlowsStorage(getTrafficFlowsUseCase, repo, hostStorage)
 
 	return getTrafficFlowsUseCase, trafficBytesParser, trafficStorage
 }
