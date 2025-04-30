@@ -113,7 +113,7 @@ func main() {
 		StoreHostsUseCase:                   storeHostsUseCase,
 		TrafficSearcher:                     getTrafficFlowsUseCase,
 		TrafficBytesParser:                  trafficBytesParser,
-		ActiveFlowsStorage:                  storeTrafficFlowsUseCase,
+		StoreTrafficFlowsUseCase:            storeTrafficFlowsUseCase,
 		GetAlertsUseCase:                    getAlertsUseCase,
 		NotifyAlertsUseCase:                 notifyAlertsUseCase,
 		ConfigureNotificationChannelUseCase: configureNotificationChannelUseCase,

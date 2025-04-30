@@ -17,7 +17,7 @@ type Api struct {
 	TrafficSearcher                     *trafficUsecases.GetTrafficFlowsUseCase
 	GetLocalhostsUseCase                *hostUsecases.GetLocalhostsUseCase
 	TrafficBytesParser                  traffic.TrafficBytesParser
-	ActiveFlowsStorage                  traffic.TrafficStorage
+	StoreTrafficFlowsUseCase            *trafficUsecases.StoreTrafficFlowsUseCase
 	GetAlertsUseCase                    *alertUsecases.GetAlertsUseCase
 	BlockHostUseCase                    *hostUsecases.BlockHostUseCase
 	ConfigureNotificationChannelUseCase *notificationChannelUseCases.ConfigureChannelUseCase
@@ -40,7 +40,7 @@ func (api *Api) GetActiveFlowsPerDestination(c *gin.Context) {
 }
 
 func (api *Api) StoreActiveTraffic(c *gin.Context) {
-	err := api.ActiveFlowsStorage.StoreFlows()
+	err := api.StoreTrafficFlowsUseCase.StoreTrafficFlows()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})

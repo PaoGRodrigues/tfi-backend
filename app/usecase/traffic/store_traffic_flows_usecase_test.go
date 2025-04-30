@@ -92,7 +92,7 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromSearcher(t *testing.T) {
 	mockTrafficRepoStorage.EXPECT().StoreTrafficFlows(activeFlowToStore).Return(nil)
 
 	trafficStorage := trafficUseCase.NewStoreTrafficFlowsUseCase(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
-	err := trafficStorage.StoreFlows()
+	err := trafficStorage.StoreTrafficFlows()
 
 	if err != nil {
 		t.Fail()
@@ -121,7 +121,7 @@ func TestStoreTrafficSuccessfullyGettingTrafficFromEmptySearcherFirstly(t *testi
 	mockTrafficRepoStorage.EXPECT().StoreTrafficFlows(activeFlowToStore).Return(nil)
 
 	trafficStorage := trafficUseCase.NewStoreTrafficFlowsUseCase(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
-	err := trafficStorage.StoreFlows()
+	err := trafficStorage.StoreTrafficFlows()
 
 	if err != nil {
 		t.Fail()
@@ -149,7 +149,7 @@ func TestStoreTrafficWithError(t *testing.T) {
 	mockTrafficRepoStorage.EXPECT().StoreTrafficFlows(activeFlowToStore).Return(fmt.Errorf("Testing Error"))
 
 	trafficStorage := trafficUseCase.NewStoreTrafficFlowsUseCase(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
-	err := trafficStorage.StoreFlows()
+	err := trafficStorage.StoreTrafficFlows()
 
 	if err == nil {
 		t.Fail()
@@ -166,7 +166,7 @@ func TestStoreTrafficWithGetTrafficReturningError(t *testing.T) {
 	mockTrafficRepoStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 
 	trafficStorage := trafficUseCase.NewStoreTrafficFlowsUseCase(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
-	err := trafficStorage.StoreFlows()
+	err := trafficStorage.StoreTrafficFlows()
 
 	if err == nil {
 		t.Fail()
@@ -193,7 +193,7 @@ func TestStoreTrafficWithErrorInEnrichData(t *testing.T) {
 	mockTrafficRepoStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 
 	trafficStorage := trafficUseCase.NewStoreTrafficFlowsUseCase(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
-	err := trafficStorage.StoreFlows()
+	err := trafficStorage.StoreTrafficFlows()
 
 	if err == nil {
 		t.Fail()
@@ -230,7 +230,7 @@ func TestStoreBroadcastServerSuccessfully(t *testing.T) {
 	mockTrafficRepoStorage.EXPECT().StoreTrafficFlows(expected).Return(nil)
 
 	trafficStorage := trafficUseCase.NewStoreTrafficFlowsUseCase(mockTrafficRepository, mockTrafficRepoStorage, mockHostsStorage)
-	err := trafficStorage.StoreFlows()
+	err := trafficStorage.StoreTrafficFlows()
 
 	if err != nil {
 		t.Fail()

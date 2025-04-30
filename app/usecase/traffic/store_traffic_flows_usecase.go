@@ -20,7 +20,7 @@ func NewStoreTrafficFlowsUseCase(trafficReader trafficPorts.TrafficReader, traff
 	}
 }
 
-func (fs *StoreTrafficFlowsUseCase) StoreFlows() error {
+func (fs *StoreTrafficFlowsUseCase) StoreTrafficFlows() error {
 	current, err := fs.trafficReader.GetTrafficFlows()
 	if err != nil {
 		return err
