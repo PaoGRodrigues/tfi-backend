@@ -10,7 +10,6 @@ import (
 	trafficPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/traffic"
 
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
-	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
 	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
 	hostUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 	notificationChannelUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/notificationchannel"
@@ -46,9 +45,6 @@ func main() {
 
 	var configureNotificationChannelUseCase *notificationChannelUseCases.ConfigureChannelUseCase
 	// ********************************
-	// *********** Repository ***********
-	var trafficRepo trafficPorts.TrafficDBRepository
-	// *******************************
 
 	// *********** Flags *************
 	var err error
@@ -95,8 +91,7 @@ func main() {
 	// *********** Repo & Usecases ***********
 	getLocalhostsUseCase, storeHostsUseCase = initializeHostUseCases(tool, database)
 
-	trafficRepo = initializeTrafficRepository(database)
-	getTrafficFlowsUseCase, getTrafficFlowsPerDestinationUseCase, storeTrafficFlowsUseCase = initializeTrafficUseCases(tool, trafficRepo, database)
+	getTrafficFlowsUseCase, getTrafficFlowsPerDestinationUseCase, storeTrafficFlowsUseCase = initializeTrafficUseCases(tool, database, database)
 
 	hostBlocker = initializeHostBlockerUseCases(console)
 
@@ -152,11 +147,6 @@ func initializeHostBlockerUseCases(console services.Terminal) *hostUseCases.Bloc
 // *****************************
 
 // *********** Traffic ***********
-func initializeTrafficRepository(db services.Database) trafficPorts.TrafficDBRepository {
-	trafficRepo := traffic_repository.NewFlowsRepo(db)
-	return trafficRepo
-}
-
 func initializeTrafficUseCases(tool services.Tool, repo trafficPorts.TrafficDBRepository, hostStorage hostPorts.HostDBRepository) (*trafficUseCases.GetTrafficFlowsUseCase,
 	*trafficUseCases.GetTrafficFlowsPerDestinationUseCase, *trafficUseCases.StoreTrafficFlowsUseCase) {
 
