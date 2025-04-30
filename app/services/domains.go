@@ -24,7 +24,7 @@ type NotificationChannel interface {
 }
 
 type Database interface {
-	AddActiveFlows([]traffic.TrafficFlow) error
+	StoreTrafficFlows([]traffic.TrafficFlow) error
 	GetServerByAttr(attr string) (traffic.Server, error)
 	GetClients() ([]traffic.Client, error)
 	GetServers() ([]traffic.Server, error)

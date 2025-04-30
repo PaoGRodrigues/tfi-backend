@@ -47,8 +47,8 @@ func (fs *FlowsRepo) GetFlowByKey(key string) (domains.TrafficFlow, error) {
 	return flow, nil
 }
 
-func (fs *FlowsRepo) StoreFlows(flows []domains.TrafficFlow) error {
-	err := fs.Database.AddActiveFlows(flows)
+func (fs *FlowsRepo) StoreTrafficFlows(flows []domains.TrafficFlow) error {
+	err := fs.Database.StoreTrafficFlows(flows)
 	if err != nil {
 		return err
 	}

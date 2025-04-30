@@ -4,7 +4,7 @@ import (
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 )
 
-func (client *SQLClient) AddActiveFlows(flows []traffic.TrafficFlow) error {
+func (client *SQLClient) StoreTrafficFlows(flows []traffic.TrafficFlow) error {
 
 	for _, flow := range flows {
 		_, err := client.addActiveFlow(flow)

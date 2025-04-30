@@ -232,10 +232,10 @@ func TestStoreFlowsSuccessfully(t *testing.T) {
 	}
 
 	mockDatabase := services_mocks.NewMockDatabase(ctrl)
-	mockDatabase.EXPECT().AddActiveFlows(activeFlows).Return(nil)
+	mockDatabase.EXPECT().StoreTrafficFlows(activeFlows).Return(nil)
 
 	trafficStorage := repository.NewFlowsRepo(mockDatabase)
-	err := trafficStorage.StoreFlows(activeFlows)
+	err := trafficStorage.StoreTrafficFlows(activeFlows)
 
 	if err != nil {
 		t.Fail()
@@ -247,10 +247,10 @@ func TestStoreFlowsReturnError(t *testing.T) {
 	defer ctrl.Finish()
 
 	mockDatabase := services_mocks.NewMockDatabase(ctrl)
-	mockDatabase.EXPECT().AddActiveFlows([]domains.TrafficFlow{}).Return(fmt.Errorf("Error Test"))
+	mockDatabase.EXPECT().StoreTrafficFlows([]domains.TrafficFlow{}).Return(fmt.Errorf("Error Test"))
 
 	trafficStorage := repository.NewFlowsRepo(mockDatabase)
-	err := trafficStorage.StoreFlows([]domains.TrafficFlow{})
+	err := trafficStorage.StoreTrafficFlows([]domains.TrafficFlow{})
 
 	if err == nil {
 		t.Fail()

@@ -3,33 +3,34 @@ package usecase
 import (
 	"net"
 
-	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
+	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
+	trafficPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/traffic"
 )
 
 type BytesAggregatorParser struct {
-	flowsStorage domains.TrafficRepository
+	flowsStorage trafficPorts.TrafficDBRepository
 }
 
-func NewBytesParser(flowsStorage domains.TrafficRepository) *BytesAggregatorParser {
+func NewBytesParser(flowsStorage trafficPorts.TrafficDBRepository) *BytesAggregatorParser {
 	return &BytesAggregatorParser{
 		flowsStorage: flowsStorage,
 	}
 }
 
-func (parser *BytesAggregatorParser) GetBytesPerDestination() ([]domains.BytesPerDestination, error) {
+func (parser *BytesAggregatorParser) GetBytesPerDestination() ([]traffic.BytesPerDestination, error) {
 	serversList, err := parser.flowsStorage.GetServers()
 
 	if err != nil {
-		return []domains.BytesPerDestination{}, err
+		return []traffic.BytesPerDestination{}, err
 	}
 
 	servers := filterPublicServers(serversList)
 
-	flows := []domains.TrafficFlow{}
+	flows := []traffic.TrafficFlow{}
 	for _, server := range servers {
 		flow, err := parser.flowsStorage.GetFlowByKey(server.Key)
 		if err != nil {
-			return []domains.BytesPerDestination{}, err
+			return []traffic.BytesPerDestination{}, err
 		}
 		flow.Server = server
 		flows = append(flows, flow)
@@ -40,8 +41,8 @@ func (parser *BytesAggregatorParser) GetBytesPerDestination() ([]domains.BytesPe
 	return bytesDst, nil
 }
 
-func filterPublicServers(flows []domains.Server) []domains.Server {
-	servers := []domains.Server{}
+func filterPublicServers(flows []traffic.Server) []traffic.Server {
+	servers := []traffic.Server{}
 
 	for _, srv := range flows {
 		ip := net.ParseIP(srv.IP)
@@ -52,9 +53,9 @@ func filterPublicServers(flows []domains.Server) []domains.Server {
 	return servers
 }
 
-func parsePerDest(flows []domains.TrafficFlow) []domains.BytesPerDestination {
+func parsePerDest(flows []traffic.TrafficFlow) []traffic.BytesPerDestination {
 
-	bytesDst := []domains.BytesPerDestination{}
+	bytesDst := []traffic.BytesPerDestination{}
 
 	for _, flow := range flows {
 		var serverName string
@@ -63,7 +64,7 @@ func parsePerDest(flows []domains.TrafficFlow) []domains.BytesPerDestination {
 		} else {
 			serverName = flow.Server.IP
 		}
-		bpd := domains.BytesPerDestination{
+		bpd := traffic.BytesPerDestination{
 			Bytes:       flow.Bytes,
 			Destination: serverName,
 		}
@@ -72,15 +73,15 @@ func parsePerDest(flows []domains.TrafficFlow) []domains.BytesPerDestination {
 	return bytesDst
 }
 
-func sumBytes(bpd []domains.BytesPerDestination) []domains.BytesPerDestination {
+func sumBytes(bpd []traffic.BytesPerDestination) []traffic.BytesPerDestination {
 	m := map[string]int{}
 	for _, v := range bpd {
 		m[v.Destination] += v.Bytes
 	}
 
-	newBpd := []domains.BytesPerDestination{}
+	newBpd := []traffic.BytesPerDestination{}
 	for dest, bytes := range m {
-		new := domains.BytesPerDestination{
+		new := traffic.BytesPerDestination{
 			Destination: dest,
 			Bytes:       bytes,
 		}
@@ -90,20 +91,20 @@ func sumBytes(bpd []domains.BytesPerDestination) []domains.BytesPerDestination {
 	return newBpd
 }
 
-func (parser *BytesAggregatorParser) GetBytesPerCountry() ([]domains.BytesPerCountry, error) {
+func (parser *BytesAggregatorParser) GetBytesPerCountry() ([]traffic.BytesPerCountry, error) {
 	serversList, err := parser.flowsStorage.GetServers()
 
 	if err != nil {
-		return []domains.BytesPerCountry{}, err
+		return []traffic.BytesPerCountry{}, err
 	}
 
 	servers := filterPublicServers(serversList)
 
-	flows := []domains.TrafficFlow{}
+	flows := []traffic.TrafficFlow{}
 	for _, server := range servers {
 		flow, err := parser.flowsStorage.GetFlowByKey(server.Key)
 		if err != nil {
-			return []domains.BytesPerCountry{}, err
+			return []traffic.BytesPerCountry{}, err
 		}
 		flow.Server = server
 		flows = append(flows, flow)
@@ -114,15 +115,15 @@ func (parser *BytesAggregatorParser) GetBytesPerCountry() ([]domains.BytesPerCou
 	return bytesCountry, nil
 }
 
-func sumCountries(bpc []domains.BytesPerCountry) []domains.BytesPerCountry {
+func sumCountries(bpc []traffic.BytesPerCountry) []traffic.BytesPerCountry {
 	m := map[string]int{}
 	for _, v := range bpc {
 		m[v.Country] += v.Bytes
 	}
 
-	bsCountry := []domains.BytesPerCountry{}
+	bsCountry := []traffic.BytesPerCountry{}
 	for country, bytes := range m {
-		bpc := domains.BytesPerCountry{
+		bpc := traffic.BytesPerCountry{
 			Country: country,
 			Bytes:   bytes,
 		}
@@ -131,12 +132,12 @@ func sumCountries(bpc []domains.BytesPerCountry) []domains.BytesPerCountry {
 	return bsCountry
 }
 
-func parsePerCountry(flows []domains.TrafficFlow) []domains.BytesPerCountry {
+func parsePerCountry(flows []traffic.TrafficFlow) []traffic.BytesPerCountry {
 
-	bytesCn := []domains.BytesPerCountry{}
+	bytesCn := []traffic.BytesPerCountry{}
 
 	for _, flow := range flows {
-		bpc := domains.BytesPerCountry{
+		bpc := traffic.BytesPerCountry{
 			Bytes:   flow.Bytes,
 			Country: flow.Server.Country,
 		}

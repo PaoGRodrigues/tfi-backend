@@ -6,21 +6,21 @@ import (
 	trafficPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/traffic"
 )
 
-type FlowsStorage struct {
-	trafficReader trafficPorts.TrafficReader
-	trafficRepo   domains.TrafficRepository
-	hostStorage   hostPorts.HostDBRepository
+type StoreTrafficFlowsUseCase struct {
+	trafficReader       trafficPorts.TrafficReader
+	trafficDBRepository trafficPorts.TrafficDBRepository
+	hostStorage         hostPorts.HostDBRepository
 }
 
-func NewFlowsStorage(trafSearcher trafficPorts.TrafficReader, trafRepo domains.TrafficRepository, hostStorage hostPorts.HostDBRepository) *FlowsStorage {
-	return &FlowsStorage{
-		trafficReader: trafSearcher,
-		trafficRepo:   trafRepo,
-		hostStorage:   hostStorage,
+func NewStoreTrafficFlowsUseCase(trafficReader trafficPorts.TrafficReader, trafficDBRepository trafficPorts.TrafficDBRepository, hostStorage hostPorts.HostDBRepository) *StoreTrafficFlowsUseCase {
+	return &StoreTrafficFlowsUseCase{
+		trafficReader:       trafficReader,
+		trafficDBRepository: trafficDBRepository,
+		hostStorage:         hostStorage,
 	}
 }
 
-func (fs *FlowsStorage) StoreFlows() error {
+func (fs *StoreTrafficFlowsUseCase) StoreFlows() error {
 	current, err := fs.trafficReader.GetTrafficFlows()
 	if err != nil {
 		return err
@@ -30,7 +30,7 @@ func (fs *FlowsStorage) StoreFlows() error {
 		if err != nil {
 			return err
 		}
-		err = fs.trafficRepo.StoreFlows(flows)
+		err = fs.trafficDBRepository.StoreTrafficFlows(flows)
 		if err != nil {
 			return err
 		}
@@ -38,7 +38,7 @@ func (fs *FlowsStorage) StoreFlows() error {
 	return err
 }
 
-func (fs *FlowsStorage) enrichData(activeFlows []domains.TrafficFlow) ([]domains.TrafficFlow, error) {
+func (fs *StoreTrafficFlowsUseCase) enrichData(activeFlows []domains.TrafficFlow) ([]domains.TrafficFlow, error) {
 	newFlows := []domains.TrafficFlow{}
 	for _, flow := range activeFlows {
 		serv, err := fs.hostStorage.GetHostByIp(flow.Server.IP)

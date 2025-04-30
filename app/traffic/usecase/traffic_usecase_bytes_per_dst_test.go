@@ -6,7 +6,7 @@ import (
 
 	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
-	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
+	trafficPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/traffic"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 )
@@ -23,7 +23,7 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 		},
 	}
 
-	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server1}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(expectedFlowFromSearcher[0], nil)
 
@@ -53,7 +53,7 @@ func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServer(t *tes
 		},
 	}
 
-	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server1, server2, server3}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
@@ -74,7 +74,7 @@ func TestGetBytesPerDestReturnsErrorWhenThereIsAnErrorInGetServersList(t *testin
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{}, fmt.Errorf("Test error"))
 
 	parser := usecase.NewBytesParser(mockFlowStorage)
@@ -90,7 +90,7 @@ func TestGetBytesPerDestReturnsErrorWhenThereIsAnErrorInGetFlowByKey(t *testing.
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(domains.TrafficFlow{}, fmt.Errorf("Test error"))
 
@@ -114,7 +114,7 @@ func TestGetBytesPerDestReturnsTheSumOfBytesSuccessfully(t *testing.T) {
 		},
 	}
 
-	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server1, server2}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
@@ -144,7 +144,7 @@ func TestGetBytesPerCountryReturnBytesSuccessfully(t *testing.T) {
 		},
 	}
 
-	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server1, server2, server3}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(expectedPerCountrySearcher[0], nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
@@ -165,7 +165,7 @@ func TestGetBytesPerCountryReturnsErrorWhenThereIsAnErrorInGetServersList(t *tes
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{}, fmt.Errorf("Test error"))
 
 	parser := usecase.NewBytesParser(mockFlowStorage)
@@ -181,7 +181,7 @@ func TestGetBytesPerCountryReturnsErrorWhenThereIsAnErrorInGetFlowByKey(t *testi
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(domains.TrafficFlow{}, fmt.Errorf("Test error"))
 
@@ -213,7 +213,7 @@ func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndASer
 		},
 	}
 
-	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server1, server2, server3, noNameServer}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
@@ -247,7 +247,7 @@ func TestGetBytesPerCountryReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndA
 		},
 	}
 
-	mockFlowStorage := mocks.NewMockTrafficRepository(ctrl)
+	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server1, server2, server3, noNameServer}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)

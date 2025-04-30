@@ -12,7 +12,7 @@ func NewFakeSQLClient() *FakeSQLClient {
 	return &FakeSQLClient{}
 }
 
-func (client *FakeSQLClient) AddActiveFlows(flows []traffic.TrafficFlow) error {
+func (client *FakeSQLClient) StoreTrafficFlows(flows []traffic.TrafficFlow) error {
 	return nil
 }
 

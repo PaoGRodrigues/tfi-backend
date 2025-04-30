@@ -17,12 +17,3 @@ type TrafficBytesParser interface {
 type TrafficStorage interface {
 	StoreFlows() error
 }
-
-// *********** Repositories
-type TrafficRepository interface {
-	StoreFlows([]TrafficFlow) error
-	GetServerByAttr(string) (Server, error)
-	GetClients() ([]Client, error)
-	GetServers() ([]Server, error)
-	GetFlowByKey(string) (TrafficFlow, error)
-}

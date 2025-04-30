@@ -40,20 +40,6 @@ func (m *MockTrafficReader) EXPECT() *MockTrafficReaderMockRecorder {
 	return m.recorder
 }
 
-// GetActiveFlows mocks base method.
-func (m *MockTrafficReader) GetActiveFlows() []traffic.TrafficFlow {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetActiveFlows")
-	ret0, _ := ret[0].([]traffic.TrafficFlow)
-	return ret0
-}
-
-// GetActiveFlows indicates an expected call of GetActiveFlows.
-func (mr *MockTrafficReaderMockRecorder) GetActiveFlows() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetActiveFlows", reflect.TypeOf((*MockTrafficReader)(nil).GetActiveFlows))
-}
-
 // GetTrafficFlows mocks base method.
 func (m *MockTrafficReader) GetTrafficFlows() ([]traffic.TrafficFlow, error) {
 	m.ctrl.T.Helper()
