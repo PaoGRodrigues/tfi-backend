@@ -13,7 +13,3 @@ type TrafficBytesParser interface {
 	GetBytesPerDestination() ([]BytesPerDestination, error)
 	GetBytesPerCountry() ([]BytesPerCountry, error)
 }
-
-type TrafficStorage interface {
-	StoreFlows() error
-}

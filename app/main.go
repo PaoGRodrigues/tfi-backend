@@ -161,9 +161,9 @@ func initializeTrafficUseCases(tool services.Tool, repo trafficPorts.TrafficDBRe
 
 	getTrafficFlowsUseCase := trafficUseCases.NewTrafficFlowsUseCase(tool)
 	trafficBytesParser := traffic_useCases.NewBytesParser(repo)
-	trafficStorage := trafficUseCases.NewStoreTrafficFlowsUseCase(getTrafficFlowsUseCase, repo, hostStorage)
+	storeTrafficFlowsUseCase := trafficUseCases.NewStoreTrafficFlowsUseCase(getTrafficFlowsUseCase, repo, hostStorage)
 
-	return getTrafficFlowsUseCase, trafficBytesParser, trafficStorage
+	return getTrafficFlowsUseCase, trafficBytesParser, storeTrafficFlowsUseCase
 }
 
 // *******************************
