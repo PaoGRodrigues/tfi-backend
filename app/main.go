@@ -5,7 +5,7 @@ import (
 	"flag"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	trafficDomains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
+	"github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	alertsPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/alert"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	trafficPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/traffic"
@@ -37,7 +37,9 @@ func main() {
 	var storeHostsUseCase *hostUseCases.StoreHostUseCase
 
 	var getTrafficFlowsUseCase *trafficUseCases.GetTrafficFlowsUseCase
-	var trafficBytesParser trafficDomains.TrafficBytesParser
+	var getTrafficFlowsPerDestinationUseCase *trafficUseCases.GetTrafficFlowsPerDestinationUseCase
+	var trafficBytesParser traffic.TrafficBytesParser
+
 	var storeTrafficFlowsUseCase *trafficUseCases.StoreTrafficFlowsUseCase
 
 	var getAlertsUseCase *alertUsecases.GetAlertsUseCase
@@ -95,7 +97,7 @@ func main() {
 	getLocalhostsUseCase, storeHostsUseCase = initializeHostUseCases(tool, database)
 
 	trafficRepo = initializeTrafficRepository(database)
-	getTrafficFlowsUseCase, trafficBytesParser, storeTrafficFlowsUseCase = initializeTrafficUseCases(tool, trafficRepo, database)
+	getTrafficFlowsUseCase, getTrafficFlowsPerDestinationUseCase, storeTrafficFlowsUseCase = initializeTrafficUseCases(tool, trafficRepo, database)
 
 	hostBlocker = initializeHostBlockerUseCases(console)
 
@@ -107,16 +109,17 @@ func main() {
 
 	api := &api.Api{
 
-		GetLocalhostsUseCase:                getLocalhostsUseCase,
-		BlockHostUseCase:                    hostBlocker,
-		StoreHostsUseCase:                   storeHostsUseCase,
-		TrafficSearcher:                     getTrafficFlowsUseCase,
-		TrafficBytesParser:                  trafficBytesParser,
-		StoreTrafficFlowsUseCase:            storeTrafficFlowsUseCase,
-		GetAlertsUseCase:                    getAlertsUseCase,
-		NotifyAlertsUseCase:                 notifyAlertsUseCase,
-		ConfigureNotificationChannelUseCase: configureNotificationChannelUseCase,
-		Engine:                              gin.Default(),
+		GetLocalhostsUseCase:                 getLocalhostsUseCase,
+		BlockHostUseCase:                     hostBlocker,
+		StoreHostsUseCase:                    storeHostsUseCase,
+		TrafficSearcher:                      getTrafficFlowsUseCase,
+		GetTrafficFlowsPerDestinationUseCase: getTrafficFlowsPerDestinationUseCase,
+		TrafficBytesParser:                   trafficBytesParser,
+		StoreTrafficFlowsUseCase:             storeTrafficFlowsUseCase,
+		GetAlertsUseCase:                     getAlertsUseCase,
+		NotifyAlertsUseCase:                  notifyAlertsUseCase,
+		ConfigureNotificationChannelUseCase:  configureNotificationChannelUseCase,
+		Engine:                               gin.Default(),
 	}
 
 	api.MapURLToPing()
@@ -156,13 +159,13 @@ func initializeTrafficRepository(db services.Database) trafficPorts.TrafficDBRep
 }
 
 func initializeTrafficUseCases(tool services.Tool, repo trafficPorts.TrafficDBRepository, hostStorage hostPorts.HostDBRepository) (*trafficUseCases.GetTrafficFlowsUseCase,
-	trafficDomains.TrafficBytesParser, *trafficUseCases.StoreTrafficFlowsUseCase) {
+	*trafficUseCases.GetTrafficFlowsPerDestinationUseCase, *trafficUseCases.StoreTrafficFlowsUseCase) {
 
 	getTrafficFlowsUseCase := trafficUseCases.NewTrafficFlowsUseCase(tool)
-	trafficBytesParser := trafficUseCases.NewBytesParser(repo)
 	storeTrafficFlowsUseCase := trafficUseCases.NewStoreTrafficFlowsUseCase(getTrafficFlowsUseCase, repo, hostStorage)
+	getTrafficFlowsPerDestinationUseCase := trafficUseCases.NewGetTrafficFlowsPerDestinationUseCase(repo)
 
-	return getTrafficFlowsUseCase, trafficBytesParser, storeTrafficFlowsUseCase
+	return getTrafficFlowsUseCase, getTrafficFlowsPerDestinationUseCase, storeTrafficFlowsUseCase
 }
 
 // *******************************

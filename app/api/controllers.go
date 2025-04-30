@@ -14,20 +14,21 @@ import (
 )
 
 type Api struct {
-	TrafficSearcher                     *trafficUsecases.GetTrafficFlowsUseCase
-	GetLocalhostsUseCase                *hostUsecases.GetLocalhostsUseCase
-	TrafficBytesParser                  traffic.TrafficBytesParser
-	StoreTrafficFlowsUseCase            *trafficUsecases.StoreTrafficFlowsUseCase
-	GetAlertsUseCase                    *alertUsecases.GetAlertsUseCase
-	BlockHostUseCase                    *hostUsecases.BlockHostUseCase
-	ConfigureNotificationChannelUseCase *notificationChannelUseCases.ConfigureChannelUseCase
-	NotifyAlertsUseCase                 *alertUsecases.NotifyAlertsUseCase
-	StoreHostsUseCase                   *hostUsecases.StoreHostUseCase
+	TrafficSearcher                      *trafficUsecases.GetTrafficFlowsUseCase
+	GetLocalhostsUseCase                 *hostUsecases.GetLocalhostsUseCase
+	GetTrafficFlowsPerDestinationUseCase *trafficUsecases.GetTrafficFlowsPerDestinationUseCase
+	TrafficBytesParser                   traffic.TrafficBytesParser
+	StoreTrafficFlowsUseCase             *trafficUsecases.StoreTrafficFlowsUseCase
+	GetAlertsUseCase                     *alertUsecases.GetAlertsUseCase
+	BlockHostUseCase                     *hostUsecases.BlockHostUseCase
+	ConfigureNotificationChannelUseCase  *notificationChannelUseCases.ConfigureChannelUseCase
+	NotifyAlertsUseCase                  *alertUsecases.NotifyAlertsUseCase
+	StoreHostsUseCase                    *hostUsecases.StoreHostUseCase
 	*gin.Engine
 }
 
 func (api *Api) GetActiveFlowsPerDestination(c *gin.Context) {
-	activeFlows, err := api.TrafficBytesParser.GetBytesPerDestination()
+	activeFlows, err := api.GetTrafficFlowsPerDestinationUseCase.GetTrafficFlowsPerDestinations()
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(500, gin.H{"data": "error"})

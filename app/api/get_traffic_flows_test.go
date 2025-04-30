@@ -9,7 +9,7 @@ import (
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
-	usecase "github.com/PaoGRodrigues/tfi-backend/app/usecase/traffic"
+	trafficUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/traffic"
 	trafficPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/traffic"
 	mocks "github.com/PaoGRodrigues/tfi-backend/mocks/traffic"
 
@@ -53,7 +53,7 @@ func TestCreateTrafficUseCaseAndGetAllTraffic(t *testing.T) {
 	mockReader := trafficPortsMock.NewMockTrafficReader(ctrl)
 	mockReader.EXPECT().GetTrafficFlows().Return(createdTraffic, nil)
 
-	getTrafficFlowsUseCase := usecase.NewTrafficFlowsUseCase(mockReader)
+	getTrafficFlowsUseCase := trafficUseCases.NewTrafficFlowsUseCase(mockReader)
 
 	api := &api.Api{
 		TrafficSearcher: getTrafficFlowsUseCase,
@@ -82,7 +82,7 @@ func TestCreateATrafficUsecaseAndGetTrafficReturnAnError(t *testing.T) {
 	mockTrafficRepository := trafficPortsMock.NewMockTrafficReader(ctrl)
 	mockTrafficRepository.EXPECT().GetTrafficFlows().Return(nil, fmt.Errorf("Testing error case"))
 
-	GetTrafficFlowsUseCase := usecase.NewTrafficFlowsUseCase(mockTrafficRepository)
+	GetTrafficFlowsUseCase := trafficUseCases.NewTrafficFlowsUseCase(mockTrafficRepository)
 
 	api := &api.Api{
 		TrafficSearcher: GetTrafficFlowsUseCase,
@@ -108,19 +108,38 @@ func TestCreateTrafficActiveFlowsAndGetBytesPerDest(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	expected := []traffic.BytesPerDestination{
-		traffic.BytesPerDestination{
-			Bytes:       3454567,
-			Destination: "google.com.ar",
-		},
+	var server = traffic.Server{
+		IP:                "8.8.8.8",
+		IsBroadcastDomain: false,
+		IsDHCP:            false,
+		Port:              443,
+		Name:              "google.com.ar",
+		Country:           "US",
+		Key:               "12344567",
 	}
 
-	mockActiveFlowsSearcher := mocks.NewMockTrafficBytesParser(ctrl)
-	mockActiveFlowsSearcher.EXPECT().GetBytesPerDestination().Return(expected, nil)
+	var expectedFlow = traffic.TrafficFlow{
+		Client: traffic.Client{
+			Name: "Local",
+			Port: 12345,
+			IP:   "192.168.4.1",
+		},
+		Server: server,
+		Protocol: traffic.Protocol{
+			L4: "TCP",
+			L7: "TLS.Google",
+		},
+		Bytes: 5566778,
+	}
+
+	mockTrafficDBRepository := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
+	mockTrafficDBRepository.EXPECT().GetServers().Return([]traffic.Server{server}, nil)
+	mockTrafficDBRepository.EXPECT().GetFlowByKey("12344567").Return(expectedFlow, nil)
+	getTrafficFlowsPerDestinationUseCase := trafficUseCases.NewGetTrafficFlowsPerDestinationUseCase(mockTrafficDBRepository)
 
 	api := &api.Api{
-		TrafficBytesParser: mockActiveFlowsSearcher,
-		Engine:             gin.Default(),
+		GetTrafficFlowsPerDestinationUseCase: getTrafficFlowsPerDestinationUseCase,
+		Engine:                               gin.Default(),
 	}
 
 	api.MapGetActiveFlowsPerDestinationURL()
@@ -141,12 +160,13 @@ func TestCreateTrafficActiveFlowsPerDestAndGetAnError(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	mockActiveFlowsSearcher := mocks.NewMockTrafficBytesParser(ctrl)
-	mockActiveFlowsSearcher.EXPECT().GetBytesPerDestination().Return(nil, fmt.Errorf("Testing error case"))
+	mockTrafficDBRepository := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
+	mockTrafficDBRepository.EXPECT().GetServers().Return(nil, fmt.Errorf("Testing error case"))
+	getTrafficFlowsPerDestinationUseCase := trafficUseCases.NewGetTrafficFlowsPerDestinationUseCase(mockTrafficDBRepository)
 
 	api := &api.Api{
-		TrafficBytesParser: mockActiveFlowsSearcher,
-		Engine:             gin.Default(),
+		GetTrafficFlowsPerDestinationUseCase: getTrafficFlowsPerDestinationUseCase,
+		Engine:                               gin.Default(),
 	}
 
 	api.MapGetActiveFlowsPerDestinationURL()

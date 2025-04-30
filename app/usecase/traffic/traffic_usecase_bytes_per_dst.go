@@ -1,8 +1,6 @@
 package traffic
 
 import (
-	"net"
-
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	trafficPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/traffic"
 )
@@ -17,80 +15,6 @@ func NewBytesParser(flowsStorage trafficPorts.TrafficDBRepository) *BytesAggrega
 	}
 }
 
-func (parser *BytesAggregatorParser) GetBytesPerDestination() ([]traffic.BytesPerDestination, error) {
-	serversList, err := parser.flowsStorage.GetServers()
-
-	if err != nil {
-		return []traffic.BytesPerDestination{}, err
-	}
-
-	servers := filterPublicServers(serversList)
-
-	flows := []traffic.TrafficFlow{}
-	for _, server := range servers {
-		flow, err := parser.flowsStorage.GetFlowByKey(server.Key)
-		if err != nil {
-			return []traffic.BytesPerDestination{}, err
-		}
-		flow.Server = server
-		flows = append(flows, flow)
-	}
-
-	parsedBytesDst := parsePerDest(flows)
-	bytesDst := sumBytes(parsedBytesDst)
-	return bytesDst, nil
-}
-
-func filterPublicServers(flows []traffic.Server) []traffic.Server {
-	servers := []traffic.Server{}
-
-	for _, srv := range flows {
-		ip := net.ParseIP(srv.IP)
-		if !ip.IsPrivate() {
-			servers = append(servers, srv)
-		}
-	}
-	return servers
-}
-
-func parsePerDest(flows []traffic.TrafficFlow) []traffic.BytesPerDestination {
-
-	bytesDst := []traffic.BytesPerDestination{}
-
-	for _, flow := range flows {
-		var serverName string
-		if flow.Server.Name != "" {
-			serverName = flow.Server.Name
-		} else {
-			serverName = flow.Server.IP
-		}
-		bpd := traffic.BytesPerDestination{
-			Bytes:       flow.Bytes,
-			Destination: serverName,
-		}
-		bytesDst = append(bytesDst, bpd)
-	}
-	return bytesDst
-}
-
-func sumBytes(bpd []traffic.BytesPerDestination) []traffic.BytesPerDestination {
-	m := map[string]int{}
-	for _, v := range bpd {
-		m[v.Destination] += v.Bytes
-	}
-
-	newBpd := []traffic.BytesPerDestination{}
-	for dest, bytes := range m {
-		new := traffic.BytesPerDestination{
-			Destination: dest,
-			Bytes:       bytes,
-		}
-		newBpd = append(newBpd, new)
-	}
-
-	return newBpd
-}
-
 func (parser *BytesAggregatorParser) GetBytesPerCountry() ([]traffic.BytesPerCountry, error) {
 	serversList, err := parser.flowsStorage.GetServers()
 
@@ -98,7 +22,7 @@ func (parser *BytesAggregatorParser) GetBytesPerCountry() ([]traffic.BytesPerCou
 		return []traffic.BytesPerCountry{}, err
 	}
 
-	servers := filterPublicServers(serversList)
+	servers := traffic.FilterPublicServers(serversList)
 
 	flows := []traffic.TrafficFlow{}
 	for _, server := range servers {
