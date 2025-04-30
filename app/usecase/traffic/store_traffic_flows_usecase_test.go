@@ -13,62 +13,6 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-var host = host_domains.Host{
-	Name:        "test",
-	PrivateHost: false,
-	IP:          "123.123.123.123",
-	City:        "",
-	Country:     "US",
-}
-
-var client = domains.Client{
-	Name: "test",
-	Port: 55672,
-	IP:   "192.168.4.9",
-}
-
-var server = domains.Server{
-	IP:                "123.123.123.123",
-	IsBroadcastDomain: false,
-	IsDHCP:            false,
-	Port:              443,
-	Name:              "lib.gen.rus",
-	Country:           "US",
-	Key:               "12344567",
-}
-
-var protocols = domains.Protocol{
-	L4: "UDP.Youtube",
-	L7: "TLS.GoogleServices",
-}
-
-var broadcastserver = domains.Server{
-	IP:                "1.1.1.1",
-	IsBroadcastDomain: true,
-	IsDHCP:            false,
-	Port:              443,
-	Name:              "SARASA",
-	Country:           "US",
-	Key:               "12344569",
-}
-
-var broadcastserverchanged = domains.Server{
-	IP:                "1.1.1.1",
-	IsBroadcastDomain: true,
-	IsDHCP:            false,
-	Port:              443,
-	Name:              "1.1.1.1",
-	Country:           "US",
-	Key:               "12344569",
-}
-var publichost = host_domains.Host{
-	Name:        "SARASA",
-	PrivateHost: false,
-	IP:          "1.1.1.1",
-	City:        "",
-	Country:     "US",
-}
-
 func TestStoreTrafficSuccessfullyGettingTrafficFromSearcher(t *testing.T) {
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()

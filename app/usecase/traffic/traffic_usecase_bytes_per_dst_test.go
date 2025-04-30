@@ -1,11 +1,12 @@
-package usecase_test
+package traffic_test
 
 import (
 	"fmt"
 	"testing"
 
 	domains "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
-	"github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
+	"github.com/PaoGRodrigues/tfi-backend/app/usecase/traffic"
+
 	trafficPortsMock "github.com/PaoGRodrigues/tfi-backend/mocks/ports/traffic"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
@@ -27,7 +28,7 @@ func TestGetBytesPerDestReturnsBytesSuccessfully(t *testing.T) {
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server1}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(expectedFlowFromSearcher[0], nil)
 
-	parser := usecase.NewBytesParser(mockFlowStorage)
+	parser := traffic.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerDestination()
 
 	if err != nil {
@@ -59,7 +60,7 @@ func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServer(t *tes
 	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
 
-	parser := usecase.NewBytesParser(mockFlowStorage)
+	parser := traffic.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerDestination()
 
 	if err != nil {
@@ -77,7 +78,7 @@ func TestGetBytesPerDestReturnsErrorWhenThereIsAnErrorInGetServersList(t *testin
 	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{}, fmt.Errorf("Test error"))
 
-	parser := usecase.NewBytesParser(mockFlowStorage)
+	parser := traffic.NewBytesParser(mockFlowStorage)
 	_, err := parser.GetBytesPerDestination()
 
 	if err == nil {
@@ -94,7 +95,7 @@ func TestGetBytesPerDestReturnsErrorWhenThereIsAnErrorInGetFlowByKey(t *testing.
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(domains.TrafficFlow{}, fmt.Errorf("Test error"))
 
-	parser := usecase.NewBytesParser(mockFlowStorage)
+	parser := traffic.NewBytesParser(mockFlowStorage)
 	_, err := parser.GetBytesPerDestination()
 
 	if err == nil {
@@ -119,7 +120,7 @@ func TestGetBytesPerDestReturnsTheSumOfBytesSuccessfully(t *testing.T) {
 	mockFlowStorage.EXPECT().GetFlowByKey(server1.Key).Return(secondExpectedFlowFromSearcher[0], nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
 
-	parser := usecase.NewBytesParser(mockFlowStorage)
+	parser := traffic.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerDestination()
 
 	assert.ElementsMatch(t, expected, got)
@@ -150,7 +151,7 @@ func TestGetBytesPerCountryReturnBytesSuccessfully(t *testing.T) {
 	mockFlowStorage.EXPECT().GetFlowByKey(server2.Key).Return(secondExpectedFlowFromSearcher[1], nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
 
-	parser := usecase.NewBytesParser(mockFlowStorage)
+	parser := traffic.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerCountry()
 
 	if err != nil {
@@ -168,7 +169,7 @@ func TestGetBytesPerCountryReturnsErrorWhenThereIsAnErrorInGetServersList(t *tes
 	mockFlowStorage := trafficPortsMock.NewMockTrafficDBRepository(ctrl)
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{}, fmt.Errorf("Test error"))
 
-	parser := usecase.NewBytesParser(mockFlowStorage)
+	parser := traffic.NewBytesParser(mockFlowStorage)
 	_, err := parser.GetBytesPerCountry()
 
 	if err == nil {
@@ -185,7 +186,7 @@ func TestGetBytesPerCountryReturnsErrorWhenThereIsAnErrorInGetFlowByKey(t *testi
 	mockFlowStorage.EXPECT().GetServers().Return([]domains.Server{server}, nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(server.Key).Return(domains.TrafficFlow{}, fmt.Errorf("Test error"))
 
-	parser := usecase.NewBytesParser(mockFlowStorage)
+	parser := traffic.NewBytesParser(mockFlowStorage)
 	_, err := parser.GetBytesPerCountry()
 
 	if err == nil {
@@ -220,7 +221,7 @@ func TestGetBytesPerDestReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndASer
 	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(noNameServer.Key).Return(expectedFlowFromSearcherWithoutName[0], nil)
 
-	parser := usecase.NewBytesParser(mockFlowStorage)
+	parser := traffic.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerDestination()
 
 	if err != nil {
@@ -254,7 +255,7 @@ func TestGetBytesPerCountryReturnsBytesSuccessfullyWhenHaveMoreThanOneServerAndA
 	mockFlowStorage.EXPECT().GetFlowByKey(server3.Key).Return(expectedPerCountrySearcher[1], nil)
 	mockFlowStorage.EXPECT().GetFlowByKey(noNameServer.Key).Return(expectedFlowFromSearcherWithoutName[0], nil)
 
-	parser := usecase.NewBytesParser(mockFlowStorage)
+	parser := traffic.NewBytesParser(mockFlowStorage)
 	got, err := parser.GetBytesPerCountry()
 
 	if err != nil {

@@ -1,4 +1,4 @@
-package usecase_test
+package traffic_test
 
 import (
 	hosts "github.com/PaoGRodrigues/tfi-backend/app/domain/host"

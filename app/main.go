@@ -12,7 +12,6 @@ import (
 
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	traffic_repository "github.com/PaoGRodrigues/tfi-backend/app/traffic/repository"
-	traffic_useCases "github.com/PaoGRodrigues/tfi-backend/app/traffic/usecase"
 	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
 	hostUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 	notificationChannelUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/notificationchannel"
@@ -160,7 +159,7 @@ func initializeTrafficUseCases(tool services.Tool, repo trafficPorts.TrafficDBRe
 	trafficDomains.TrafficBytesParser, *trafficUseCases.StoreTrafficFlowsUseCase) {
 
 	getTrafficFlowsUseCase := trafficUseCases.NewTrafficFlowsUseCase(tool)
-	trafficBytesParser := traffic_useCases.NewBytesParser(repo)
+	trafficBytesParser := trafficUseCases.NewBytesParser(repo)
 	storeTrafficFlowsUseCase := trafficUseCases.NewStoreTrafficFlowsUseCase(getTrafficFlowsUseCase, repo, hostStorage)
 
 	return getTrafficFlowsUseCase, trafficBytesParser, storeTrafficFlowsUseCase
