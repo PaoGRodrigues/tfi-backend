@@ -1,6 +1,6 @@
 package traffic
 
-import traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
+import "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 
 type TrafficDBRepository interface {
 	StoreTrafficFlows([]traffic.TrafficFlow) error

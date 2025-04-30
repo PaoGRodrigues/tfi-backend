@@ -5,7 +5,6 @@ import (
 	"flag"
 
 	"github.com/PaoGRodrigues/tfi-backend/app/api"
-	"github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"
 	alertsPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/alert"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	trafficPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/traffic"
@@ -38,7 +37,7 @@ func main() {
 
 	var getTrafficFlowsUseCase *trafficUseCases.GetTrafficFlowsUseCase
 	var getTrafficFlowsPerDestinationUseCase *trafficUseCases.GetTrafficFlowsPerDestinationUseCase
-	var trafficBytesParser traffic.TrafficBytesParser
+	var getTrafficFlowsPerCountryUseCase *trafficUseCases.GetTrafficFlowsPerCountryUseCase
 
 	var storeTrafficFlowsUseCase *trafficUseCases.StoreTrafficFlowsUseCase
 
@@ -114,7 +113,7 @@ func main() {
 		StoreHostsUseCase:                    storeHostsUseCase,
 		TrafficSearcher:                      getTrafficFlowsUseCase,
 		GetTrafficFlowsPerDestinationUseCase: getTrafficFlowsPerDestinationUseCase,
-		TrafficBytesParser:                   trafficBytesParser,
+		GetTrafficFlowsPerCountryUseCase:     getTrafficFlowsPerCountryUseCase,
 		StoreTrafficFlowsUseCase:             storeTrafficFlowsUseCase,
 		GetAlertsUseCase:                     getAlertsUseCase,
 		NotifyAlertsUseCase:                  notifyAlertsUseCase,

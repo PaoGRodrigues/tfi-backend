@@ -1,6 +1,5 @@
 #!/bin/bash
 
-mockgen -destination mocks/traffic/traffic.go -source=app/domain/traffic/model_temp.go TrafficRepository,TrafficBytesParser,TrafficService
 mockgen -destination mocks/services/services.go -source=app/services/domains.go Tool,Terminal,NotificationChannel,Database
 mockgen -destination mocks/ports/host/reader.go -source=app/ports/host/reader.go HostReader
 mockgen -destination mocks/ports/host/db_repository.go -source=app/ports/host/db_repository.go HostDBRepository
