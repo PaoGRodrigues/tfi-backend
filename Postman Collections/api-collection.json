@@ -1030,7 +1030,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"Token\": \"5823864009:AAHLm2Wq1pX9Yx8AOhpijBZy_t791urqzeI\",\n    \"Username\": \"PaoPao\"\n}",
+							"raw": "{\n    \"Token\": \"5823864009:AAHLm2Wq1pX9Yx8AOhpijBZy_\",\n    \"Username\": \"Pao\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
