@@ -813,6 +813,11 @@
 							"    pm.test(\"Status 400 esperado por falta de atributo en el body\", () => {",
 							"        pm.expect(pm.response.code).to.eql(400);",
 							"    });",
+							"",
+							"    pm.test(\"El response contiene el mensaje de error\", () => {",
+							"        const json = pm.response.json();",
+							"        pm.expect(json).to.have.property(\"data\");",
+							"    });",
 							"}"
 						],
 						"type": "text/javascript",
@@ -971,7 +976,23 @@
 					"script": {
 						"id": "bef05b34-9a1a-4272-860a-7c3e1bfc09b6",
 						"exec": [
-							""
+							"// La respuesta es 400 si se envía el body vacío o 200 si se ejecuta correctamente.",
+							"const modo = pm.variables.get(\"test\");",
+							"",
+							"if (modo === \"ok\") {",
+							"    pm.test(\"Status 200 OK\", () => {",
+							"        pm.expect(pm.response.code).to.be.eql(200);",
+							"    });",
+							"} else if (modo === \"error\") {",
+							"    pm.test(\"Status 400 esperado por falta de atributo en el body\", () => {",
+							"        pm.expect(pm.response.code).to.eql(400);",
+							"    });",
+							"",
+							"    pm.test(\"El response contiene el mensaje de error\", () => {",
+							"        const json = pm.response.json();",
+							"        pm.expect(json).to.have.property(\"data\");",
+							"    });",
+							"}"
 						],
 						"type": "text/javascript",
 						"packages": {}
