@@ -810,7 +810,7 @@
 							"        pm.expect(pm.response.code).to.be.eql(200);",
 							"    });",
 							"} else if (modo === \"error\") {",
-							"    pm.test(\"Status 400 esperado por body vacío\", () => {",
+							"    pm.test(\"Status 400 esperado por falta de atributo en el body\", () => {",
 							"        pm.expect(pm.response.code).to.eql(400);",
 							"    });",
 							"}"
@@ -939,6 +939,45 @@
 		},
 		{
 			"name": "Channel Configuration",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "45cd937d-2998-4340-8592-4ed8b139aa92",
+						"exec": [
+							"const modo = pm.variables.get(\"test\");",
+							"",
+							"let body;",
+							"",
+							"if (modo === \"ok\") {",
+							"    body = {",
+							"        token: \"XHSYEKDO\",",
+							"        username: \"username1\",",
+							"    };",
+							"} else if (modo === \"error\") {",
+							"    body = {",
+							"        token: \"XHSYEKDO\",",
+							"    };",
+							"}",
+							"",
+							"pm.request.body.raw = JSON.stringify(body);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "bef05b34-9a1a-4272-860a-7c3e1bfc09b6",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "a3e760fd-6bb8-4810-9534-5de47cd04900",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
