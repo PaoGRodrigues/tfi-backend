@@ -103,6 +103,13 @@
 							"            pm.expect(item.MAC).to.be.a(\"string\");",
 							"            pm.expect(item.Privado).to.eql(true);",
 							"    });",
+							"});",
+							"",
+							"pm.test(\"El campo IP no está vacío\", () => {",
+							"    const jsonData = pm.response.json();",
+							"    jsonData.data.forEach(item => {",
+							"            pm.expect(item.IP).to.not.be.undefined;",
+							"    });",
 							"});"
 						],
 						"type": "text/javascript",
