@@ -784,7 +784,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"host\": \"XXXX\"\n}",
+					"raw": "{\n    \"host\": {{ip o url}}\n}",
 					"options": {
 						"raw": {
 							"language": "json"
