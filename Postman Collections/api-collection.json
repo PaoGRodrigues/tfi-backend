@@ -778,7 +778,7 @@
 					"script": {
 						"id": "9101ceda-d441-47d4-8869-be6e2d329854",
 						"exec": [
-							"const modo = pm.variables.get(\"test\");",
+							"const modo = pm.variables.get(\"test_env\");",
 							"",
 							"let body;",
 							"",
@@ -803,7 +803,7 @@
 						"id": "c8839990-3dcf-418f-b884-e5ca61edbc77",
 						"exec": [
 							"// La respuesta es 400 si se envía el body vacío o 200 si se ejecuta correctamente.",
-							"const modo = pm.variables.get(\"test\");",
+							"const modo = pm.variables.get(\"test_env\");",
 							"",
 							"if (modo === \"ok\") {",
 							"    pm.test(\"Status 200 OK\", () => {",
@@ -950,7 +950,7 @@
 					"script": {
 						"id": "45cd937d-2998-4340-8592-4ed8b139aa92",
 						"exec": [
-							"const modo = pm.variables.get(\"test\");",
+							"const modo = pm.variables.get(\"test_env\");",
 							"",
 							"let body;",
 							"",
@@ -977,7 +977,7 @@
 						"id": "bef05b34-9a1a-4272-860a-7c3e1bfc09b6",
 						"exec": [
 							"// La respuesta es 400 si se envía el body vacío o 200 si se ejecuta correctamente.",
-							"const modo = pm.variables.get(\"test\");",
+							"const modo = pm.variables.get(\"test_env\");",
 							"",
 							"if (modo === \"ok\") {",
 							"    pm.test(\"Status 200 OK\", () => {",
