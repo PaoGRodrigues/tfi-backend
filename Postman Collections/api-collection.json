@@ -70,7 +70,7 @@
 			]
 		},
 		{
-			"name": "Localhosts",
+			"name": "Get Localhosts",
 			"event": [
 				{
 					"listen": "test",
@@ -171,7 +171,7 @@
 			]
 		},
 		{
-			"name": "Traffic",
+			"name": "Get Traffic Flows",
 			"event": [
 				{
 					"listen": "test",
@@ -313,7 +313,7 @@
 			]
 		},
 		{
-			"name": "Flows Per Destination",
+			"name": "Get Traffic Flows Per Destination",
 			"event": [
 				{
 					"listen": "test",
@@ -422,7 +422,7 @@
 			]
 		},
 		{
-			"name": "Flows Per Country",
+			"name": "Get Traffic Flows Per Country",
 			"event": [
 				{
 					"listen": "test",
@@ -533,7 +533,7 @@
 			]
 		},
 		{
-			"name": "Alerts",
+			"name": "Get Alerts",
 			"event": [
 				{
 					"listen": "test",
@@ -943,7 +943,7 @@
 			]
 		},
 		{
-			"name": "Channel Configuration",
+			"name": "Configure Notification Channel",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -1071,7 +1071,7 @@
 			]
 		},
 		{
-			"name": "Alert Notification",
+			"name": "Notify Alerts",
 			"event": [
 				{
 					"listen": "test",
