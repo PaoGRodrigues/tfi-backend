@@ -70,101 +70,6 @@
 			]
 		},
 		{
-			"name": "Hosts",
-			"event": [
-				{
-					"listen": "test",
-					"script": {
-						"id": "1efede6b-fa7b-4d9d-8968-a3bf9b742a1b",
-						"exec": [
-							"pm.test(\"Status code is 200\", () => {",
-							"    pm.expect(pm.response.code).to.eql(200);",
-							"});",
-							"",
-							"/*",
-							"La respuesta tiene este formato:",
-							"{",
-							"\"data\" : ",
-							"    [",
-							"        {",
-							"            \"Name\": \"\",",
-							"            \"ASname\": \"APPLE-ENGINEERING\",",
-							"            \"PrivateHost\": false,",
-							"            \"IP\": \"17.57.172.10\",",
-							"            \"Mac\": \"DC:A6:32:5E:DA:82\",",
-							"            \"City\": \"\",",
-							"            \"Country\": \"US\"",
-							"        }",
-							"    ]",
-							"}",
-							"*/",
-							"pm.test(\"Formato correcto de respuesta\", () => {",
-							"    const jsonData = pm.response.json();",
-							"    pm.expect(jsonData).to.be.an(\"object\");",
-							"    pm.expect(jsonData.data).to.be.an(\"array\");",
-							"    pm.expect(jsonData.data[0].Name).to.be.a(\"string\");",
-							"    pm.expect(jsonData.data[0].PrivateHost).to.be.an(\"boolean\");",
-							"});"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"id": "32eecc94-c34b-4d13-b276-e261eb6bfa17",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"auth": {
-					"type": "noauth"
-				},
-				"method": "GET",
-				"header": [],
-				"url": "http://192.168.0.13:8080/hosts",
-				"description": "Obtener el listado de clientes servidores (_hosts_ o _IPs_ locales y externos) que tienen flujos de tráfico activos siendo analizados por la herramienta."
-			},
-			"response": [
-				{
-					"id": "db49c592-235b-4a08-9525-f1cc4630b4f7",
-					"name": "Hosts",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"url": "http://192.168.0.13:8080/hosts"
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Access-Control-Allow-Methods",
-							"value": "GET"
-						},
-						{
-							"key": "Access-Control-Allow-Origin",
-							"value": "*"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Date",
-							"value": "Thu, 24 Apr 2025 19:04:20 GMT"
-						},
-						{
-							"key": "Transfer-Encoding",
-							"value": "chunked"
-						}
-					],
-					"cookie": [],
-					"responseTime": null,
-					"body": "{\n    \"data\": [\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": true,\n            \"IP\": \"192.168.4.4\",\n            \"Mac\": \"5E:00:C4:90:01:F8\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"APPLE-ENGINEERING\",\n            \"PrivateHost\": false,\n            \"IP\": \"17.57.172.10\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"US\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"GOOGLE\",\n            \"PrivateHost\": false,\n            \"IP\": \"142.250.79.131\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"US\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": false,\n            \"IP\": \"ff02::1:ff14:c085\",\n            \"Mac\": \"33:33:FF:14:C0:85\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"APPLE-ENGINEERING\",\n            \"PrivateHost\": false,\n            \"IP\": \"17.248.201.66\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"US\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": false,\n            \"IP\": \"ff02::fb\",\n            \"Mac\": \"33:33:00:00:00:FB\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"APPLE-ENGINEERING\",\n            \"PrivateHost\": false,\n            \"IP\": \"17.249.252.4\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"US\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"APPLE-ENGINEERING\",\n            \"PrivateHost\": false,\n            \"IP\": \"17.248.201.65\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"US\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": false,\n            \"IP\": \"ff02::16\",\n            \"Mac\": \"33:33:00:00:00:16\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"AKAMAI-AS\",\n            \"PrivateHost\": false,\n            \"IP\": \"172.224.17.6\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"Buenos Aires\",\n            \"Country\": \"AR\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"Akamai International B.V.\",\n            \"PrivateHost\": false,\n            \"IP\": \"2.23.164.29\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"Buenos Aires\",\n            \"Country\": \"AR\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"APPLE-ENGINEERING\",\n            \"PrivateHost\": false,\n            \"IP\": \"17.248.201.72\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"US\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": true,\n            \"IP\": \"fe80::c72:bad3:b614:c085\",\n            \"Mac\": \"5E:00:C4:90:01:F8\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": true,\n            \"IP\": \"fe80::4b6:684f:f3c3:92ba\",\n            \"Mac\": \"5E:00:C4:90:01:F8\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"CLOUDFLARENET\",\n            \"PrivateHost\": false,\n            \"IP\": \"104.22.4.65\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": false,\n            \"IP\": \"224.0.0.251\",\n            \"Mac\": \"01:00:5E:00:00:FB\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"APPLE-AUSTIN\",\n            \"PrivateHost\": false,\n            \"IP\": \"17.253.10.201\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"São Paulo\",\n            \"Country\": \"BR\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": true,\n            \"IP\": \"0.0.0.0\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": false,\n            \"IP\": \"ff02::2\",\n            \"Mac\": \"33:33:00:00:00:02\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": true,\n            \"IP\": \"192.168.4.1\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"Telecentro S.A.\",\n            \"PrivateHost\": false,\n            \"IP\": \"181.44.127.112\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"Ramos Mejía\",\n            \"Country\": \"AR\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"APPLE-ENGINEERING\",\n            \"PrivateHost\": false,\n            \"IP\": \"17.167.200.10\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"US\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"FASTLY\",\n            \"PrivateHost\": false,\n            \"IP\": \"151.101.217.140\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"Buenos Aires\",\n            \"Country\": \"AR\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": false,\n            \"IP\": \"224.0.0.22\",\n            \"Mac\": \"01:00:5E:00:00:16\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"APPLE-ENGINEERING\",\n            \"PrivateHost\": false,\n            \"IP\": \"17.252.196.22\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"US\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"FASTLY\",\n            \"PrivateHost\": false,\n            \"IP\": \"151.101.219.6\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"Buenos Aires\",\n            \"Country\": \"AR\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"APPLE-ENGINEERING\",\n            \"PrivateHost\": false,\n            \"IP\": \"17.57.172.11\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"\",\n            \"Country\": \"US\"\n        },\n        {\n            \"Name\": \"\",\n            \"PrivateHost\": true,\n            \"IP\": \"255.255.255.255\",\n            \"Mac\": \"FF:FF:FF:FF:FF:FF\",\n            \"City\": \"\",\n            \"Country\": \"\"\n        },\n        {\n            \"Name\": \"\",\n            \"ASname\": \"FACEBOOK\",\n            \"PrivateHost\": false,\n            \"IP\": \"31.13.94.54\",\n            \"Mac\": \"DC:A6:32:5E:DA:82\",\n            \"City\": \"El Talar\",\n            \"Country\": \"AR\"\n        }\n    ]\n}"
-				}
-			]
-		},
-		{
 			"name": "Localhosts",
 			"event": [
 				{
@@ -193,7 +98,13 @@
 							"    const jsonData = pm.response.json();",
 							"    pm.expect(jsonData).to.be.an(\"object\");",
 							"    pm.expect(jsonData.data).to.be.an(\"array\");",
+							"jsonData.data.forEach(item => {",
+							"        pm.expect(item.Bytes).to.be.an(\"number\");",
+							"        pm.expect(item.Destination).to.be.a(\"string\");",
+							"    }); ",
 							"    pm.expect(jsonData.data[0].Privado).to.eql(true);",
+							"",
+							"",
 							"});"
 						],
 						"type": "text/javascript",
@@ -391,15 +302,12 @@
 							"*/",
 							"pm.test(\"Formato correcto de respuesta\", () => {",
 							"    const jsonData = pm.response.json();",
-							"    jsonData.data.forEach(item => {",
-							"pm.expect(jsonData.data[0].Bytes).to.be.an(\"number\");",
-							"    pm.expect(jsonData.data[0].Destination).to.be.a(\"string\");",
-							"    }",
-							"",
-							"    )",
 							"    pm.expect(jsonData).to.be.an(\"object\");",
 							"    pm.expect(jsonData.data).to.be.an(\"array\");",
-							"    ",
+							"    jsonData.data.forEach(item => {",
+							"        pm.expect(item.Bytes).to.be.an(\"number\");",
+							"        pm.expect(item.Destination).to.be.a(\"string\");",
+							"    });  ",
 							"});",
 							"",
 							"pm.test(\"Lista de destinos no está vacía\", () => {",
