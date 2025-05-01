@@ -772,6 +772,54 @@
 		},
 		{
 			"name": "Block Host",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9101ceda-d441-47d4-8869-be6e2d329854",
+						"exec": [
+							"const modo = pm.variables.get(\"test\");",
+							"",
+							"let body;",
+							"",
+							"if (modo === \"ok\") {",
+							"    body = {",
+							"        host: \"reddit.com\",",
+							"    };",
+							"} else if (modo === \"error\") {",
+							"    body = {",
+							"    };",
+							"}",
+							"",
+							"pm.request.body.raw = JSON.stringify(body);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "c8839990-3dcf-418f-b884-e5ca61edbc77",
+						"exec": [
+							"// La respuesta es 400 si se envía el body vacío o 200 si se ejecuta correctamente.",
+							"const modo = pm.variables.get(\"test\");",
+							"",
+							"if (modo === \"ok\") {",
+							"    pm.test(\"Status 200 OK\", () => {",
+							"        pm.expect(pm.response.code).to.be.eql(200);",
+							"    });",
+							"} else if (modo === \"error\") {",
+							"    pm.test(\"Status 400 esperado por body vacío\", () => {",
+							"        pm.expect(pm.response.code).to.eql(400);",
+							"    });",
+							"}"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "6c030c22-c2b2-42be-b065-766bfb741b84",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
@@ -903,7 +951,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"Token\": \"XXXXX\",\n    \"Username\": \"XXXXX\"\n}",
+					"raw": "{\n    \"Token\": {{token}},\n    \"Username\": {{username}}\n}",
 					"options": {
 						"raw": {
 							"language": "json"
