@@ -1,4 +1,4 @@
-package services
+package ntopng
 
 type FakeTool struct{}
 

@@ -1,4 +1,4 @@
-package services
+package sqlite
 
 import (
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"

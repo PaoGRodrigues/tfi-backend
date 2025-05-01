@@ -1,4 +1,4 @@
-package services
+package ntopng
 
 type Check struct {
 	Subdir    string `json:"check_subdir"`

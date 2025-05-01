@@ -1,4 +1,4 @@
-package services
+package sqlite
 
 import "database/sql"
 

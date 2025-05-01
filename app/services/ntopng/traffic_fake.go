@@ -1,4 +1,4 @@
-package services
+package ntopng
 
 import (
 	traffic "github.com/PaoGRodrigues/tfi-backend/app/domain/traffic"

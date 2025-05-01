@@ -1,4 +1,4 @@
-package services
+package ntopng
 
 func (d *FakeTool) EnableChecks() {
 }

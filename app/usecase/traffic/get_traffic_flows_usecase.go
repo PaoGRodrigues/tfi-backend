@@ -24,7 +24,3 @@ func (usecase *GetTrafficFlowsUseCase) GetTrafficFlows() ([]domains.TrafficFlow,
 	usecase.activeFlows = res
 	return res, nil
 }
-
-func (gw *GetTrafficFlowsUseCase) GetActiveFlows() []domains.TrafficFlow {
-	return gw.activeFlows
-}

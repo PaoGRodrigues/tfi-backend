@@ -20,8 +20,8 @@ func NewGetTrafficFlowsPerCountryUseCase(trafficDBRepository trafficPorts.Traffi
 	}
 }
 
-func (parser *GetTrafficFlowsPerCountryUseCase) GetBytesPerCountry() ([]BytesPerCountry, error) {
-	serversList, err := parser.trafficDBRepository.GetServers()
+func (usecase *GetTrafficFlowsPerCountryUseCase) GetBytesPerCountry() ([]BytesPerCountry, error) {
+	serversList, err := usecase.trafficDBRepository.GetServers()
 
 	if err != nil {
 		return []BytesPerCountry{}, err
@@ -31,7 +31,7 @@ func (parser *GetTrafficFlowsPerCountryUseCase) GetBytesPerCountry() ([]BytesPer
 
 	flows := []traffic.TrafficFlow{}
 	for _, server := range servers {
-		flow, err := parser.trafficDBRepository.GetFlowByKey(server.Key)
+		flow, err := usecase.trafficDBRepository.GetFlowByKey(server.Key)
 		if err != nil {
 			return []BytesPerCountry{}, err
 		}
@@ -42,6 +42,21 @@ func (parser *GetTrafficFlowsPerCountryUseCase) GetBytesPerCountry() ([]BytesPer
 	parsedBytesCountry := parsePerCountry(flows)
 	bytesCountry := sumCountries(parsedBytesCountry)
 	return bytesCountry, nil
+}
+
+func parsePerCountry(flows []traffic.TrafficFlow) []BytesPerCountry {
+
+	bytesCn := []BytesPerCountry{}
+
+	for _, flow := range flows {
+		bpc := BytesPerCountry{
+			Bytes:   flow.Bytes,
+			Country: flow.Server.Country,
+		}
+		bytesCn = append(bytesCn, bpc)
+	}
+
+	return bytesCn
 }
 
 func sumCountries(bpc []BytesPerCountry) []BytesPerCountry {
@@ -59,19 +74,4 @@ func sumCountries(bpc []BytesPerCountry) []BytesPerCountry {
 		bsCountry = append(bsCountry, bpc)
 	}
 	return bsCountry
-}
-
-func parsePerCountry(flows []traffic.TrafficFlow) []BytesPerCountry {
-
-	bytesCn := []BytesPerCountry{}
-
-	for _, flow := range flows {
-		bpc := BytesPerCountry{
-			Bytes:   flow.Bytes,
-			Country: flow.Server.Country,
-		}
-		bytesCn = append(bytesCn, bpc)
-	}
-
-	return bytesCn
 }
