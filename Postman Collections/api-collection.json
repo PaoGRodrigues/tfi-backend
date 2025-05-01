@@ -638,18 +638,9 @@
 					"script": {
 						"id": "a5a8c8dc-da86-4e6f-b352-7a48bf8e7a70",
 						"exec": [
-							"pm.test(\"Status code is 200\", () => {",
+							"pm.test(\"Request correcto. Status code 200\", () => {",
 							"    pm.expect(pm.response.code).to.eql(200);",
-							"});",
-							"",
-							"/*",
-							"La respuesta tiene este formato:",
-							"{",
-							"\"data\" : \"error\"",
-							"}",
-							"*/",
-							"",
-							""
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -711,6 +702,21 @@
 		},
 		{
 			"name": "Store Hosts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2a0fd4a5-819c-4dbf-afb4-3828953af256",
+						"exec": [
+							"pm.test(\"Request correcto. Status code 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "2cf8001e-35c1-4c91-9c51-3adfdc19c047",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
