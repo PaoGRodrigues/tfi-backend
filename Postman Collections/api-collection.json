@@ -14,7 +14,7 @@
 					"script": {
 						"id": "24af315e-9887-4a79-85e1-ed5c22f2756c",
 						"exec": [
-							"pm.test(\"Status code is 200\", () => {",
+							"pm.test(\"Request correcto. Status code 200\", () => {",
 							"  pm.expect(pm.response.code).to.eql(200);",
 							"});",
 							""
@@ -77,7 +77,7 @@
 					"script": {
 						"id": "8283350e-cc47-4a32-b5a2-c07da075dce5",
 						"exec": [
-							"pm.test(\"Status code is 200\", () => {",
+							"pm.test(\"Request correcto. Status code 200\", () => {",
 							"    pm.expect(pm.response.code).to.eql(200);",
 							"});",
 							"",
@@ -178,7 +178,7 @@
 					"script": {
 						"id": "ac8de90f-61e8-4dc2-a380-696a99caebf7",
 						"exec": [
-							"pm.test(\"Status code is 200\", () => {",
+							"pm.test(\"Request correcto. Status code 200\", () => {",
 							"    pm.expect(pm.response.code).to.eql(200);",
 							"});",
 							"",
@@ -320,7 +320,7 @@
 					"script": {
 						"id": "baabc7e0-2947-42f5-bc5a-7662c30214bb",
 						"exec": [
-							"pm.test(\"Status code is 200\", () => {",
+							"pm.test(\"Request correcto. Status code 200\", () => {",
 							"    pm.expect(pm.response.code).to.eql(200);",
 							"});",
 							"",
@@ -429,7 +429,7 @@
 					"script": {
 						"id": "4308008d-0a15-4c04-befa-3a3809f196fe",
 						"exec": [
-							"pm.test(\"Status code is 200\", () => {",
+							"pm.test(\"Request correcto. Status code 200\", () => {",
 							"    pm.expect(pm.response.code).to.eql(200);",
 							"});",
 							"",
@@ -540,7 +540,7 @@
 					"script": {
 						"id": "be7e8992-6336-4c0a-b8ef-acc2243a8fde",
 						"exec": [
-							"pm.test(\"Status code is 200\", () => {",
+							"pm.test(\"Request correcto. Status code 200\", () => {",
 							"    pm.expect(pm.response.code).to.eql(200);",
 							"});",
 							"",
@@ -806,7 +806,7 @@
 							"const modo = pm.variables.get(\"test_env\");",
 							"",
 							"if (modo === \"ok\") {",
-							"    pm.test(\"Status 200 OK\", () => {",
+							"    pm.test(\"Request correcto. Status code 200\", () => {",
 							"        pm.expect(pm.response.code).to.be.eql(200);",
 							"    });",
 							"} else if (modo === \"error\") {",
@@ -980,7 +980,7 @@
 							"const modo = pm.variables.get(\"test_env\");",
 							"",
 							"if (modo === \"ok\") {",
-							"    pm.test(\"Status 200 OK\", () => {",
+							"    pm.test(\"Request correcto. Status code 200\", () => {",
 							"        pm.expect(pm.response.code).to.be.eql(200);",
 							"    });",
 							"} else if (modo === \"error\") {",
@@ -1072,6 +1072,21 @@
 		},
 		{
 			"name": "Alert Notification",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "802e273a-7fd7-45dd-878e-a28845f10af9",
+						"exec": [
+							"pm.test(\"Request correcto. Status code 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "1daeb9a3-55c4-4bf1-bd29-1b846ce36af8",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
