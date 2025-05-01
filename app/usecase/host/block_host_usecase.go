@@ -14,6 +14,6 @@ func NewBlockHostUseCase(blockService hostPorts.HostBlocker) *BlockHostUseCase {
 	}
 }
 
-func (blocker *BlockHostUseCase) Block(host string) (*string, error) {
-	return blocker.blockService.Block(host)
+func (usecase *BlockHostUseCase) Block(host string) (*string, error) {
+	return usecase.blockService.Block(host)
 }

@@ -17,14 +17,14 @@ func NewHostsStorage(repository ports.HostReader, hostDBRepository ports.HostDBR
 	}
 }
 
-func (hs *StoreHostUseCase) StoreHosts() error {
-	activeHosts, err := hs.hostRepositoryReader.GetAllHosts()
+func (usecase *StoreHostUseCase) StoreHosts() error {
+	activeHosts, err := usecase.hostRepositoryReader.GetAllHosts()
 	if err != nil {
 		return err
 	}
 
 	if activeHosts != nil {
-		err = hs.hostDBRepository.StoreHosts(activeHosts)
+		err = usecase.hostDBRepository.StoreHosts(activeHosts)
 		if err != nil {
 			return err
 		}
@@ -32,8 +32,8 @@ func (hs *StoreHostUseCase) StoreHosts() error {
 	return nil
 }
 
-func (hs *StoreHostUseCase) GetHostByIp(ip string) (host.Host, error) {
-	current, err := hs.hostDBRepository.GetHostByIp(ip)
+func (usecase *StoreHostUseCase) GetHostByIp(ip string) (host.Host, error) {
+	current, err := usecase.hostDBRepository.GetHostByIp(ip)
 	if err != nil {
 		return host.Host{}, err
 	}

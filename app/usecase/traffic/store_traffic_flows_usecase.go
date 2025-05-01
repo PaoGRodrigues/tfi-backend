@@ -9,28 +9,28 @@ import (
 type StoreTrafficFlowsUseCase struct {
 	trafficReader       trafficPorts.TrafficReader
 	trafficDBRepository trafficPorts.TrafficDBRepository
-	hostStorage         hostPorts.HostDBRepository
+	hostDBRepository    hostPorts.HostDBRepository
 }
 
-func NewStoreTrafficFlowsUseCase(trafficReader trafficPorts.TrafficReader, trafficDBRepository trafficPorts.TrafficDBRepository, hostStorage hostPorts.HostDBRepository) *StoreTrafficFlowsUseCase {
+func NewStoreTrafficFlowsUseCase(trafficReader trafficPorts.TrafficReader, trafficDBRepository trafficPorts.TrafficDBRepository, hostDBRepository hostPorts.HostDBRepository) *StoreTrafficFlowsUseCase {
 	return &StoreTrafficFlowsUseCase{
 		trafficReader:       trafficReader,
 		trafficDBRepository: trafficDBRepository,
-		hostStorage:         hostStorage,
+		hostDBRepository:    hostDBRepository,
 	}
 }
 
-func (fs *StoreTrafficFlowsUseCase) StoreTrafficFlows() error {
-	current, err := fs.trafficReader.GetTrafficFlows()
+func (usecase *StoreTrafficFlowsUseCase) StoreTrafficFlows() error {
+	current, err := usecase.trafficReader.GetTrafficFlows()
 	if err != nil {
 		return err
 	}
 	if len(current) != 0 {
-		flows, err := fs.enrichData(current)
+		flows, err := usecase.enrichData(current)
 		if err != nil {
 			return err
 		}
-		err = fs.trafficDBRepository.StoreTrafficFlows(flows)
+		err = usecase.trafficDBRepository.StoreTrafficFlows(flows)
 		if err != nil {
 			return err
 		}
@@ -38,10 +38,10 @@ func (fs *StoreTrafficFlowsUseCase) StoreTrafficFlows() error {
 	return err
 }
 
-func (fs *StoreTrafficFlowsUseCase) enrichData(activeFlows []domains.TrafficFlow) ([]domains.TrafficFlow, error) {
+func (usecase *StoreTrafficFlowsUseCase) enrichData(trafficFlows []domains.TrafficFlow) ([]domains.TrafficFlow, error) {
 	newFlows := []domains.TrafficFlow{}
-	for _, flow := range activeFlows {
-		serv, err := fs.hostStorage.GetHostByIp(flow.Server.IP)
+	for _, flow := range trafficFlows {
+		serv, err := usecase.hostDBRepository.GetHostByIp(flow.Server.IP)
 		if err != nil {
 			return []domains.TrafficFlow{}, err
 		}

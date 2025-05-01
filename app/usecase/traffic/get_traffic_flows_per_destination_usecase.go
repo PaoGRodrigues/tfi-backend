@@ -20,8 +20,8 @@ func NewGetTrafficFlowsPerDestinationUseCase(trafficDBRepository trafficPorts.Tr
 	}
 }
 
-func (parser *GetTrafficFlowsPerDestinationUseCase) GetTrafficFlowsPerDestinations() ([]BytesPerDestination, error) {
-	serversList, err := parser.trafficDBRepository.GetServers()
+func (usecase *GetTrafficFlowsPerDestinationUseCase) GetTrafficFlowsPerDestinations() ([]BytesPerDestination, error) {
+	serversList, err := usecase.trafficDBRepository.GetServers()
 
 	if err != nil {
 		return []BytesPerDestination{}, err
@@ -31,7 +31,7 @@ func (parser *GetTrafficFlowsPerDestinationUseCase) GetTrafficFlowsPerDestinatio
 
 	flows := []traffic.TrafficFlow{}
 	for _, server := range servers {
-		flow, err := parser.trafficDBRepository.GetFlowByKey(server.Key)
+		flow, err := usecase.trafficDBRepository.GetFlowByKey(server.Key)
 		if err != nil {
 			return []BytesPerDestination{}, err
 		}
