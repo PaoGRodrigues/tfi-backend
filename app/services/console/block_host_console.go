@@ -1,4 +1,4 @@
-package services
+package console
 
 import (
 	"github.com/coreos/go-iptables/iptables"

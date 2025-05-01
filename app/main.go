@@ -8,6 +8,10 @@ import (
 	alertsPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/alert"
 	hostPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/host"
 	trafficPorts "github.com/PaoGRodrigues/tfi-backend/app/ports/traffic"
+	consoleService "github.com/PaoGRodrigues/tfi-backend/app/services/console"
+	ntopngService "github.com/PaoGRodrigues/tfi-backend/app/services/ntopng"
+	sqliteService "github.com/PaoGRodrigues/tfi-backend/app/services/sqlite"
+	telegramService "github.com/PaoGRodrigues/tfi-backend/app/services/telegram"
 
 	services "github.com/PaoGRodrigues/tfi-backend/app/services"
 	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
@@ -58,14 +62,14 @@ func main() {
 	// *******************************
 
 	if *scope != "prod" {
-		tool = services.NewFakeTool()
-		console = services.NewFakeConsole()
-		channel = services.NewFakeBot()
-		database = services.NewFakeSQLClient()
+		tool = ntopngService.NewFakeTool()
+		console = consoleService.NewFakeConsole()
+		channel = telegramService.NewFakeBot()
+		database = sqliteService.NewFakeSQLClient()
 
 	} else {
 		if ip != nil || port != nil || user != nil || pass != nil || db != nil {
-			tool = services.NewTool("http://"+*ip+":"+*port, *user, *pass)
+			tool = ntopngService.NewTool("http://"+*ip+":"+*port, *user, *pass)
 			err := tool.SetInterfaceID()
 			if err != nil {
 				panic(err.Error())
@@ -182,25 +186,25 @@ func initializeConfigureNotificationChannelUseCase(channel services.Notification
 
 // *********** Services ***********
 func initializedNotificationChannel() services.NotificationChannel {
-	telegram := services.NewTelegramInterface()
+	telegram := telegramService.NewTelegramInterface()
 	return telegram
 }
 
-func newDB(nameFile string) (*services.SQLClient, error) {
+func newDB(nameFile string) (services.Database, error) {
 	db, err := sql.Open("sqlite3", nameFile)
 	if err != nil {
 		return nil, err
 	}
-	databaseConn := services.NewSQLClient(db)
+	databaseConn := sqliteService.NewSQLClient(db)
 	return databaseConn, nil
 }
 
-func initializeConsole() (*services.Console, error) {
+func initializeConsole() (services.Terminal, error) {
 	iptables, err := iptables.New()
 	if err != nil {
 		return nil, err
 	}
-	console := services.NewConsole(iptables)
+	console := consoleService.NewConsole(iptables)
 	return console, nil
 }
 

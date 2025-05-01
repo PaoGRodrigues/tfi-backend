@@ -1,4 +1,4 @@
-package services
+package ntopng
 
 import "github.com/PaoGRodrigues/tfi-backend/app/domain/host"
 
