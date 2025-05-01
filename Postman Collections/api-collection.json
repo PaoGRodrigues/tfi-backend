@@ -632,6 +632,30 @@
 		},
 		{
 			"name": "Store Traffic",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a5a8c8dc-da86-4e6f-b352-7a48bf8e7a70",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.expect(pm.response.code).to.eql(200);",
+							"});",
+							"",
+							"/*",
+							"La respuesta tiene este formato:",
+							"{",
+							"\"data\" : \"error\"",
+							"}",
+							"*/",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
 			"id": "070af75c-797d-4bb6-a713-5ca7bab3ab99",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
