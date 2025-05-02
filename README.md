@@ -1,5 +1,7 @@
 # Trabajo Final Integrador - Backend
 
+![Go](https://img.shields.io/badge/code-Golang-blue?logo=go)
+
 ## Introducción
 Este repositorio contiene el backend del trabajo final **Análisis, visibilidad de tráfico y seguridad para usuarios finales en redes hogareñas**
 
