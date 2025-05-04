@@ -34,7 +34,7 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": "http://192.168.0.13:8080/ping",
+				"url": "{{base_url}}/ping",
 				"description": "Comprobar estado de la _api_."
 			},
 			"response": [
@@ -127,7 +127,7 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": "http://192.168.0.13:8080/localhosts",
+				"url": "{{base_url}}/localhosts",
 				"description": "Obtener el listado de _hosts_ **locales** que tienen flujos de tráfico activos siendo analizados por la herramienta."
 			},
 			"response": [
@@ -269,7 +269,7 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": "http://192.168.0.13:8080/traffic",
+				"url": "{{base_url}}/traffic",
 				"description": "Obtener el listado de flujos de tráfico activos siendo analizados por la herramienta."
 			},
 			"response": [
@@ -378,7 +378,7 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"url": "http://192.168.0.13:8080/activeflowsperdest",
+				"url": "{{base_url}}/activeflowsperdest",
 				"description": "Obtener la cantidad de bytes transmitidos a un destino particular (_IPs_ públicas o dominios)."
 			},
 			"response": [
