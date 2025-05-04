@@ -489,7 +489,7 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": "http://192.168.0.13:8080/activeflowspercountry",
+				"url": "{{base_url}}/activeflowspercountry",
 				"description": "Obtener la cantidad de bytes transmitidos a un país particular."
 			},
 			"response": [
@@ -587,7 +587,7 @@
 				},
 				"method": "GET",
 				"header": [],
-				"url": "http://192.168.0.13:8080/alerts",
+				"url": "{{base_url}}/alerts",
 				"description": "Obtener el listado de alertas detectadas por la herramienta en los últimos siete (7) días."
 			},
 			"response": [
@@ -657,7 +657,7 @@
 				},
 				"method": "POST",
 				"header": [],
-				"url": "http://192.168.0.13:8080/activeflows",
+				"url": "{{base_url}}/activeflows",
 				"description": "Guardar los flujos de datos activos analizados por la herramienta en el momento de la consulta."
 			},
 			"response": [
@@ -727,7 +727,7 @@
 				},
 				"method": "POST",
 				"header": [],
-				"url": "http://192.168.0.13:8080/hosts",
+				"url": "{{base_url}}/hosts",
 				"description": "Guardar los _hosts_ de datos activos analizados por la herramienta en el momento de la consulta, para enriquecer los datos de tráfico."
 			},
 			"response": [
@@ -844,7 +844,7 @@
 						}
 					}
 				},
-				"url": "http://192.168.0.13:8080/blockhost",
+				"url": "{{base_url}}/blockhost",
 				"description": "Bloquear _IPs_ o dominios en IPTables."
 			},
 			"response": [
@@ -1018,7 +1018,7 @@
 						}
 					}
 				},
-				"url": "http://192.168.0.13:8080/configurechannel",
+				"url": "{{base_url}}/configurechannel",
 				"description": "Configurar _bot_ de Telegram para recepción de notificaciones."
 			},
 			"response": [
@@ -1097,7 +1097,7 @@
 				},
 				"method": "POST",
 				"header": [],
-				"url": "http://192.168.0.13:8080/alertnotification",
+				"url": "{{base_url}}/alertnotification",
 				"description": "Recuperar las alertas y enviar la notificación a Telegram."
 			},
 			"response": [
