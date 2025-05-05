@@ -10,9 +10,11 @@ Dirigirse a **este link** para obtener información sobre los endpoints disponib
 
 ## Instalación
 ### Prerequisitos
-* Configuración de la Raspberry Pi (ver XXXX).
-* Instalación y configuración de la herramienta de monitoreo (ver XXXX).
-* Instalación de git en la Raspberry Pi (ver XXXX).
+Esta solución está pensada para ser desplegada en una Raspberry Pi.
+* Configuración del entorno (ver [TFI](https://github.com/PaoGRodrigues/tfi)).
+* Instalación y configuración de la herramienta de monitoreo (ver [TFI](https://github.com/PaoGRodrigues/tfi)).
+* Instalar Git
+* Instalar Golang
 
 ### Descarga y build
 * Hacer un clone del repositorio en la Raspberry Pi.
@@ -34,11 +36,13 @@ $ sudo apt install sqlite3
 ``` 
 $ sqlite3 file.sqlite
 ```
-* Copiar los comandos que están en el archivo **scripts/db.sql** de este repositorio.
+* Copiar los comandos que están en el archivo [db.sql](/scripts/db.sql) de este repositorio.
 * Ejecutar SQlite3 vía terminal. Pegar los comandos y apretar Enter.
 
+Con estos pasos ya está creada la Base de datos.
+
 ### Ejecución de la aplicación
-`Nota: Se debe ejecutar como root debido a que se modifican IPTables.`
+`Nota: El backend debe ejecutarse como root debido a que se modifican las IPTables.`
 ```
 $ sudo su
 $ cd /home/pi/tfi-backend
@@ -55,4 +59,14 @@ $ ./app/app -s=prod -ip=192.168.0.13 -pr=3000 -u=Admin -p=Admin -db=file.sqlite
 | `-p`     | Contraseña del usuario de la herramienta. |
 | `-db`    | Ruta al archivo de base de datos SQLite a utilizar. |
 
+## Documentación de la API
+Se puede consultar la documentación de la API en el siguiente [enlace](link).
+
 ## Ejecución de pruebas
+Esta colección de pruebas está pensada para ejecutarse desde una computadora conectada a la misma red de la Raspberry donde está corriendo el backend.
+
+* Ejecutar el backend en la Raspberry Pi como _root_. 
+* Importar la colección a Postman o Postman Web, como se indica en [este enlace](https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-data/).
+* Reemplazar la variable base_url en las variables de la colección por la IP de la Raspberry Pi.
+* Se pueden correr las pruebas individuales en cada endpoint o bien ejecutar todas las pruebas a la vez desde el Runner de Postman. 
+* Por defecto, se ejecutarán las pruebas que den Status code: 200. Algunas pruebas tienen la opción de ejecutarse enviando bodies incorrectos. Para eso, modificar la el valor de la variable de la collección test_env ponerla como error.
