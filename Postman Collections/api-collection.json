@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "6398c7b9-cef2-4113-9226-e3cfa6904840",
 		"name": "Trabajo Final Integrador",
-		"description": "Documentación y colección de pruebas manuales para el _backend_.\n\n# Prerequisitos\n\n- Tener configurada la Raspberry como _access point_ como se indica en [el siguiente link.](https://github.com/PaoGRodrigues/tfi)\n    \n- Tener instalada y configurada la herramienta de monitoreo en la Raspberry Pi.\n    \n\n# Ejecución de las prueba\n\n- Ejecutar el _backend_ en la Raspberry Pi como _root._\n    \n- Reemplazar la variable _base_url_ en las variables de la colección por la IP de la Raspberry Pi.\n    \n- Se pueden correr las pruebas individuales en cada endpoint o bien ejecutar todas las pruebas a la vez desde el [Runner](https://learning.postman.com/docs/collections/running-collections/intro-to-collection-runs/) de Postman.\n    \n- Seleccionar\n    \n\nEsta colección de pruebas está pensada para ejecutarse desde una computadora conectada a la misma red de la Raspberry donde está corriendo el _backend_.",
+		"description": "Documentación y colección de pruebas manuales para el _backend_.\n\n# Prerequisitos\n\n- Tener configurada la Raspberry como _access point_ como se indica en [el siguiente link.](https://github.com/PaoGRodrigues/tfi)\n    \n- Tener instalada y configurada la herramienta de monitoreo en la Raspberry Pi.\n    \n\n# Ejecución de las prueba\n\n- Ejecutar el _backend_ en la Raspberry Pi como _root._\n    \n- Reemplazar la variable _base_url_ en las variables de la colección por la IP de la Raspberry Pi.\n    \n- Se pueden correr las pruebas individuales en cada endpoint o bien ejecutar todas las pruebas a la vez desde el [Runner](https://learning.postman.com/docs/collections/running-collections/intro-to-collection-runs/) de Postman.\n    \n- Por defecto, se ejecutarán las pruebas que den _Status code: 200._ Algunas pruebas tienen la opción de ejecutarse enviando _bodies_ erróneos. Para eso, modificar la variable del entorno _Testing_environment_ y ponerla como _error_.\n    \n\nEsta colección de pruebas está pensada para ejecutarse desde una computadora conectada a la misma red de la Raspberry donde está corriendo el _backend_.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
@@ -1145,7 +1145,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "d01d6efb-d765-4e66-9f6a-fd75c00d6c89",
+				"id": "57d7d313-ba3d-4157-813a-03f3f1c36237",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
@@ -1156,7 +1156,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "ef3019fe-610d-4925-95e5-9d584f432fc4",
+				"id": "6fbca9f4-f77a-4d10-bf6f-974ec8f1eefd",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
@@ -1169,6 +1169,11 @@
 		{
 			"key": "base_url",
 			"value": "http://192.168.0.13:8080",
+			"type": "string"
+		},
+		{
+			"key": "test_env",
+			"value": "ok",
 			"type": "string"
 		}
 	]
