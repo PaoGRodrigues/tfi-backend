@@ -1,6 +1,8 @@
 package api
 
 import (
+	"net/http"
+
 	alertUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/alert"
 	hostUsecases "github.com/PaoGRodrigues/tfi-backend/app/usecase/host"
 	notificationChannelUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/notificationchannel"
@@ -28,6 +30,15 @@ func (api *Api) MapURLToPing() {
 			"message": "pong",
 		})
 	})
+}
+
+func (api *Api) MapSwaggerDocumentation() {
+	api.Static("/docs", "./docs")
+	// Redirigir a la UI directamente
+	api.GET("/swagger", func(c *gin.Context) {
+		c.Redirect(http.StatusMovedPermanently, "/docs/swagger-ui/")
+	})
+
 }
 
 func (api *Api) MapGetLocalHostsURL() {

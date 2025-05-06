@@ -121,6 +121,7 @@ func main() {
 	}
 
 	api.MapURLToPing()
+	api.MapSwaggerDocumentation()
 	api.MapGetTrafficURL()
 	api.MapGetLocalHostsURL()
 	api.MapGetActiveFlowsPerDestinationURL()
