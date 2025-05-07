@@ -20,6 +20,7 @@ import (
 	trafficUseCases "github.com/PaoGRodrigues/tfi-backend/app/usecase/traffic"
 
 	"github.com/coreos/go-iptables/iptables"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -132,6 +133,8 @@ func main() {
 	api.MapConfigureNotifChannelURL()
 	api.MapGetActiveFlowsPerCountryURL()
 	api.MapStoreHostsURL()
+
+	api.Use(cors.Default())
 
 	api.Run(":8080")
 }

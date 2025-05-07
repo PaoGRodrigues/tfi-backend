@@ -4,8 +4,8 @@ info:
   description: 'Documentación del _backend_ del Trabajo Final Integrador.'
   version: 1.0.0
 servers:
-  - url: "url_base:8080"
-    description: Reemplazar **url_base** con la _IP_ de la Raspberry Pi.
+  - url: "http://url_base:8080"
+    description: _IP_ de la Raspberry Pi.
 paths:
   /ping:
     get:
