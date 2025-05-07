@@ -60,7 +60,20 @@ $ ./app/app -s=prod -ip=192.168.0.13 -pr=3000 -u=Admin -p=Admin -db=file.sqlite
 | `-db`    | Ruta al archivo de base de datos SQLite a utilizar. |
 
 ## Documentación de la API
-Se puede consultar la documentación de la API en el siguiente [enlace](link).
+Para consultar la documentación de la api:
+1. Sin el backend en ejecución
+    * Clonar el repositorio.
+    * En el root del repositorio, ejecutar ``` $ python3 -m http.server 8080```
+    * Para acceder a la documentación desde el navegador: http://localhost:8080/docs/swagger-ui/
+2. Con el backend en ejecución en la Raspberry Pi
+    * Seguir los pasos anteriores indicados en este Readme para la configuración de la Raspberry Pi, la herramienta y el backend. 
+    * Antes de ejecutar la aplicación, en el atributo _server_, reemplazar _url-base_ por la IP actual de la Raspberry Pi en el archivo [.yml](docs/openapi_trabajo_final.yaml).
+    ```
+    servers:
+        - url: "http://url_base:8080"
+        - description: _IP_ de la Raspberry Pi. 
+    ```
+    * Una vez ejecutado el backend, se puede encontrar la documentación en el endpoint http://**IP Raspberry**:8080/swagger desde el navegador. También se pueden consultar el resto de los endpoints desde el Swagger.
 
 ## Ejecución de pruebas
 Esta colección de pruebas está pensada para ejecutarse desde una computadora conectada a la misma red de la Raspberry donde está corriendo el backend.
