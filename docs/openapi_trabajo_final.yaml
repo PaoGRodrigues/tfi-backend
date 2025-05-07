@@ -1,0 +1,92 @@
+openapi: 3.0.3
+info:
+  title: Trabajo Final Integrador
+  description: 'Documentación del _backend_ del Trabajo Final Integrador.'
+  version: 1.0.0
+servers:
+  - url: "http://url_base:8080"
+    description: _IP_ de la Raspberry Pi.
+paths:
+  /ping:
+    get:
+      summary: Ping
+      description: Comprobar estado de la _api_.
+      responses:
+        '200':
+          description: Successful response
+  /localhosts:
+    get:
+      summary: Get Localhosts
+      description: Obtener el listado de _hosts_ **locales** que tienen flujos de
+        tráfico activos siendo analizados por la herramienta.
+      responses:
+        '200':
+          description: Successful response
+  /traffic:
+    get:
+      summary: Get Traffic Flows
+      description: Obtener el listado de flujos de tráfico activos siendo analizados
+        por la herramienta.
+      responses:
+        '200':
+          description: Successful response
+  /activeflowsperdest:
+    get:
+      summary: Get Traffic Flows Per Destination
+      description: Obtener la cantidad de bytes transmitidos a un destino particular
+        (_IPs_ públicas o dominios).
+      responses:
+        '200':
+          description: Successful response
+  /activeflowspercountry:
+    get:
+      summary: Get Traffic Flows Per Country
+      description: Obtener la cantidad de bytes transmitidos a un país particular.
+      responses:
+        '200':
+          description: Successful response
+  /alerts:
+    get:
+      summary: Get Alerts
+      description: Obtener el listado de alertas detectadas por la herramienta en
+        los últimos siete (7) días.
+      responses:
+        '200':
+          description: Successful response
+  /activeflows:
+    post:
+      summary: Store Traffic
+      description: Guardar los flujos de datos activos analizados por la herramienta
+        en el momento de la consulta.
+      responses:
+        '200':
+          description: Successful response
+  /hosts:
+    post:
+      summary: Store Hosts
+      description: Guardar los _hosts_ de datos activos analizados por la herramienta
+        en el momento de la consulta, para enriquecer los datos de tráfico.
+      responses:
+        '200':
+          description: Successful response
+  /blockhost:
+    post:
+      summary: Block Host
+      description: Bloquear _IPs_ o dominios en IPTables.
+      responses:
+        '200':
+          description: Successful response
+  /configurechannel:
+    post:
+      summary: Configure Notification Channel
+      description: Configurar _bot_ de Telegram para recepción de notificaciones.
+      responses:
+        '200':
+          description: Successful response
+  /alertnotification:
+    post:
+      summary: Notify Alerts
+      description: Recuperar las alertas y enviar la notificación a Telegram.
+      responses:
+        '200':
+          description: Successful response
