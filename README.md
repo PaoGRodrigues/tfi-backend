@@ -9,7 +9,7 @@ Este repositorio contiene el backend del trabajo final **Análisis, visibilidad 
 Dirigirse a **este link** para obtener información sobre los endpoints disponibles y cómo se utiliza cada uno.
 
 ## Instalación
-### Prerequisitos
+### Prerrequisitos
 Esta solución está pensada para ser desplegada en una Raspberry Pi.
 * Configuración del entorno (ver [TFI](https://github.com/PaoGRodrigues/tfi)).
 * Instalación y configuración de la herramienta de monitoreo (ver [TFI](https://github.com/PaoGRodrigues/tfi)).
