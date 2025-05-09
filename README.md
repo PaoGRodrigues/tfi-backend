@@ -14,9 +14,6 @@ Entre las funcionalidades se encuentran
 * Bloqueo de tráfico en IPTables
 * Envío de notificaciones vía Telegram
 
-## Documentación
-Dirigirse a **este link** para obtener información sobre los endpoints disponibles y cómo se utiliza cada uno.
-
 ## Instalación
 ### Prerrequisitos
 Esta solución está pensada para ser desplegada en una Raspberry Pi.
