@@ -5,6 +5,15 @@
 ## Introducción
 Este repositorio contiene el backend del trabajo final **Análisis, visibilidad de tráfico y seguridad para usuarios finales en redes hogareñas**
 
+Esta aplicación es la intermediaria entre la herramienta de monitoreo de tráfico y el frontend. Su función principal es obtener información y ofrecer las funcionalidades que la herramienta no posee en su versión _Community_. 
+
+Entre las funcionalidades se encuentran
+* Obtención y guardado de flujos de tráfico
+* Obtención y guardado de _hosts_
+* Cantidad de tráfico por país y por destino
+* Bloqueo de tráfico
+* Envío de notificaciones
+
 ## Documentación
 Dirigirse a **este link** para obtener información sobre los endpoints disponibles y cómo se utiliza cada uno.
 
