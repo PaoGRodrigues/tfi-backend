@@ -59,6 +59,9 @@ $ ./app/app -s=prod -ip=192.168.0.13 -pr=3000 -u=Admin -p=Admin -db=file.sqlite
 | `-p`     | Contraseña del usuario de la herramienta. |
 | `-db`    | Ruta al archivo de base de datos SQLite a utilizar. |
 
+### Configuración del bot de Telegram
+Para configurar el bot de Telegram, ver [Configuración del bot de Telegram](docs/TelegramConfig.md)
+
 ## Documentación de la API
 Para consultar la documentación de la api:
 1. Sin el backend en ejecución
