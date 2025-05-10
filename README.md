@@ -88,7 +88,7 @@ Para consultar la documentación de la api:
 Esta colección de pruebas está pensada para ejecutarse desde una computadora conectada a la misma red de la Raspberry donde está corriendo el backend.
 
 * Ejecutar el backend en la Raspberry Pi como _root_. 
-* Importar la colección a Postman o Postman Web, como se indica en [este enlace](https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-data/).
+* Importar la [colección](https://github.com/PaoGRodrigues/tfi-backend/blob/9faad168845ab2324748894345752fe4ccb59431/Postman%20Collections/api-collection.json) a Postman o Postman Web, como se indica en [este enlace](https://learning.postman.com/docs/getting-started/importing-and-exporting/importing-data/).
 * Reemplazar la variable base_url en las variables de la colección por la IP de la Raspberry Pi.
 * Se pueden correr las pruebas individuales en cada endpoint o bien ejecutar todas las pruebas a la vez desde el Runner de Postman. 
-* Por defecto, se ejecutarán las pruebas que den Status code: 200. Algunas pruebas tienen la opción de ejecutarse enviando bodies incorrectos. Para eso, modificar la el valor de la variable de la collección test_env ponerla como error.
+* Por defecto, se ejecutarán las pruebas que den Status code: 200. Algunas pruebas tienen la opción de ejecutarse enviando bodies incorrectos. Para eso, modificar la el valor de la variable de la collección test_env, dejándola como **error**.
