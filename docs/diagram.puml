@@ -1,0 +1,474 @@
+@startuml
+namespace alert {
+    class Alert << (S,Aquamarine) >> {
+        + Name string
+        + Family string
+        + Category string
+        + Time string
+        + Severity string
+        + AlertFlow AlertFlow
+        + AlertProtocol traffic.Protocol
+
+    }
+    class AlertFlow << (S,Aquamarine) >> {
+        + Client traffic.Client
+        + Server traffic.Server
+
+    }
+    interface AlertReader  {
+        + GetAllAlerts( int,  int) ([]alert.Alert, error)
+
+    }
+    class GetAlertsUseCase << (S,Aquamarine) >> {
+        - repository alert.AlertReader
+
+        + GetAllAlerts() ([]alert.Alert, error)
+
+    }
+    interface Notifier  {
+        + SendMessage( string) error
+
+    }
+    class NotifyAlertsUseCase << (S,Aquamarine) >> {
+        - repository alert.AlertReader
+        - notificationsService alert.Notifier
+
+        + SendAlertMessages() error
+
+    }
+}
+
+
+namespace api {
+    class AlertsResponse << (S,Aquamarine) >> {
+        + Name string
+        + Category string
+        + Time string
+        + Severity string
+        + Source string
+        + Destination string
+
+    }
+    class Api << (S,Aquamarine) >> {
+        + TrafficSearcher *traffic.GetTrafficFlowsUseCase
+        + GetLocalhostsUseCase *host.GetLocalhostsUseCase
+        + GetTrafficFlowsPerDestinationUseCase *traffic.GetTrafficFlowsPerDestinationUseCase
+        + GetTrafficFlowsPerCountryUseCase *traffic.GetTrafficFlowsPerCountryUseCase
+        + StoreTrafficFlowsUseCase *traffic.StoreTrafficFlowsUseCase
+        + GetAlertsUseCase *alert.GetAlertsUseCase
+        + BlockHostUseCase *host.BlockHostUseCase
+        + ConfigureNotificationChannelUseCase *notificationchannel.ConfigureChannelUseCase
+        + NotifyAlertsUseCase *alert.NotifyAlertsUseCase
+        + StoreHostsUseCase *host.StoreHostUseCase
+
+        - parseAlertsData(alerts []alert.Alert) []AlertsResponse
+
+        + BlockHost(c *gin.Context) 
+        + ConfigNotificationChannel(c *gin.Context) 
+        + GetAlerts(c *gin.Context) 
+        + GetLocalHosts(c *gin.Context) 
+        + GetTraffic(c *gin.Context) 
+        + GetActiveFlowsPerCountry(c *gin.Context) 
+        + GetActiveFlowsPerDestination(c *gin.Context) 
+        + SendAlertNotification(c *gin.Context) 
+        + MapURLToPing() 
+        + MapSwaggerDocumentation() 
+        + MapGetLocalHostsURL() 
+        + MapGetTrafficURL() 
+        + MapGetActiveFlowsPerDestinationURL() 
+        + MapGetActiveFlowsPerCountryURL() 
+        + MapAlertsURL() 
+        + MapBlockHostURL() 
+        + MapNotificationsURL() 
+        + MapConfigureNotifChannelURL() 
+        + MapStoreHostsURL() 
+        + MapStoreActiveFlowsURL() 
+        + StoreHosts(c *gin.Context) 
+        + StoreTrafficFlows(c *gin.Context) 
+
+    }
+    class HostsResponse << (S,Aquamarine) >> {
+        + Name string
+        + PrivateHost bool
+        + IP string
+        + Mac string
+        + ASname string
+
+    }
+    class blockHostRequest << (S,Aquamarine) >> {
+        + Host string
+
+    }
+    class configRequest << (S,Aquamarine) >> {
+        + Token string
+        + Username string
+
+    }
+}
+"gin.Engine" *-- "api.Api"
+
+
+namespace console {
+    class Console << (S,Aquamarine) >> {
+        + IPTables *iptables.IPTables
+
+        + Block(host string) (*string, error)
+
+    }
+}
+
+"host.HostBlocker" <|-- "console.Console"
+"services.Terminal" <|-- "console.Console"
+
+namespace host {
+    class BlockHostUseCase << (S,Aquamarine) >> {
+        - blockService host.HostBlocker
+
+        + Block(host string) (*string, error)
+
+    }
+    class GetLocalhostsUseCase << (S,Aquamarine) >> {
+        - repository host.HostReader
+
+        + GetLocalHosts() ([]host.Host, error)
+
+    }
+    class Host << (S,Aquamarine) >> {
+        + Name string
+        + ASname string
+        + PrivateHost bool
+        + IP string
+        + Mac string
+        + City string
+        + Country string
+
+    }
+    interface HostBlocker  {
+        + Block( string) (*string, error)
+
+    }
+    interface HostDBRepository  {
+        + StoreHosts( []host.Host) error
+        + GetHostByIp( string) (host.Host, error)
+
+    }
+    interface HostReader  {
+        + GetAllHosts() ([]host.Host, error)
+
+    }
+    class StoreHostUseCase << (S,Aquamarine) >> {
+        - hostRepositoryReader host.HostReader
+        - hostDBRepository host.HostDBRepository
+
+        + StoreHosts() error
+        + GetHostByIp(ip string) (host.Host, error)
+
+    }
+}
+
+"host.HostBlocker" <|-- "host.BlockHostUseCase"
+"services.Terminal" <|-- "host.BlockHostUseCase"
+
+namespace notificationchannel {
+    class ConfigureChannelUseCase << (S,Aquamarine) >> {
+        - notificationChannel notificationchannel.NotificationChannel
+
+        + Configure(user string, token string) error
+
+    }
+    interface NotificationChannel  {
+        + Configure( string,  string) error
+        + Configure( string,  string) error
+
+    }
+}
+
+"notificationchannel.NotificationChannel" <|-- "notificationchannel.ConfigureChannelUseCase"
+
+namespace ntopng {
+    class Alert << (S,Aquamarine) >> {
+        + Row_id string
+        + Name <font color=blue>struct</font>{string}
+        + Family string
+        + Category <font color=blue>struct</font>{string}
+        + Time <font color=blue>struct</font>{string}
+        + Severity <font color=blue>struct</font>{int}
+        + AlertFlow AlertFlow
+        + AlertProtocol AlertProtocol
+
+    }
+    class AlertClient << (S,Aquamarine) >> {
+        + Value string
+        + Contry string
+
+    }
+    class AlertFlow << (S,Aquamarine) >> {
+        + CliPort string
+        + SrvPort string
+        + Client AlertClient
+        + Server AlertServer
+
+    }
+    class AlertProtocol << (S,Aquamarine) >> {
+        + Protocol <font color=blue>struct</font>{string, string, string}
+
+    }
+    class AlertServer << (S,Aquamarine) >> {
+        + Name string
+        + Value string
+        + Country string
+
+    }
+    class Check << (S,Aquamarine) >> {
+        + Subdir string
+        + ScriptKey string
+
+    }
+    class HTTPIfResponse << (S,Aquamarine) >> {
+        + Rc int
+        + RcStrHr string
+        + RcStr string
+        + Rsp []Interface
+
+    }
+    class HttpAlertResponse << (S,Aquamarine) >> {
+        + Rc int
+        + RcStrHr string
+        + RcStr string
+        + Rsp Records
+        + RecordsTotal int
+        + RecordsFiltered int
+
+    }
+    class HttpCheckResponse << (S,Aquamarine) >> {
+        + Rc int
+        + RcStrHr string
+        + Rsp Response
+
+    }
+    class HttpHostResponse << (S,Aquamarine) >> {
+        + Rc int
+        + RcStr string
+        + Rsp []host.Host
+
+    }
+    class HttpResponse << (S,Aquamarine) >> {
+        + Rc int
+        + RcStr string
+        + Rsp RspData
+
+    }
+    class Interface << (S,Aquamarine) >> {
+        + IfName string
+        + IfId int
+        + Name string
+
+    }
+    class NtopNG << (S,Aquamarine) >> {
+        + UrlClient string
+        + InterfaceId int
+        + Usr string
+        + Pass string
+
+        - enableCheck(currentCheck Check) (HttpCheckResponse, error)
+        - getAlertsList(epoch_begin int, epoch_end int) (HttpAlertResponse, error)
+        - getHostsList() (HttpHostResponse, error)
+        - getInterfaceID() (HTTPIfResponse, error)
+        - getActiveFlows() ([]traffic.TrafficFlow, error)
+        - getActiveFlowsSinglePage(page int) (HttpResponse, error)
+
+        + EnableChecks() 
+        + GetAllAlerts(epoch_begin int, epoch_end int) ([]alert.Alert, error)
+        + GetAllHosts() ([]host.Host, error)
+        + SetInterfaceID() error
+        + GetTrafficFlows() ([]traffic.TrafficFlow, error)
+
+    }
+    class Records << (S,Aquamarine) >> {
+        + Alerts []Alert
+
+    }
+    class Response << (S,Aquamarine) >> {
+        + Success bool
+
+    }
+    class RspData << (S,Aquamarine) >> {
+        + Data []traffic.TrafficFlow
+        + CurrentPage int
+        + PerPage int
+
+    }
+}
+
+"alert.AlertReader" <|-- "ntopng.NtopNG"
+"host.HostReader" <|-- "ntopng.NtopNG"
+"services.Tool" <|-- "ntopng.NtopNG"
+"traffic.TrafficReader" <|-- "ntopng.NtopNG"
+
+namespace services {
+    interface Database  {
+        + StoreTrafficFlows( []traffic.TrafficFlow) error
+        + GetServerByAttr(attr string) (traffic.Server, error)
+        + GetClients() ([]traffic.Client, error)
+        + GetServers() ([]traffic.Server, error)
+        + GetFlowByKey(key string) (traffic.TrafficFlow, error)
+        + StoreHosts( []host.Host) error
+        + GetHostByIp( string) (host.Host, error)
+
+    }
+    interface NotificationChannel  {
+        + Configure( string,  string) error
+        + SendMessage( string) error
+
+    }
+    interface Terminal  {
+        + Block( string) (*string, error)
+
+    }
+    interface Tool  {
+        + SetInterfaceID() error
+        + GetAllHosts() ([]host.Host, error)
+        + GetTrafficFlows() ([]traffic.TrafficFlow, error)
+        + GetAllAlerts(epoch_begin int, epoch_end int) ([]alert.Alert, error)
+        + EnableChecks() 
+
+    }
+}
+
+
+namespace sqlite {
+    class SQLClient << (S,Aquamarine) >> {
+        - db *sql.DB
+
+        - addHost(host host.Host) error
+        - addActiveFlow(currentFlow traffic.TrafficFlow) (string, error)
+        - insertClient(currentClient traffic.Client, key string) error
+        - insertServer(currentServer traffic.Server, key string) error
+        - insertProtocol(currentProto traffic.Protocol, key string) error
+
+        + StoreHosts(hosts []host.Host) error
+        + GetHostByIp(ip string) (host.Host, error)
+        + StoreTrafficFlows(flows []traffic.TrafficFlow) error
+        + GetServerByAttr(attr string) (traffic.Server, error)
+        + GetClients() ([]traffic.Client, error)
+        + GetServers() ([]traffic.Server, error)
+        + GetFlowByKey(key string) (traffic.TrafficFlow, error)
+
+    }
+}
+
+"host.HostDBRepository" <|-- "sqlite.SQLClient"
+"services.Database" <|-- "sqlite.SQLClient"
+"traffic.TrafficDBRepository" <|-- "sqlite.SQLClient"
+
+namespace telegram {
+    class Telegram << (S,Aquamarine) >> {
+        + Token string
+        + Username string
+        + ChatID int64
+        + ChatIDMutex *sync.Mutex
+        + TelegramBot *v5.BotAPI
+
+        - waitForTelegramChatID() 
+
+        + SendMessage(message string) error
+        + Configure(token string, username string) error
+
+    }
+}
+
+"alert.Notifier" <|-- "telegram.Telegram"
+"notificationchannel.NotificationChannel" <|-- "telegram.Telegram"
+"services.NotificationChannel" <|-- "telegram.Telegram"
+
+namespace traffic {
+    class BytesPerCountry << (S,Aquamarine) >> {
+        + Bytes int
+        + Country string
+
+    }
+    class BytesPerDestination << (S,Aquamarine) >> {
+        + Bytes int
+        + Destination string
+
+    }
+    class Client << (S,Aquamarine) >> {
+        + Key string
+        + Name string
+        + Port int
+        + IP string
+
+    }
+    class GetTrafficFlowsPerCountryUseCase << (S,Aquamarine) >> {
+        - trafficDBRepository traffic.TrafficDBRepository
+
+        + GetBytesPerCountry() ([]BytesPerCountry, error)
+
+    }
+    class GetTrafficFlowsPerDestinationUseCase << (S,Aquamarine) >> {
+        - trafficDBRepository traffic.TrafficDBRepository
+
+        + GetTrafficFlowsPerDestinations() ([]BytesPerDestination, error)
+
+    }
+    class GetTrafficFlowsUseCase << (S,Aquamarine) >> {
+        - repository traffic.TrafficReader
+        - activeFlows []traffic.TrafficFlow
+
+        + GetTrafficFlows() ([]traffic.TrafficFlow, error)
+
+    }
+    class Protocol << (S,Aquamarine) >> {
+        + Key string
+        + L4 string
+        + L7 string
+        + Label string
+
+    }
+    class Server << (S,Aquamarine) >> {
+        + Key string
+        + IP string
+        + IsBroadcastDomain bool
+        + IsDHCP bool
+        + Port int
+        + Name string
+        + Country string
+
+    }
+    class StoreTrafficFlowsUseCase << (S,Aquamarine) >> {
+        - trafficReader traffic.TrafficReader
+        - trafficDBRepository traffic.TrafficDBRepository
+        - hostDBRepository host.HostDBRepository
+
+        - enrichData(trafficFlows []traffic.TrafficFlow) ([]traffic.TrafficFlow, error)
+
+        + StoreTrafficFlows() error
+
+    }
+    interface TrafficDBRepository  {
+        + StoreTrafficFlows( []traffic.TrafficFlow) error
+        + GetServerByAttr( string) (traffic.Server, error)
+        + GetClients() ([]traffic.Client, error)
+        + GetServers() ([]traffic.Server, error)
+        + GetFlowByKey( string) (traffic.TrafficFlow, error)
+
+    }
+    class TrafficFlow << (S,Aquamarine) >> {
+        + Key string
+        + FirstSeen uint64
+        + LastSeen uint64
+        + Client Client
+        + Server Server
+        + Bytes int
+        + Protocol Protocol
+
+    }
+    interface TrafficReader  {
+        + GetTrafficFlows() ([]traffic.TrafficFlow, error)
+
+    }
+}
+
+"traffic.TrafficReader" <|-- "traffic.GetTrafficFlowsUseCase"
+
+@enduml

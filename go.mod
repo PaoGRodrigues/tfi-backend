@@ -21,9 +21,11 @@ require (
 	github.com/cloudwego/base64x v0.1.5 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.8 // indirect
 	github.com/goccy/go-json v0.10.5 // indirect
+	github.com/jfeliu007/goplantuml v1.6.2 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.10 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/pelletier/go-toml/v2 v2.2.3 // indirect
+	github.com/spf13/afero v1.8.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	golang.org/x/arch v0.15.0 // indirect
 	golang.org/x/net v0.38.0 // indirect
