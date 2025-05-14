@@ -96,7 +96,8 @@ func main() {
 	// *********** Repo & Usecases ***********
 	getLocalhostsUseCase, storeHostsUseCase = initializeHostUseCases(tool, database)
 
-	getTrafficFlowsUseCase, getTrafficFlowsPerDestinationUseCase, storeTrafficFlowsUseCase = initializeTrafficUseCases(tool, database, database)
+	getTrafficFlowsUseCase, getTrafficFlowsPerDestinationUseCase,
+		storeTrafficFlowsUseCase, getTrafficFlowsPerCountryUseCase = initializeTrafficUseCases(tool, database, database)
 
 	hostBlocker = initializeHostBlockerUseCases(console)
 
@@ -156,13 +157,14 @@ func initializeHostBlockerUseCases(console services.Terminal) *hostUseCases.Bloc
 
 // *********** Traffic ***********
 func initializeTrafficUseCases(tool services.Tool, repo trafficPorts.TrafficDBRepository, hostStorage hostPorts.HostDBRepository) (*trafficUseCases.GetTrafficFlowsUseCase,
-	*trafficUseCases.GetTrafficFlowsPerDestinationUseCase, *trafficUseCases.StoreTrafficFlowsUseCase) {
+	*trafficUseCases.GetTrafficFlowsPerDestinationUseCase, *trafficUseCases.StoreTrafficFlowsUseCase, *trafficUseCases.GetTrafficFlowsPerCountryUseCase) {
 
 	getTrafficFlowsUseCase := trafficUseCases.NewTrafficFlowsUseCase(tool)
 	storeTrafficFlowsUseCase := trafficUseCases.NewStoreTrafficFlowsUseCase(getTrafficFlowsUseCase, repo, hostStorage)
 	getTrafficFlowsPerDestinationUseCase := trafficUseCases.NewGetTrafficFlowsPerDestinationUseCase(repo)
+	getTrafficFlowsPerCountryUseCase := trafficUseCases.NewGetTrafficFlowsPerCountryUseCase(repo)
 
-	return getTrafficFlowsUseCase, getTrafficFlowsPerDestinationUseCase, storeTrafficFlowsUseCase
+	return getTrafficFlowsUseCase, getTrafficFlowsPerDestinationUseCase, storeTrafficFlowsUseCase, getTrafficFlowsPerCountryUseCase
 }
 
 // *******************************
